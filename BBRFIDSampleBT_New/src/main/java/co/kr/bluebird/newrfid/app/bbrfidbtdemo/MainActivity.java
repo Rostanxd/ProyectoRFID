@@ -834,11 +834,16 @@ public class MainActivity extends Activity {
                 }
             }
             else {
-                if(mCurrentFragment.equals(mInventoryPerStoreFragment) && mInventoryPerStoreFragment.isOpenLayoutSale()){
-                    mInventoryPerStoreFragment.backLayoutInfo();
+                if(mCurrentFragment.equals(mInventoryPerStoreFragment)  ){
+
+                    if(mInventoryPerStoreFragment.isOpenLayoutSale()){
+                        mInventoryPerStoreFragment.backLayoutInfo();
+                    }
+                    else {
+                        mInventoryPerStoreFragment.CleanControl();
+                    }
                 }
                 else {
-                    mInventoryPerStoreFragment.CleanControl();
                     switchToHome();
                 }
             }
