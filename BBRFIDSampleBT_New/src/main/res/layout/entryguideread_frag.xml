@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragmentvct.EntryGuideCheckFragment">
+
+    <TableLayout
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_margin="5dp">
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GENoOrdenEntrada" />
+
+            <EditText
+                android:id="@+id/et_nGuiaEntrada"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GECantidad" />
+
+            <EditText
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </TableRow>
+
+
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_margin="5dp">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GEitemsSearch" />
+
+            <ProgressBar
+                android:id="@+id/pbLeidos"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp" />
+
+            <TextView
+                android:id="@+id/tvCantItemLeidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GEitems" />
+
+        </TableRow>
+
+
+    </TableLayout>
+
+    <!--<TableLayout
+        android:layout_width="315dp"
+        android:layout_height="50dp"
+        android:stretchColumns="*"
+        android:layout_margin="5dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="91dp"
+                android:minWidth="220dp"
+                android:minHeight="60dp" />
+
+        </TableRow>
+
+
+    </TableLayout>
+-->
+
+
+    <TableLayout
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_margin="5dp">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnIniciarGR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/GEiniciar" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/GEfinalizar" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/GElimpiar" />
+        </TableRow>
+
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        android:layout_weight="1.1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/GEitemsDif" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+
+            <TableLayout
+                android:id="@+id/tablelayoutItemsDif"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        android:layout_weight="1.1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/GEtagNoEncontrados" />
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+
+            <TableLayout
+                android:id="@+id/tablelayoutItemsNoEnc"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginLeft="5dip"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvItemsREP"
+            android:layout_width="150dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvCantAntREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvCantActualREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvDiferenciaREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tvCantVentaREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvCantEgresoREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvSaldoBodIntREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvSaldoOtrosREP"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+</LinearLayout>

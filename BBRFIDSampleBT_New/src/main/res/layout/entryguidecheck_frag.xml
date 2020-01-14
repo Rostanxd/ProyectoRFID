@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
+
+<!--
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentvct.EntryGuideCheckFragment">
+</FrameLayout>-->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_marginRight="5dip">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="1dip">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GENoOrdenEntrada" />
+
+            <EditText
+                android:id="@+id/et_nGuiaEntrada"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btnCargarCE"
+                android:layout_width="wrap_content"
+                android:layout_height="30dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="10dip"
+                android:backgroundTint="#00897B"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="5dip"
+                android:background="@drawable/borderedondo"
+                android:text="@string/GEbtnCargar" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="1dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="5dip">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GECantidad" />
+
+            <TextView
+                android:id="@+id/tvCantidadOCGR"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="0" />
+
+            <!-- <EditText
+                android:id="@+id/etCantidadOCGR"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />-->
+        </TableRow>
+    </TableLayout>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        android:layout_weight="1.1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+
+            <TableLayout
+                android:id="@+id/tablelayoutproduct"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </ScrollView>
+
+    </LinearLayout>-->
+
+    <!--android:background="@drawable/borde"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginBottom="5dip"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/lv_entriesGuide"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp" >
+
+        </ListView>
+    </LinearLayout>
+
+
+
+   <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.1"
+        android:orientation="vertical">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/GECantidadTotal" />
+
+                <TextView
+                    android:id="@+id/tvCantidadTotalval"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="0" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                     />
+
+
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>-->
+
+
+</LinearLayout>

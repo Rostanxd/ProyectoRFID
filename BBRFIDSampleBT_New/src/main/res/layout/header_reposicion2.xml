@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginLeft="5dip"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="150dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_items"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_cantAnt"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_cantAct"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_cant"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_ventas"/>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_egreso"/>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_saldoBod"/>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:background="#00897B"
+            android:textColor="@android:color/white"
+            android:text="@string/HR_saldoOt"/>
+    </LinearLayout>
+
+
+</LinearLayout>
