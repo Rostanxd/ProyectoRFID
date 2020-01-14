@@ -841,6 +841,7 @@ public class MainActivity extends Activity {
                     }
                     else {
                         mInventoryPerStoreFragment.CleanControl();
+                        switchToHome();
                     }
                 }
                 else {
