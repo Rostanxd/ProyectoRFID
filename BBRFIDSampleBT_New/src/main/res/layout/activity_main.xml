@@ -1442,9 +1442,21 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
+                            <TextView
+                                android:id="@+id/tvParam1"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:textAlignment="center"
+                                android:text="Parametrizador"
+                                android:visibility="gone"
+                                android:textColor="#000"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
 
                         </LinearLayout>
                         <LinearLayout
+                            android:id="@+id/layouttvParam"
                             android:layout_gravity="bottom|center_horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

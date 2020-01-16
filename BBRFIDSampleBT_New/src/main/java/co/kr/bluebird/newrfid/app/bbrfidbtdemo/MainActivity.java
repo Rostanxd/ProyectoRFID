@@ -54,6 +54,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -110,12 +111,13 @@ public class MainActivity extends Activity {
     private TakingInventoryControlFragment mTakingInventoryControlFragment;
     private TakingInventoryParticipantFragment mTakingInventoryParticipantFragment;
 
-    private LinearLayout mUILayout;
+    private LinearLayout mUILayout, mlayouttvParam;
+    private TextView mtvParam1;
 
     private Fragment mCurrentFragment;
 
-    private boolean isAdmin;
-    private CardView mcvParametrizador;
+    private boolean isAdmin, isExistParametrizacion;
+    private CardView mcvParametrizador,mcvConectividad,mcvConfiguracion,mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
     /*private ImageButton mConnectButton;
     private ImageButton mSDFunctionButton;
     private ImageButton mRFConfigButton;
@@ -151,8 +153,42 @@ public class MainActivity extends Activity {
 
         mContext = this;
 
+        mlayouttvParam = (LinearLayout) findViewById(R.id.layouttvParam);
+        mtvParam1 = (TextView) findViewById(R.id.tvParam1);
+
         mcvParametrizador  = (CardView)findViewById(R.id.cvParametrizador);
+        mcvConectividad = (CardView)findViewById(R.id.cvConectividad);
+        mcvConfiguracion  = (CardView)findViewById(R.id.cvConfiguracion);
+        mcvGuiaEntrada = (CardView)findViewById(R.id.cvGuiaEntrada);
+        mcvGuiaDespacho = (CardView)findViewById(R.id.cvGuiaDespacho);
+        mcvEnvioMercaderia = (CardView)findViewById(R.id.cvEnvioMercaderia);
+        mcvRecepcionMercaderia = (CardView)findViewById(R.id.cvRecepcionMercaderia);
+        mcvInventariotienda = (CardView)findViewById(R.id.cvInventariotienda);
+        mcvReposicion = (CardView)findViewById(R.id.cvReposicion);
+        mcvTomaInventarioControl = (CardView)findViewById(R.id.cvTomaInventarioControl);
+        mcvTomaInventarioParticipante = (CardView)findViewById(R.id.cvTomaInventarioParticipante);
+
+
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        isExistParametrizacion = getIntent().getBooleanExtra("isExistParametrizacion", false);
+
+
+
+        if(!isExistParametrizacion){
+            mlayouttvParam.setVisibility(View.GONE);
+            mtvParam1.setVisibility(View.VISIBLE);
+            mcvConectividad.setVisibility(View.GONE);
+            mcvConfiguracion.setVisibility(View.GONE);
+            mcvGuiaEntrada.setVisibility(View.GONE);
+            mcvGuiaDespacho.setVisibility(View.GONE);
+            mcvEnvioMercaderia.setVisibility(View.GONE);
+            mcvRecepcionMercaderia.setVisibility(View.GONE);
+            mcvInventariotienda.setVisibility(View.GONE);
+            mcvReposicion.setVisibility(View.GONE);
+            mcvTomaInventarioControl.setVisibility(View.GONE);
+            mcvTomaInventarioParticipante.setVisibility(View.GONE);
+        }
+
 
         if(isAdmin){
             mcvParametrizador.setVisibility(View.VISIBLE);

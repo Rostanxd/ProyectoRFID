@@ -14,6 +14,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table parameterservice(codigo int primary key, localhost text, localport text, exthost text, extport text, codbodega text, descbodega text, holding text, conexiontype text,  dateini text, dateend text, dispositivoid text )");
+        sqLiteDatabase.execSQL("create table paramlogin(codigo int primary key, startdate text, user text, estado int  )");
     }
 
     @Override

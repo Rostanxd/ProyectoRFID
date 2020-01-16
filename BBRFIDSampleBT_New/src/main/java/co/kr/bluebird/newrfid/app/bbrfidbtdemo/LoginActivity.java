@@ -1,14 +1,20 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,16 +35,21 @@ import java.util.List;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAAcceso;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAPrograma;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RfidAutentication;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 
 
 public class LoginActivity extends Activity {
 
     private Button mbtnIngresarLogin;
+    private ParamLectorRfid paramLectorRfid_ = null;
+    private ParamRfidIteration paramRfidIteration = null;
     private EditText mtxtUser , mtxtPass;
     private Context mcontext;
     private RfidAutentication rfidAutentication;
@@ -55,10 +66,35 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        paramRfidIteration = new ParamRfidIteration();
+        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros(mcontext);
+
+        switchAdmin = (Switch)findViewById(R.id.switch1);
+
+        if(ExistLoggeo()){
+            // si existe loggeed
+        }
+        else {
+            if(paramLectorRfid_ != null){
+
+            }
+            else {
+                // modo config
+
+                switchAdmin.setChecked(true);
+                switchAdmin.setEnabled(false);
+            }
+        }
+
+
         mbtnIngresarLogin = (Button)findViewById(R.id.btnIngresarLogin);
+        EnabledDisabledBtnLogin(false);
+
         mtxtUser = (EditText)findViewById(R.id.etusuarioLogin) ;
         mtxtPass = (EditText)findViewById(R.id.etPassLogin) ;
-        switchAdmin = (Switch)findViewById(R.id.switch1);
+
+        mtxtUser.addTextChangedListener(addTextWatcherUser);
+        mtxtPass.addTextChangedListener(addTextWatcherPass);
 
         mcontext = this;
         rfidService = new RfidService(mcontext);
@@ -96,6 +132,28 @@ public class LoginActivity extends Activity {
                 tarea.execute();
             }
         });
+    }
+
+    private void EnabledDisabledBtnLogin(boolean isEnabled){
+        mbtnIngresarLogin.setEnabled(isEnabled);
+        mbtnIngresarLogin.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor((isEnabled ? "#00897B":"#D5D7D6"))));
+    }
+
+    private boolean ExistLoggeo(){
+
+        boolean existLogeo = false;
+
+        if(paramLectorRfid_ != null){
+            ParamLogin paramLogin  = paramRfidIteration.ConsultarParametrosLogin(mcontext);
+            if(paramLogin != null){
+                if(paramLogin.isValidseccion()){
+                    // si esta logeado
+                    existLogeo = true;
+                }
+            }
+
+        }
+        return existLogeo;
     }
 
 
@@ -316,9 +374,19 @@ public class LoginActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             progressDialog.cancel();
 
-            Intent intent = new Intent(mcontext, MainActivity.class);
-            intent.putExtra("isAdmin", isAdmin);
-            startActivity(intent);
+            if(paramLectorRfid_ == null){
+                paramLectorRfid_ =  paramRfidIteration.ConsultarParametros(mcontext);
+            }
+
+            if(paramLectorRfid_ != null || isAdmin){
+                Intent intent = new Intent(mcontext, MainActivity.class);
+                intent.putExtra("isAdmin", isAdmin);
+                intent.putExtra("isExistParametrizacion", (paramLectorRfid_ != null));
+                startActivity(intent);
+            }
+            else {
+                InvocarAlert("Lo sentimos, inicie session como Administrador, y dirigirse a la opción parametrizador...");
+            }
 
             /*if(!RequiereAdmin){
                 if(loginData != null && loginData.getEstado() != null )
@@ -353,5 +421,63 @@ public class LoginActivity extends Activity {
         }
     }
 
+    private void InvocarAlert(String msj)
+    {
+        AlertDialog.Builder alerta = new AlertDialog.Builder(mcontext);
+        alerta.setMessage(msj)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        mtxtUser.setText("");
+                        mtxtPass.setText("");
+                        dialog.dismiss();
+                    }
+                });
 
+        alerta.show();
+    }
+
+    // eventos
+
+    /*
+    private OnClickListener sledListener = new OnClickListener() {
+     metEstiloItemIPS.addTextChangedListener(new TextWatcher() {
+    */
+
+    private TextWatcher addTextWatcherUser = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(charSequence.length() > 0 && mtxtPass.length() > 0){
+
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    private TextWatcher addTextWatcherPass = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 }

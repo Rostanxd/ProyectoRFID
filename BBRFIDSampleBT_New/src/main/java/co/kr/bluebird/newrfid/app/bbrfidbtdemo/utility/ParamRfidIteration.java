@@ -4,14 +4,69 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.versionedparcelable.VersionedParcel;
+
 import java.text.ParseException;
 import java.util.Date;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
+
 import java.text.SimpleDateFormat;
 
 public class ParamRfidIteration {
+
+    public ParamLogin ConsultarParametrosLogin(Context mContext){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        SQLiteDatabase base = admin.getWritableDatabase();
+        int codigo = 1;
+        ParamLogin paramLogin = null;
+
+        Cursor fila = base.rawQuery("select startdate, user, estado from paramlogin where codigo=" +codigo, null);
+
+        if(fila.moveToFirst()){
+            paramLogin.setStartdate(fila.getString(1));
+            paramLogin.setUsuario(fila.getString(2));
+            paramLogin.setEstado(Integer.parseInt(fila.getString(3)) );
+            paramLogin.setValidseccion((DiferenciaFechas(fila.getString(1)) <121 ));
+        }
+
+        return paramLogin;
+    }
+
+    private long DiferenciaFechas(String fechaUltimoInicioSeccion){
+
+        long minutos = 0;
+
+        Date fechaActual = new Date();
+        Date DfechaActualFormat = null;
+        Date DfechaUltimoInicioSeccion = null;
+        String strDateFormat = "yyyy-MM-dd HH:mm";
+
+        SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
+
+        try{
+            DfechaUltimoInicioSeccion = objSDF.parse(objSDF.format(parseDate(fechaUltimoInicioSeccion)));
+            DfechaActualFormat = objSDF.parse(objSDF.format(fechaActual));
+
+
+            long diff = DfechaUltimoInicioSeccion.getTime() - DfechaActualFormat.getTime();
+
+            long segundos = diff / 1000;
+            minutos = segundos / 60;
+            /*long horas = minutos / 60;
+            long dias = horas / 24;*/
+        }
+        catch (ParseException pe){
+            minutos = 121;
+        }
+
+
+
+        return minutos;
+
+    }
 
     public ParamLectorRfid ConsultarParametros(Context mContext){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
