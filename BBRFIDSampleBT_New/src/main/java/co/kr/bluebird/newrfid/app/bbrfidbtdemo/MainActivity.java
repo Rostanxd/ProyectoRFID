@@ -10,6 +10,7 @@
 
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.EntryGuideCheckFragment;
@@ -23,6 +24,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ShippingWareReadFragm
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryControlFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryParticipantFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TestFragment;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import android.app.Activity;
@@ -744,6 +746,15 @@ public class MainActivity extends Activity {
                     .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                            // logica de estado de cierre de seccion manual...
+                            ParamRfidIteration paramRfidIteration = new ParamRfidIteration(mContext);
+                            ParamLogin paramLogin = new ParamLogin();
+                            paramLogin.setEstado(0);
+                            paramRfidIteration.RegistrarModificarParamLogin(paramLogin, true);
+
                             finish();
                         }
                     })

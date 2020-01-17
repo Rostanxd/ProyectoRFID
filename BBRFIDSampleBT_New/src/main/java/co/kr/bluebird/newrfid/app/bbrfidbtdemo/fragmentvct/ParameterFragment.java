@@ -350,9 +350,6 @@ public class ParameterFragment extends Fragment {
         }*/
     }
 
-    private void cleanControls(){
-
-    }
 
     /*private void verDataInicioSeccion(){
 

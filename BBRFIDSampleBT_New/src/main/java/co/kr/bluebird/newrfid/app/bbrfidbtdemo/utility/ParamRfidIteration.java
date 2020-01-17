@@ -1,5 +1,6 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,7 +18,13 @@ import java.text.SimpleDateFormat;
 
 public class ParamRfidIteration {
 
-    public ParamLogin ConsultarParametrosLogin(Context mContext){
+    private Context mContext;
+
+    public ParamRfidIteration(Context context){
+        mContext = context;
+    }
+
+    public ParamLogin ConsultarParametrosLogin(){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
         SQLiteDatabase base = admin.getWritableDatabase();
         int codigo = 1;
@@ -26,10 +33,12 @@ public class ParamRfidIteration {
         Cursor fila = base.rawQuery("select startdate, user, estado from paramlogin where codigo=" +codigo, null);
 
         if(fila.moveToFirst()){
-            paramLogin.setStartdate(fila.getString(1));
-            paramLogin.setUsuario(fila.getString(2));
-            paramLogin.setEstado(Integer.parseInt(fila.getString(3)) );
-            paramLogin.setValidseccion((DiferenciaFechas(fila.getString(1)) <121 ));
+            //String estado = fila.getString(3);
+            paramLogin = new ParamLogin();
+            paramLogin.setStartdate(fila.getString(0));
+            paramLogin.setUsuario(fila.getString(1));
+            paramLogin.setEstado(Integer.parseInt(fila.getString(2) ));
+            paramLogin.setValidseccion((DiferenciaFechas(fila.getString(0)) <121 ));
         }
 
         return paramLogin;
@@ -68,7 +77,7 @@ public class ParamRfidIteration {
 
     }
 
-    public ParamLectorRfid ConsultarParametros(Context mContext){
+    public ParamLectorRfid ConsultarParametros(){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
         SQLiteDatabase base = admin.getWritableDatabase();
 
@@ -171,4 +180,61 @@ public class ParamRfidIteration {
             return false;
         }
     }
+
+
+
+    public boolean RegistrarModificarParamLogin( ParamLogin paramLogin, boolean isChangeStatus)
+    {
+
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        SQLiteDatabase base = admin.getWritableDatabase();
+
+        int codigo = 1;
+        boolean isIngModExitosa = false;
+
+
+        Cursor fila1 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
+        String startdate = null;
+        if(fila1.moveToFirst()){
+            startdate = fila1.getString(0);
+        }
+
+
+        ContentValues registro = new ContentValues();
+
+        registro.put("codigo", 1);
+        registro.put("estado", paramLogin.getEstado());
+        if(!isChangeStatus){
+            registro.put("startdate", startdate);
+            registro.put("user", paramLogin.getUsuario());
+        }
+
+
+
+
+        Cursor fila = base.rawQuery("select codigo from paramlogin where codigo ="+codigo, null);
+
+        if(!fila.moveToFirst()){
+            // insert
+
+            final long parametro = base.insert("paramlogin", null, registro);
+            if(parametro > 0){
+                isIngModExitosa = true;
+            }
+            base.close();
+        }
+        else
+        {
+            //update
+            int cant = base.update("paramlogin",registro, "codigo="+codigo, null);
+            if(cant  > 0 ){
+                isIngModExitosa = true;
+            }
+            base.close();
+
+        }
+        return isIngModExitosa;
+    }
+
+
 }
