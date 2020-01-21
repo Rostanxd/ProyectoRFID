@@ -660,14 +660,14 @@ public class RfidService {
     }
 
 
-    public SendTags EnvioTagsEpcGeneral(List<String> listEpc)
+    /*public SendTags EnvioTagsEpcGeneral(List<String> listEpc)
     {
         SendTags sendTags = null;
 
-        /*String SOAP_ACTION = "WebSithaction/AWSRFIDTEST.Execute";
+        *//*String SOAP_ACTION = "WebSithaction/AWSRFIDTEST.Execute";
         String METHOD_NAME = "WsRFIDTest.Execute";
         String NAMESPACE = "WebSith";
-        String URL = "http://info.thgye.com.ec/awsrfidtest.aspx";*/
+        String URL = "http://info.thgye.com.ec/awsrfidtest.aspx";*//*
 
         SoapObject Object_sdt_rfid_tag ;
         SoapObject Object_sdt_rfid_tag2 = new SoapObject(NAMESPACE_, "sdt_rfid_tag");
@@ -717,7 +717,7 @@ public class RfidService {
         }
 
         return sendTags;
-    }
+    }*/
 
 
     //Guia de despacho and Envio de mercaderia

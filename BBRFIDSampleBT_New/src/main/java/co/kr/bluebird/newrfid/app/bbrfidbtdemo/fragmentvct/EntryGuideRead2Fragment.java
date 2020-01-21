@@ -143,7 +143,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     private Button mclean_imgbtn;
     private Button mprocesar_imgbtn;
 
-    private ImageButton mnext_imgbtn;
+    /*private ImageButton mnext_imgbtn;*/
 
     private Switch mTurboSwitch;
 
@@ -401,16 +401,17 @@ public class EntryGuideRead2Fragment extends Fragment {
         mclean_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mclean_imgbtn.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialprocesar );
-        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
-        myIcon.setColorFilter(filter);
 
         mprocesar_imgbtn = (Button)v.findViewById(R.id.procesar_imgbtn);
-        mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mprocesar_imgbtn.setOnClickListener(sledListener);
 
-        mnext_imgbtn = (ImageButton)v.findViewById(R.id.next_imgbtn);
-        mnext_imgbtn.setOnClickListener(sledListener);
+        btnProcesarManagement(false);
+        btnProcesarEnabledDisabled(false);
+
+
+
+        /*mnext_imgbtn = (ImageButton)v.findViewById(R.id.next_imgbtn);
+        mnext_imgbtn.setOnClickListener(sledListener);*/
 
 
 
@@ -539,6 +540,37 @@ public class EntryGuideRead2Fragment extends Fragment {
             alert.show();
         }
     };*/
+
+
+   private void btnProcesarManagement(boolean isProcesar ){
+
+       Drawable myIcon = null;
+       ColorFilter filter = null;
+
+       if(isProcesar ){
+           myIcon = getResources().getDrawable( R.drawable.materialprocesar );
+           mprocesar_imgbtn.setText("Procesar");
+       }
+       else {
+           myIcon = getResources().getDrawable( R.drawable.materialcompare18 );
+           mprocesar_imgbtn.setText("Comparar");
+       }
+
+       filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+       myIcon.setColorFilter(filter);
+
+
+       mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+
+   }
+
+   private void btnProcesarEnabledDisabled(boolean isEnabled){
+       mprocesar_imgbtn.setEnabled(isEnabled);
+       mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor( isEnabled? "#1895C0" : "#D5D7D6")));
+
+   }
+
+
 
     private void switchLayout(boolean showList) {
         mLocate = !showList;
@@ -818,9 +850,7 @@ public class EntryGuideRead2Fragment extends Fragment {
                             mclean_imgbtn.setEnabled(false);
                             mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
 
-                            mprocesar_imgbtn.setEnabled(false);
-                            mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-
+                            btnProcesarEnabledDisabled(false);
                             startStopwatch();
                             mInventory = true;
                             enableControl(!mInventory);
@@ -847,8 +877,10 @@ public class EntryGuideRead2Fragment extends Fragment {
                         mclean_imgbtn.setEnabled(true);
                         mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
 
-                        mprocesar_imgbtn.setEnabled(true);
-                        mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                        if(!mCountText.getText().equals("0")){
+                            btnProcesarEnabledDisabled(true);
+                        }
+
                         lectureHasPc = !mIgnorePC;
 
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
@@ -861,39 +893,12 @@ public class EntryGuideRead2Fragment extends Fragment {
                     break;
 
                 case R.id.procesar_imgbtn:
-                    //logica del boton procesar
 
-                    /*ArrLis = mAdapter.listaEtiquetasLeidas();
-
-                    ListEpcRead = new ArrayList<>();
-
-
-                    int tarray =ArrLis.size();
-
-                    int i = 0;
-
-                    while (i < tarray){
-                        ListEpcRead.add(ArrLis.get(i).mUt);
-                        i++;
-                    }
-
-                    //WSparameter_GuiaEntradaDetalle
-                    if(ListEpcRead != null && ListEpcRead.size() > 0){
-                        mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaDetalle);
-                        mlv_tagsNoEnc.setAdapter(null);
-                        executeSoapGuiaEntradaDetalleAsync tarea = new executeSoapGuiaEntradaDetalleAsync();
-                        tarea.execute();
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext, "No hay items que procesar...", Toast.LENGTH_SHORT).show();
-                    }*/
-
-                    DialogProcesar();
+                    btnProcesar_extracted();
 
                     break;
 
-                case R.id.next_imgbtn:
+                /*case R.id.next_imgbtn:
 
                     ListEpcRead = new ArrayList<>();
                     for (ListItem tag:ArrLis) {
@@ -904,11 +909,16 @@ public class EntryGuideRead2Fragment extends Fragment {
                     SoapEnvioTagsGeneralAsync soapEnvioTagsGeneralAsync = new SoapEnvioTagsGeneralAsync();
                     soapEnvioTagsGeneralAsync.execute();
 
-                    break;
+                    break;*/
 
             }
         }
     };
+
+
+    private void btnProcesar_extracted(){
+        DialogCompararProcesar(mprocesar_imgbtn.getText().equals("Comparar"));
+    }
 
     private void DialogCleanControls(){
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
@@ -1146,7 +1156,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
 
-    private  class SoapEnvioTagsGeneralAsync extends AsyncTask<Void, Void, Void> {
+    /*private  class SoapEnvioTagsGeneralAsync extends AsyncTask<Void, Void, Void> {
 
         SendTags response;
         @Override
@@ -1165,7 +1175,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
           Toast.makeText(mContext, response.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     private void LlenarGrid(EGDetailResponse detailResponse){
 
@@ -2077,6 +2087,7 @@ public class EntryGuideRead2Fragment extends Fragment {
                                 ret = mReader.RF_PerformInventory(mIsTurbo, mMask, mIgnorePC);
                             //ret = mReader.RF_READ(SDConsts.RFMemType.EPC, 1, 7, "00000000", false);
                             if (ret == SDConsts.RFResult.SUCCESS) {
+                                btnProcesarEnabledDisabled(false);
                                 startStopwatch();
                                 mInventory = true;
                                 enableControl(!mInventory);
@@ -2103,6 +2114,12 @@ public class EntryGuideRead2Fragment extends Fragment {
                         if (mReader.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
                             mInventory = false;
                             enableControl(!mInventory);
+
+                            btnProcesarManagement(false);
+
+                            if(!mCountText.getText().equals("0")){
+                                btnProcesarEnabledDisabled(true);
+                            }
                         }
                         lectureHasPc = !mIgnorePC;
                         pauseStopwatch();
@@ -2400,35 +2417,20 @@ public class EntryGuideRead2Fragment extends Fragment {
     }
 
     // Dialog
-    private void DialogProcesar(){
+    private void DialogCompararProcesar(boolean isCompare){
+        String alertMsj = "Se va a "+ (isCompare ? "Comparar" : "Procesar")+" la Guia de Entrada";
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage("Esta seguro procesar la Guia de Entrada...")
+        alerta.setMessage(alertMsj)
                 .setCancelable(false)
                 .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ArrLis = mAdapter.listaEtiquetasLeidas();
 
-                        ListEpcRead = new ArrayList<>();
-                        int tarray =ArrLis.size();
-
-                        int j = 0;
-
-                        while (j < tarray){
-                            ListEpcRead.add(ArrLis.get(j).mUt);
-                            j++;
+                        if(isCompare){
+                            EntryGuideCompare();
                         }
-
-                        //WSparameter_GuiaEntradaDetalle
-                        if(ListEpcRead != null && ListEpcRead.size() > 0){
-                            mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaDetalle);
-                            mlv_tagsNoEnc.setAdapter(null);
-                            executeSoapGuiaEntradaDetalleAsync tarea = new executeSoapGuiaEntradaDetalleAsync();
-                            tarea.execute();
-                        }
-                        else
-                        {
-                            Toast.makeText(mContext, "No hay items que procesar...", Toast.LENGTH_SHORT).show();
+                        else {
+                            EntryGuideProcesar();
                         }
                     }
                 })
@@ -2439,6 +2441,32 @@ public class EntryGuideRead2Fragment extends Fragment {
                     }
                 });
         alerta.show();
+    }
+
+
+    private void EntryGuideCompare(){
+        getListEpcsRead();
+        if(ListEpcRead != null && ListEpcRead.size() > 0){
+            mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaDetalle);
+            mlv_tagsNoEnc.setAdapter(null);
+            executeSoapGuiaEntradaDetalleAsync tarea = new executeSoapGuiaEntradaDetalleAsync();
+            tarea.execute();
+        }
+        else {
+            Toast.makeText(mContext,"No hay Etiquetas con que comparar...",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+    private void EntryGuideProcesar(){
+
+    }
+    private void getListEpcsRead()
+    {
+        ArrLis = mAdapter.listaEtiquetasLeidas();
+        ListEpcRead = new ArrayList<>();
+        for (ListItem item : ArrLis){
+            ListEpcRead.add(item.mUt);
+        }
     }
 
     private void DialogPowerState() {
