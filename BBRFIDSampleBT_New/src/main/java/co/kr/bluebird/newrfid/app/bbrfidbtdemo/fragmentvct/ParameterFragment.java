@@ -229,6 +229,7 @@ public class ParameterFragment extends Fragment {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
         SQLiteDatabase base = admin.getWritableDatabase();
 
+
         String localHost = medLocalHost.getText().toString();
         String localPort = medLocalPort.getText().toString();
         String extHost =  medExtHost.getText().toString();
@@ -287,16 +288,20 @@ public class ParameterFragment extends Fragment {
             // insert
 
             final long parametro = base.insert("parameterservice", null, registro);
-            base.close();
+
 
             if(parametro > 0){
-                Toast.makeText(mContext,"Registro correcto: "+ parametro, Toast.LENGTH_LONG);
+                RegistrarPrimerInicioSession(base);
+                Toast.makeText(mContext,"Registro correcto: "+ parametro, Toast.LENGTH_LONG).show();
                 CleanControls();
                 LLenarCampos();
             }
             else {
                 Toast.makeText(mContext,"Registro Incorrecto", Toast.LENGTH_LONG);
             }
+            base.close();
+
+            //verDataInicioSeccion();
         }
         else
         {
@@ -317,8 +322,44 @@ public class ParameterFragment extends Fragment {
 
     }
 
-    private void cleanControls(){
+    public void RegistrarPrimerInicioSession(SQLiteDatabase sqlbase){
+        ContentValues rowLogin = new ContentValues();
 
+        Cursor fila1 = sqlbase.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
+        String startdate = null;
+        if(fila1.moveToFirst()){
+            startdate = fila1.getString(0);
+        }
+
+        rowLogin.put("codigo",1 );
+        rowLogin.put("startdate",startdate );
+        rowLogin.put("user","xxxxx" );
+        rowLogin.put("estado",0 );
+
+        sqlbase.rawQuery("select codigo from paramlogin where codigo ="+1, null);
+
+        //Cursor fila = sqlbase.rawQuery("select codigo from paramlogin where codigo ="+1, null);
+
+        /*if(!fila.moveToFirst()){
+            // insert
+            final long paramet = sqlbase.insert("paramlogin", null, rowLogin);
+            if(paramet > 0){
+                Toast.makeText(mContext,"Login ingresado", Toast.LENGTH_LONG).show();
+            }
+
+        }*/
     }
+
+
+    /*private void verDataInicioSeccion(){
+
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        SQLiteDatabase sqlbase = admin.getWritableDatabase();
+        Cursor logindata = sqlbase.rawQuery("select codigo,startdate,user,estado  from paramlogin where codigo ="+1, null);
+
+        if(logindata.moveToFirst()){
+            Toast.makeText(mContext, "Fecha de inicio de seccion: " + logindata.getString(1), Toast.LENGTH_LONG).show();
+        }
+    }*/
 
 }

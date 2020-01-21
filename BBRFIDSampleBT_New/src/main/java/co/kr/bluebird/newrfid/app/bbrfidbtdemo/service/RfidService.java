@@ -74,8 +74,8 @@ public class RfidService {
 
     public RfidService(Context mContext_)
     {
-        paramRfidIteration = new ParamRfidIteration();
-        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros(mContext_);
+        paramRfidIteration = new ParamRfidIteration(mContext_);
+        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros();
         globalContext = mContext_;
     }
 
@@ -949,9 +949,9 @@ public class RfidService {
 
         SoapObject soNivel1 = new SoapObject(NAMESPACE_, METHOD_NAME_);
 
-        paramRfidIteration = new ParamRfidIteration();
+        paramRfidIteration = new ParamRfidIteration(mContext);
 
-        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros(mContext);
+        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros();
         String codBodega = paramLectorRfid.getCodbodega();
 
         soNivel1.addProperty("Bodcodigo", codBodega);
@@ -996,9 +996,9 @@ public class RfidService {
 
         SoapObject soNivel2 = new SoapObject(NAMESPACE, "nivel2");
 
-        paramRfidIteration = new ParamRfidIteration();
+        paramRfidIteration = new ParamRfidIteration(mContext);
 
-        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros(mContext);
+        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros();
         String codBodega = paramLectorRfid.getCodbodega();
 
 
@@ -1074,9 +1074,9 @@ public class RfidService {
 
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
 
-        paramRfidIteration = new ParamRfidIteration();
+        paramRfidIteration = new ParamRfidIteration(mContext);
 
-        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros(mContext);
+        ParamLectorRfid paramLectorRfid =  paramRfidIteration.ConsultarParametros();
         String codBodega = paramLectorRfid.getCodbodega();
 
         if(isNotExistQr && dataNoQr != null )

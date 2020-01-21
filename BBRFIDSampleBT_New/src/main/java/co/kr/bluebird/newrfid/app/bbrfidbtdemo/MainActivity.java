@@ -10,6 +10,7 @@
 
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.EntryGuideCheckFragment;
@@ -23,6 +24,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ShippingWareReadFragm
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryControlFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryParticipantFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TestFragment;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import android.app.Activity;
@@ -54,6 +56,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -110,12 +113,13 @@ public class MainActivity extends Activity {
     private TakingInventoryControlFragment mTakingInventoryControlFragment;
     private TakingInventoryParticipantFragment mTakingInventoryParticipantFragment;
 
-    private LinearLayout mUILayout;
+    private LinearLayout mUILayout, mlayouttvParam;
+    private TextView mtvParam1;
 
     private Fragment mCurrentFragment;
 
-    private boolean isAdmin;
-    private CardView mcvParametrizador;
+    private boolean isAdmin, isExistParametrizacion;
+    private CardView mcvParametrizador,mcvConectividad,mcvConfiguracion,mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
     /*private ImageButton mConnectButton;
     private ImageButton mSDFunctionButton;
     private ImageButton mRFConfigButton;
@@ -151,8 +155,42 @@ public class MainActivity extends Activity {
 
         mContext = this;
 
+        mlayouttvParam = (LinearLayout) findViewById(R.id.layouttvParam);
+        mtvParam1 = (TextView) findViewById(R.id.tvParam1);
+
         mcvParametrizador  = (CardView)findViewById(R.id.cvParametrizador);
+        mcvConectividad = (CardView)findViewById(R.id.cvConectividad);
+        mcvConfiguracion  = (CardView)findViewById(R.id.cvConfiguracion);
+        mcvGuiaEntrada = (CardView)findViewById(R.id.cvGuiaEntrada);
+        mcvGuiaDespacho = (CardView)findViewById(R.id.cvGuiaDespacho);
+        mcvEnvioMercaderia = (CardView)findViewById(R.id.cvEnvioMercaderia);
+        mcvRecepcionMercaderia = (CardView)findViewById(R.id.cvRecepcionMercaderia);
+        mcvInventariotienda = (CardView)findViewById(R.id.cvInventariotienda);
+        mcvReposicion = (CardView)findViewById(R.id.cvReposicion);
+        mcvTomaInventarioControl = (CardView)findViewById(R.id.cvTomaInventarioControl);
+        mcvTomaInventarioParticipante = (CardView)findViewById(R.id.cvTomaInventarioParticipante);
+
+
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        isExistParametrizacion = getIntent().getBooleanExtra("isExistParametrizacion", false);
+
+
+
+        if(!isExistParametrizacion){
+            mlayouttvParam.setVisibility(View.GONE);
+            mtvParam1.setVisibility(View.VISIBLE);
+            mcvConectividad.setVisibility(View.GONE);
+            mcvConfiguracion.setVisibility(View.GONE);
+            mcvGuiaEntrada.setVisibility(View.GONE);
+            mcvGuiaDespacho.setVisibility(View.GONE);
+            mcvEnvioMercaderia.setVisibility(View.GONE);
+            mcvRecepcionMercaderia.setVisibility(View.GONE);
+            mcvInventariotienda.setVisibility(View.GONE);
+            mcvReposicion.setVisibility(View.GONE);
+            mcvTomaInventarioControl.setVisibility(View.GONE);
+            mcvTomaInventarioParticipante.setVisibility(View.GONE);
+        }
+
 
         if(isAdmin){
             mcvParametrizador.setVisibility(View.VISIBLE);
@@ -708,6 +746,15 @@ public class MainActivity extends Activity {
                     .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                            // logica de estado de cierre de seccion manual...
+                            ParamRfidIteration paramRfidIteration = new ParamRfidIteration(mContext);
+                            ParamLogin paramLogin = new ParamLogin();
+                            paramLogin.setEstado(0);
+                            paramRfidIteration.RegistrarModificarParamLogin(paramLogin, true);
+
                             finish();
                         }
                     })
