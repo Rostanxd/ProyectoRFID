@@ -918,7 +918,6 @@
     </string-array>
 
 
-
     <string-array name="WSparameter_InventarioPorTiendaInfo">
         <item>WebSithaction/AWSRFIDITEMINFO.Execute</item>
         <item>WsRfidItemInfo.Execute</item>

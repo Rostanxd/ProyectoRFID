@@ -126,8 +126,8 @@ public class ShippingWareGenerateFragment extends Fragment {
         first = true;
         rfidService = new RfidService(mContext);
 
-        paramRfidIteration = new ParamRfidIteration();
-        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros(mContext);
+        paramRfidIteration = new ParamRfidIteration(mContext);
+        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros();
 
         mLayoutBodAlmacenamiento = (LinearLayout)  v.findViewById(R.id.LayoutBodAlmacenamiento);
 
