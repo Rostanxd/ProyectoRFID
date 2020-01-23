@@ -6,6 +6,15 @@ public class EGDetailResponse {
 
     public DataSourceDto status;
     public List<EGTagsResponseItem> items;
+    public boolean isProcesable;
+
+    public boolean isProcesable() {
+        return isProcesable;
+    }
+
+    public void setProcesable(boolean procesable) {
+        isProcesable = procesable;
+    }
 
     public DataSourceDto getStatus() {
         return status;

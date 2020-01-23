@@ -271,42 +271,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="#1895C0"
-                        android:text="procesar"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp" />
-                    <!--<ImageButton
-                        android:id="@+id/inven_imgbutton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/iniciar" />-->
 
-                    <!--  <ImageButton
-                          android:id="@+id/stop_inven_imgbutton"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                          android:src="@drawable/detener" />-->
 
                     <!--<ImageButton
-                        android:id="@+id/clean_imgbtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/limpiar" />-->
-                    <!-- <ImageButton
-                         android:id="@+id/procesar_imgbtn"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="1"
-                         android:src="@drawable/ejecutar" />-->
-
-                    <ImageButton
                         android:id="@+id/next_imgbtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:src="@drawable/next" />
+                        android:src="@drawable/next" />-->
 
                     <Button
                         android:id="@+id/clear_button"

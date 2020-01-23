@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="endpointlocal">Endpoint Local</string>
+    <string name="endpointext">Endpoint externo</string>
     <string name="PhostLocal">Host Local</string>
     <string name="PportLocal">Puerto Local</string>
     <string name="PhostExt">Host Externo</string>
@@ -785,6 +787,16 @@
         <item>WsRfidGuiaEntradaDetalle.Execute</item>
         <item>WebSith</item>
         <item>/awsrfidguiaentradadetalle.aspx</item>
+
+    </string-array>
+
+
+    <string-array name="WSparameter_GuiaEntradaProcesar">
+
+        <item>WebSithaction/AWSRFIDGUIAENTRADAPROCESAR.Execute</item>
+        <item>WsRfidGuiaEntradaProcesar.Execute</item>
+        <item>WebSith</item>
+        <item>/awsrfidguiaentradaprocesar.aspx</item>
 
     </string-array>
 

@@ -23,6 +23,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.EntryGuide;
 /*import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide;*/
@@ -53,6 +55,7 @@ public class EntryGuideCheckFragment extends Fragment {
     private boolean first ;
 
     private String[] mWSParameters;
+    private String NoOrdenCompra = null;
 
 
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
@@ -73,6 +76,7 @@ public class EntryGuideCheckFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.entryguidecheck_frag, container, false);
 
+
         mContext = inflater.getContext();
         rfidService = new RfidService(mContext);
         mOrdenCompraGR = (EditText)v.findViewById(R.id.et_nGuiaEntrada);
@@ -81,22 +85,15 @@ public class EntryGuideCheckFragment extends Fragment {
         mtvCantidadOCGR = (TextView)v.findViewById(R.id.tvCantidadOCGR);
         //mtvCantidadTotalval = (TextView)v.findViewById(R.id.tvCantidadTotalval);
         mlv_entriesGuide = (ListView)v.findViewById(R.id.lv_entriesGuide);
+
+        NoOrdenCompra = getArguments() != null ? getArguments().getString("NoOCompra") : "0";
+
         first = true;
         btnCargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //CleanTablerow();
-                ResposeEG = null;
-                cantGuide = 0;
-                numeroOrdenCompra = mOrdenCompraGR.getText().toString();
-                if(!numeroOrdenCompra.trim().equals("")){
-                    mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
-                    executeSoapAsync tarea = new executeSoapAsync();
-                    tarea.execute();
-                }
-                else {
-                    Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
-                }
+                btnCargar_extracted();
 
             }
         });
@@ -104,7 +101,34 @@ public class EntryGuideCheckFragment extends Fragment {
         return  v;
     }
 
+    @Override
+    public void onStart() {
 
+        super.onStart();
+
+        if(!mOrdenCompraGR.getText().toString().trim().equals("") || (NoOrdenCompra != null && !NoOrdenCompra.equals("0") )){
+
+            if(NoOrdenCompra != null && !NoOrdenCompra.equals("0")){
+                mOrdenCompraGR.setText(NoOrdenCompra);
+            }
+            btnCargar_extracted();
+        }
+
+    }
+
+    private void btnCargar_extracted(){
+        ResposeEG = null;
+        cantGuide = 0;
+        numeroOrdenCompra = mOrdenCompraGR.getText().toString();
+        if(!numeroOrdenCompra.trim().equals("")){
+            mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
+            executeSoapAsync tarea = new executeSoapAsync();
+            tarea.execute();
+        }
+        else {
+            Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void CleanControls(){
         mOrdenCompraGR.setText("");
@@ -165,6 +189,7 @@ public class EntryGuideCheckFragment extends Fragment {
                                         args.putString("NoGuia", NoGuia);
                                         args.putString("NoOCompra",NoOCompra);
                                         args.putString("NoGuiaCant", NoGuiaCant);
+
                                         mEntryGuideReadFragment.setArguments(args);
 
                                         FragmentTransaction ft = getFragmentManager().beginTransaction();

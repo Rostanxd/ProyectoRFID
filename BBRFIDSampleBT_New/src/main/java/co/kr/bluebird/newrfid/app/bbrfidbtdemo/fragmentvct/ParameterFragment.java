@@ -1,8 +1,6 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct;
 
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,14 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.util.Calendar;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
@@ -162,9 +155,9 @@ public class ParameterFragment extends Fragment {
 
     private void InicialiarAtributos(View v)
     {
-        medLocalHost = (EditText)v.findViewById(R.id.edLocalHost);
+        medLocalHost = (EditText)v.findViewById(R.id.edEndPointLocal);
         medLocalPort= (EditText)v.findViewById(R.id.edLocalPort);
-        medExtHost= (EditText)v.findViewById(R.id.edExtHost);
+        medExtHost= (EditText)v.findViewById(R.id.edEndPointExt);
         medExtPort= (EditText)v.findViewById(R.id.edExtPort);
         medCodBodega= (EditText)v.findViewById(R.id.edCodBodega);
         medDesBodega= (EditText)v.findViewById(R.id.edDesBodega);

@@ -191,7 +191,7 @@ public class LoginActivity extends Activity {
 
     private boolean VerificarCamposParametrizacionLlenos(){
 
-        return ( paramLectorRfid_ != null && !paramLectorRfid_.getHost().trim().equals("") && !paramLectorRfid_.getPort().trim().equals("") && !paramLectorRfid_.getCodbodega().trim().equals("") && !paramLectorRfid_.getDescBodega().trim().equals("") && !paramLectorRfid_.getDispositivoid().trim().equals(""));
+        return ( paramLectorRfid_ != null && !paramLectorRfid_.getEndpoint().trim().equals("")  && !paramLectorRfid_.getCodbodega().trim().equals("") && !paramLectorRfid_.getDescBodega().trim().equals("") && !paramLectorRfid_.getDispositivoid().trim().equals(""));
     }
 
     private void EnabledDisabledBtnLogin(boolean isEnabled){

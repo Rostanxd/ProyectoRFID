@@ -32,7 +32,7 @@
                     android:text="@string/PhostLocal" />
 
                 <EditText
-                    android:id="@+id/edLocalHost"
+                    android:id="@+id/edEndPointLocal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -75,7 +75,7 @@
                     android:text="@string/PhostExt" />
 
                 <EditText
-                    android:id="@+id/edExtHost"
+                    android:id="@+id/edEndPointExt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

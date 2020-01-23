@@ -13,6 +13,15 @@ public class EGTagsResponseItem implements Serializable {
     public String itemGrupo5;
     public int CantidadLeidos;
     public int CantidadNoLeidos;
+    public int CantidadDoc;
+
+    public int getCantidadDoc() {
+        return CantidadDoc;
+    }
+
+    public void setCantidadDoc(int cantidadDoc) {
+        CantidadDoc = cantidadDoc;
+    }
 
     public List<String> DataLeido;
     public List<String> DataNoLeido;
