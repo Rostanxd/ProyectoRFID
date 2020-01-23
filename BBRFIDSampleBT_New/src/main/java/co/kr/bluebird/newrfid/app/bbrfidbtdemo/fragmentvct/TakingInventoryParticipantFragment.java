@@ -1763,14 +1763,14 @@ public class TakingInventoryParticipantFragment extends Fragment {
     private  class exWSInventarioProcesarAsync extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog progressDialog;
-        DataSourceDtoEx dtoEx;
+        DataSourceDto dtoResponse;
         String mConteo = mspinnerConteoIP.getSelectedItem().toString();
         String codUbicacion = spinnerMap.get(mspinnerUbicacionIP.getSelectedItemPosition());
         @Override
         protected Void doInBackground(Void... voids) {
 
             //ArrayList<String> epcsLeidos = mAdapter.listTagReadEpc();
-            dtoEx = rfidService.WSTomaInventarioProcesar(mAdapter.listTagReadEpc(),mConteo,codUbicacion);
+            dtoResponse = rfidService.WSTomaInventarioProcesar2(mAdapter.listTagReadEpc(),mConteo,codUbicacion);
             return null;
         }
 
@@ -1778,18 +1778,14 @@ public class TakingInventoryParticipantFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
             progressDialog.cancel();
-           if(dtoEx != null && dtoEx.getHandlerException().isExceptionExist()){
-               Toast.makeText(mContext, "Hubo un Error: "+ dtoEx.getHandlerException().getExceptionMessage(), Toast.LENGTH_SHORT).show();
-           }
-           else {
-               if(dtoEx != null && dtoEx.getInformationDto() != null && dtoEx.getInformationDto().getCodigo().equals("00")){
-                   //Toast.makeText(mContext, "El proceso fue exitoso", Toast.LENGTH_SHORT).show();
-                   InvocarAlert("Se ha procesado el Invetario Correctamente");
-               }
-               else {
-                   Toast.makeText(mContext, "El proceso fue erroneo: "+ dtoEx.getInformationDto().getDescripcion(), Toast.LENGTH_SHORT).show();
-               }
-           }
+
+            if(dtoResponse != null && dtoResponse.getCodigo() != null && dtoResponse.getCodigo().equals("00")){
+                InvocarAlert("Se ha procesado el Invetario Correctamente");
+            }
+            else {
+                Toast.makeText(mContext,  dtoResponse.getDescripcion(), Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         @Override
