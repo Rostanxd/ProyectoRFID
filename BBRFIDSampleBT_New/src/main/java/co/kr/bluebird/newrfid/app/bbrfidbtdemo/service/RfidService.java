@@ -41,6 +41,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginAcceso;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginProgram;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReceiveWareDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Replenishment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentSale;
@@ -54,10 +55,11 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 
 public class RfidService {
 
-    private String gUsuario = "vplaza";
+    private String gUsuario ;
     private ParamRfidIteration paramRfidIteration;
     private ParamLectorRfid paramLectorRfid_;
     private Context globalContext;
+    private ParamLogin paramLogin_;
 
     private String TriggerException;
 
@@ -76,7 +78,10 @@ public class RfidService {
     {
         paramRfidIteration = new ParamRfidIteration(mContext_);
         paramLectorRfid_ =  paramRfidIteration.ConsultarParametros();
+        paramLogin_ = paramRfidIteration.ConsultarParametrosLogin();
         globalContext = mContext_;
+
+        gUsuario = paramLogin_ != null ? paramLogin_.getUsuario() :"";
     }
 
     /*public RfidService(Context mContext_, String [] WSConsumo)
@@ -126,7 +131,7 @@ public class RfidService {
 
             soapEnvelope.setOutputSoapObject(Request);
 
-            HttpTransportSE transportSE = new HttpTransportSE(paramLectorRfid_.getHostPort()+URL_);
+            HttpTransportSE transportSE = new HttpTransportSE(paramLectorRfid_.getEndpoint()+URL_);
             transportSE.debug = true;
 
 
@@ -173,6 +178,34 @@ public class RfidService {
         return ResponseGuide;
     }
 
+    public DataSourceDto WSGuiaEntradaProcesar(String numGuia){
+
+        DataSourceDto sourceDto = null;
+        SoapObject request = new SoapObject(NAMESPACE_,METHOD_NAME_ );
+        request.addProperty("Guianumero", numGuia);
+        request.addProperty("Usrcodigo", paramLogin_ != null ? paramLogin_.getUsuario(): "");
+
+
+        SoapObject resultRequestSOAP = CallService(request,SOAP_ACTION_,  paramLectorRfid_.getEndpoint()+URL_,true, false);
+
+
+        if(TriggerException == null && resultRequestSOAP != null && resultRequestSOAP.hasProperty("estado")){
+
+            SoapObject soEstado = (SoapObject) resultRequestSOAP.getProperty("estado");
+
+            String codigo = soEstado.getPropertyAsString("codigo");
+            String mensaje = soEstado.getPropertyAsString("mensaje");
+
+            sourceDto = new DataSourceDto(codigo, mensaje, null);
+
+        }
+        else {
+            sourceDto = new DataSourceDto("9999", TriggerException, null);
+        }
+
+        return sourceDto;
+
+    }
 
     public EGDetailResponse GuiaEntradaDetalleService2(String numGuia, List<String> ListEpc)
     {
@@ -200,7 +233,7 @@ public class RfidService {
         SOPrincipal.addProperty("Guianumero", numGuia);
         SOPrincipal.addProperty("Sdtrfidetiquetasrequest",SOTagRequest);
 
-        SoapObject resultRequestSOAP = CallService(SOPrincipal,SOAP_ACTION_,  paramLectorRfid_.getHostPort()+URL_,true, false);
+        SoapObject resultRequestSOAP = CallService(SOPrincipal,SOAP_ACTION_,  paramLectorRfid_.getEndpoint()+URL_,true, false);
 
 
         DataSourceDto geEstado = null;
@@ -210,10 +243,12 @@ public class RfidService {
 
         //SoapObject TagRespItem = null;
 
-        String [] ItemValue =  new String[8];
+        String [] ItemValue =  new String[9];
 
         List<String> _tagNoRead;
         List<String> _tagRead;
+
+        boolean GuiaEntradaProcesable = true;
 
         if(TriggerException == null)
         {
@@ -238,6 +273,8 @@ public class RfidService {
                         ItemValue[5] = TagRespItem.getPropertyAsString("itemGrupo5");
                         ItemValue[6] = TagRespItem.getPropertyAsString("CantidadLeidos");
                         ItemValue[7] = TagRespItem.getPropertyAsString("CantidadNoLeidos");
+                        ItemValue[8] = TagRespItem.getPropertyAsString("CantidadDoc");
+
 
                         _tagNoRead = new ArrayList<String>();
                         _tagRead = new ArrayList<String>();
@@ -326,9 +363,14 @@ public class RfidService {
                             }
                         }
 
-
-
                         egTagsResponseItem = new EGTagsResponseItem(ItemValue[0],ItemValue[1],ItemValue[2],ItemValue[3],ItemValue[4],ItemValue[5], Integer.valueOf(ItemValue[6]) ,Integer.valueOf(ItemValue[7]),_tagRead,_tagNoRead);
+
+                        egTagsResponseItem.setCantidadDoc(Integer.valueOf(ItemValue[8]));
+
+                        // if(cant_leidos != cant_documentado)
+                        if(Integer.valueOf(ItemValue[6]) != Integer.valueOf(ItemValue[8])){
+                            GuiaEntradaProcesable = false;
+                        }
                         egTagsResponseItemList.add(egTagsResponseItem);
                     }
                     egDetailResponse.setItems(egTagsResponseItemList);
@@ -343,6 +385,7 @@ public class RfidService {
             egDetailResponse.setStatus(new DataSourceDto("9999", TriggerException, null));
         }
 
+        egDetailResponse.setProcesable(GuiaEntradaProcesable);
 
         return  egDetailResponse;
     }
@@ -496,7 +539,7 @@ public class RfidService {
 
 
 
-        SoapObject resultRequestSOAP = CallService(SOAP_ACTION_,METHOD_NAME_,NAMESPACE_,paramLectorRfid_.getHostPort()+URL_,propiedades, null, true, false);
+        SoapObject resultRequestSOAP = CallService(SOAP_ACTION_,METHOD_NAME_,NAMESPACE_,paramLectorRfid_.getEndpoint()+URL_,propiedades, null, true, false);
 
         DespatchGuide despatchGuide = null;
         if(TriggerException == null){
@@ -557,7 +600,7 @@ public class RfidService {
 
 
         propiedades.put("Bodcodigo", paramLectorRfid_.getCodbodega());
-        SoapObject resultRequestSOAP = CallService(SOAP_ACTION_,METHOD_NAME_,NAMESPACE_,paramLectorRfid_.getHostPort()+URL_,propiedades, null, true, false);
+        SoapObject resultRequestSOAP = CallService(SOAP_ACTION_,METHOD_NAME_,NAMESPACE_,paramLectorRfid_.getEndpoint()+URL_,propiedades, null, true, false);
 
         if(TriggerException == null){
             spinnerDto = ResponseToGenericSpinnerDto(resultRequestSOAP, "tipos","nombre",false);
@@ -660,66 +703,6 @@ public class RfidService {
     }
 
 
-    /*public SendTags EnvioTagsEpcGeneral(List<String> listEpc)
-    {
-        SendTags sendTags = null;
-
-        *//*String SOAP_ACTION = "WebSithaction/AWSRFIDTEST.Execute";
-        String METHOD_NAME = "WsRFIDTest.Execute";
-        String NAMESPACE = "WebSith";
-        String URL = "http://info.thgye.com.ec/awsrfidtest.aspx";*//*
-
-        SoapObject Object_sdt_rfid_tag ;
-        SoapObject Object_sdt_rfid_tag2 = new SoapObject(NAMESPACE_, "sdt_rfid_tag");
-
-        for(String epc: listEpc) {
-
-            Object_sdt_rfid_tag = new SoapObject(NAMESPACE_, "sdt_rfid_tag");
-            Object_sdt_rfid_tag.addProperty("epc", epc);
-            Object_sdt_rfid_tag.addProperty("tid", "");
-            Object_sdt_rfid_tag.addProperty("user", "");
-            Object_sdt_rfid_tag.addProperty("reserved", "");
-
-
-            Object_sdt_rfid_tag2.addProperty("sdt_rfid_rtag",Object_sdt_rfid_tag);
-
-        }
-
-        Map<String, SoapObject> propiedades = new HashMap<>();
-        propiedades.put("Sdt_rfid_tags",Object_sdt_rfid_tag2);
-
-        SoapObject resultRequestSOAP = CallService(SOAP_ACTION_,METHOD_NAME_,NAMESPACE_,paramLectorRfid_.getHostPort()+URL_,null,propiedades,false, true);
-
-        String  tagsReceiver = null;
-        String msj = null;
-        String SOState = null;
-        try {
-
-            SoapPrimitive SOData = null;
-            SOState =  ((SoapObject) resultRequestSOAP.getProperty("state")).getPropertyAsString("status") ;
-            String TagsRespose = SOData+"";
-
-            if (SOState.equals("00")){
-
-                SOData =(SoapPrimitive) ((SoapObject)resultRequestSOAP.getProperty("data")).getProperty("tags_quantity");
-                tagsReceiver = SOData+"";
-                msj = "El llamado al servicio fue Exitoso, Tags Recibidos"+ tagsReceiver;
-            }
-            else {
-                msj = "El llamado al servicio fue Fallido";
-            }
-
-        } catch (Exception ex){
-            msj = "Ocurrio una excepcion: "+ex.getMessage();
-        }
-        finally {
-            sendTags = new SendTags(SOState,msj, Integer.valueOf(tagsReceiver) );
-        }
-
-        return sendTags;
-    }*/
-
-
     //Guia de despacho and Envio de mercaderia
 
     public EGDetailResponse EPCHomologacionService(ArrayList<String> ListEpc)
@@ -729,7 +712,7 @@ public class RfidService {
         String METHOD_NAME = "WsRfidEpcHomologacion.Execute";
         /*String NAMESPACE = "http://tempuri.org/";*/
         String NAMESPACE = "WebSith";
-        String URL =  paramLectorRfid_.getHostPort()+"/aWsRfidEpcHomologacion.aspx";
+        String URL =  paramLectorRfid_.getEndpoint()+"/aWsRfidEpcHomologacion.aspx";
 
         SoapObject SOepc ;
         SoapObject SOtagEPC = new SoapObject(NAMESPACE, "tag_read");
@@ -894,7 +877,7 @@ public class RfidService {
         soNivel1.addProperty("Sdtrfidetiquetasresponse", soNivel2);
         soNivel1.addProperty("Discodigo", paramLectorRfid_.getDispositivoid());
 
-        SoapObject resultRequestSOAP = CallService(soNivel1,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true, false);
+        SoapObject resultRequestSOAP = CallService(soNivel1,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true, false);
 
         DataSourceDto geEstado = null;
 
@@ -958,7 +941,7 @@ public class RfidService {
         soNivel1.addProperty("Motcodigo", pMotivo);
         soNivel1.addProperty("Trnnota", pNota);
 
-        SoapObject resultRequestSOAP = ArmarRequest(mContext, soNivel1, SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,NAMESPACE_,items,false);
+        SoapObject resultRequestSOAP = ArmarRequest(mContext, soNivel1, SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,NAMESPACE_,items,false);
 
         DataSourceDto geEstado = null;
         String lSecuenciaGuia = null;
@@ -1052,7 +1035,7 @@ public class RfidService {
             soNivel2.addProperty("SdtRfidEtiquetasResponse.SdtRfidEtiquetasResponseItem", soNivel3);
         }
         soNivel1.addProperty("Sdtrfidetiquetasresponse", soNivel2);
-        soNivel1.addProperty("Usrcodigo", "vplaza");
+        soNivel1.addProperty("Usrcodigo", gUsuario);
 
         SoapObject resultRequestSOAP = CallService(soNivel1,SOAP_ACTION,URL,true, false);
 
@@ -1095,7 +1078,7 @@ public class RfidService {
 
 
 
-        SoapObject resultRequestSOAP = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false);
+        SoapObject resultRequestSOAP = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
 
         DataSourceDto geEstado = null;
         String lDocOrigen = null, lDocDestino = null, lMotivo = null;
@@ -1187,7 +1170,6 @@ public class RfidService {
     public EGDetailResponse WSRecepcionMercaderiaCompara(String Docorigen, List<String> epcs)
     {
         EGDetailResponse detailResponse = null;
-        String host = paramLectorRfid_.getHostPort();
 
         /*String SOAP_ACTION = "WebSithaction/AWSRFIDRECEPCIONCOMPARA.Execute";
         String METHOD_NAME = "WsRfidRecepcionCompara.Execute";
@@ -1214,7 +1196,7 @@ public class RfidService {
         soNivel2.addProperty("etiquetas",soNivel3);
         soNivel1.addProperty("Sdtrfidetiquetasrequest", soNivel2);
 
-        SoapObject resultRequestSOAP = CallService(soNivel1,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false);
+        SoapObject resultRequestSOAP = CallService(soNivel1,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
 
         if(TriggerException == null){
             detailResponse = ResponseRWtoObject(resultRequestSOAP);
@@ -1399,7 +1381,6 @@ public class RfidService {
     {
         DataSourceDto dtoResponse = null;
         String codigo = null, mensaje = null;
-        String host = paramLectorRfid_.getHostPort();
 
         /*String SOAP_ACTION = "WebSithaction/AWSRFIDRECEPCIONPROCESAR.Execute";
         String METHOD_NAME = "WsRfidRecepcionProcesar.Execute";
@@ -1410,7 +1391,7 @@ public class RfidService {
         soNivel1.addProperty("Docorigen", pDocOrigen);
         soNivel1.addProperty("Nota", pNota);
 
-        SoapObject resultRequestSOAP =ArmarRequest(globalContext, soNivel1, SOAP_ACTION_, paramLectorRfid_.getHostPort()+URL_, NAMESPACE_, responseItems,true);
+        SoapObject resultRequestSOAP =ArmarRequest(globalContext, soNivel1, SOAP_ACTION_, paramLectorRfid_.getEndpoint()+URL_, NAMESPACE_, responseItems,true);
 
         if(resultRequestSOAP.hasProperty("estado")){
             SoapObject soEstado = (SoapObject) resultRequestSOAP.getProperty("estado");
@@ -1430,7 +1411,7 @@ public class RfidService {
 
     public GenericSpinnerDto WSConteo(){
         //http://info.thgye.com.ec/awsrfidconteos.aspx
-        String host = paramLectorRfid_.getHostPort();
+
         DataSourceDto dtoEstado = null;
         DataSourceDto dtoData = null;
         List<DataSourceDto> dtoList = null;
@@ -1438,7 +1419,7 @@ public class RfidService {
 
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
         soRequest.addProperty("Bodcodigo",paramLectorRfid_.codbodega);
-        SoapObject resultRequestSOAP = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false);
+        SoapObject resultRequestSOAP = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
 
         genericSpinnerDto = new GenericSpinnerDto();
         if(TriggerException == null)
@@ -1514,7 +1495,7 @@ public class RfidService {
         //SoapObject resultRequestSOAP = CallService(soRequest,SOAP_ACTION,URL,true,false);
 
 
-        return responsetoObjectIC(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false));
+        return responsetoObjectIC(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
 
     }
 
@@ -1582,7 +1563,7 @@ public class RfidService {
 
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
 
-        return ResponseToGenericSpinnerDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false),"ubicaciones","descripcion",true);
+        return ResponseToGenericSpinnerDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false),"ubicaciones","descripcion",true);
     }
 
     public GenericSpinnerDto WSSeccion()
@@ -1590,7 +1571,7 @@ public class RfidService {
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
         soRequest.addProperty("Bodcodigo",paramLectorRfid_.getCodbodega());
 
-        return ResponseToGenericSpinnerDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false),"secciones","descripcion",true);
+        return ResponseToGenericSpinnerDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false),"secciones","descripcion",true);
     }
 
     public DataSourceDtoEx WSTomaInventarioProcesar(ArrayList<String> ListEpc, String pConteo, String pUbicacion)
@@ -1621,7 +1602,7 @@ public class RfidService {
 
                 wsException.setExceptionExist(false);
                 try {
-                    SoapObject resultRequestSOAP =ArmarRequest(globalContext, soRequest, SOAP_ACTION_, paramLectorRfid_.getHostPort()+URL_, NAMESPACE_, detailResponse.getItems(),true);
+                    SoapObject resultRequestSOAP =ArmarRequest(globalContext, soRequest, SOAP_ACTION_, paramLectorRfid_.getEndpoint()+URL_, NAMESPACE_, detailResponse.getItems(),true);
 
                     if(TriggerException == null){
                         if(resultRequestSOAP.hasProperty("estado")){
@@ -1667,7 +1648,7 @@ public class RfidService {
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
         soRequest.addProperty("Itmcodigo", coditem);
 
-        SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false);
+        SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
 
         if(TriggerException == null){
             garment = ResponseToGarment(response);
@@ -1751,7 +1732,7 @@ public class RfidService {
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
         soRequest.addProperty("Itmcodigo", pItmcodigo);
 
-        SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+ URL_,true,false);
+        SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+ URL_,true,false);
 
         if(TriggerException == null){
             return ResponseToGarmentSale(response);
@@ -1869,7 +1850,7 @@ public class RfidService {
 
         //SoapObject response = CallService(soRequest,SOAP_ACTION_,URL_,true,false);
 
-        return ResponseToStoreExistence(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false));
+        return ResponseToStoreExistence(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
 
     }
 
@@ -1909,7 +1890,7 @@ public class RfidService {
 
         String url = URL_;
         if(!isAdministrador){
-            url = paramLectorRfid_.getHostPort()+URL_;
+            url = paramLectorRfid_.getEndpoint()+URL_;
         }
 
         SoapObject soResponse = CallService(soRequest,SOAP_ACTION_,url,true,false);
@@ -2024,7 +2005,7 @@ public class RfidService {
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
 
         TriggerException = null;
-        return  ResponseToObjReplenishment(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false));
+        return  ResponseToObjReplenishment(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
 
     }
 
@@ -2123,7 +2104,7 @@ public class RfidService {
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
 
         TriggerException = null;
-        return  ResponseToObjReplenishmentSale(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false));
+        return  ResponseToObjReplenishmentSale(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
 
     }
 
@@ -2183,7 +2164,7 @@ public class RfidService {
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
 
         TriggerException = null;
-        return  ResponseToDataSourceDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getHostPort()+URL_,true,false));
+        return  ResponseToDataSourceDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
 
     }
 

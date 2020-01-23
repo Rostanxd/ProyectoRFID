@@ -544,14 +544,21 @@ public class MainActivity extends Activity {
                 mCurrentFragment = mTestFragment;
                 break;*/
 
-                if (mEntryGuideCheckFragment == null)
+                if (mEntryGuideCheckFragment == null){
                     mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                    /*Bundle args = new Bundle();
+                    args.putString("NoOCompra", null);
+                    mDespatchGuideReadFragment.setArguments(args);*/
+                }
                 mCurrentFragment = mEntryGuideCheckFragment;
                 break;
             case 13:
-                if (mDespatchGuideReadFragment == null)
+                if (mDespatchGuideReadFragment == null) {
                     mDespatchGuideReadFragment = DespatchGuideReadFragment.newInstance();
+
+                }
                 mCurrentFragment = mDespatchGuideReadFragment;
+
                 break;
 
             case 14:
@@ -776,6 +783,7 @@ public class MainActivity extends Activity {
 
         boolean isFirstFragment = true;
         boolean execFragmentTransaction = false;
+        String noOrdenComprar = null;
 
         if(mCurrentFragment.equals(mBTConnectivityFragment)){
             mDispositivoBTRfidSelect = mBTConnectivityFragment.mDeviceSelect;
@@ -785,6 +793,9 @@ public class MainActivity extends Activity {
         {
             mEntryGuideCheckFragment.CleanControls();
             if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
+
+                noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
+
                 isFirstFragment = false;
                 //mDrawerLayout.closeDrawer(mDrawerList);
                 if (mEntryGuideCheckFragment != null) {
@@ -901,6 +912,18 @@ public class MainActivity extends Activity {
         if(execFragmentTransaction)
         {
             FragmentTransaction ft1 = mFragmentManager.beginTransaction();
+
+           /* if(mCurrentFragment.equals(mEntryGuideCheckFragment)){
+                mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                Bundle args = new Bundle();
+                args.putString("NoOCompra", noOrdenComprar);
+                mEntryGuideCheckFragment.setArguments(args);
+
+                mCurrentFragment = mDespatchGuideReadFragment;
+            }*/
+
+
+
             ft1.replace(R.id.content, mCurrentFragment);
             ft1.commit();
             //mDrawerList.setItemChecked(PositionFrag, true);
@@ -911,6 +934,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void  syh(){
+
+    }
 
     private void DialogConfirmacionBack(String msj_){
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);

@@ -86,7 +86,7 @@ public class ParamRfidIteration {
 
 
 
-        Cursor fila = base.rawQuery("select localhost,localport, exthost, extport, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = base.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
         if(fila.moveToFirst()){
             paramLectorRfid = new ParamLectorRfid();
             int indexLE;
@@ -99,11 +99,11 @@ public class ParamRfidIteration {
             SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
             //String fechaActualFormat = objSDF.format(fechaActual);
 
-            if(fila.getString(9) != null && !fila.getString(9).isEmpty()){
+            if(fila.getString(7) != null && !fila.getString(7).isEmpty()){
                 try {
                     fechaActualFormat = objSDF.parse(objSDF.format(fechaActual));
                     /*Date myDate = new Date(2014, 02, 11,20,00);*/
-                    fechaFinParamFormat = objSDF.parse(objSDF.format(parseDate(fila.getString(9))));
+                    fechaFinParamFormat = objSDF.parse(objSDF.format(parseDate(fila.getString(7))));
                 }
                 catch (ParseException ex){
 
@@ -111,37 +111,30 @@ public class ParamRfidIteration {
             }
 
 
-            String port = "";
-            String host = "";
-            if(fila.getString(7).equals("Local"))
+
+            String endpoint = "";
+            if(fila.getString(5).equals("Local"))
             {
-                host = fila.getString(0);
-                port = fila.getString(1);
+                endpoint = fila.getString(0);
+
             }
             else if(fechaActualFormat != null && fechaFinParamFormat != null && CompararFechas(fechaActualFormat,fechaFinParamFormat)){
-                host = fila.getString(2);
-                port = fila.getString(3);
+                endpoint = fila.getString(1);
+
             }
             else {
-                host = fila.getString(0);
-                port = fila.getString(1);
+                endpoint = fila.getString(0);
+
             }
 
-            if(port == null && port.isEmpty()){
-                port = "80";
-            }
-            paramLectorRfid.setHost(host);
-            paramLectorRfid.setPort(port);
-            paramLectorRfid.setHostPort(host+":"+port);
+
+            paramLectorRfid.setEndpoint(endpoint);
+            paramLectorRfid.setCodbodega(fila.getString(2));
+            paramLectorRfid.setDescBodega(fila.getString(3));
+            paramLectorRfid.setHolding(fila.getString(4));
 
 
-
-            paramLectorRfid.setCodbodega(fila.getString(4));
-            paramLectorRfid.setDescBodega(fila.getString(5));
-            paramLectorRfid.setHolding(fila.getString(6));
-
-
-            if(fila.getString(7).equals("Local"))
+            if(fila.getString(5).equals("Local"))
             {
                 indexLE = 0;
             }
@@ -149,9 +142,9 @@ public class ParamRfidIteration {
                 indexLE = 1;
             }
             paramLectorRfid.setConexiontype(String.valueOf(indexLE) );
-            paramLectorRfid.setDateini(fila.getString(8));
-            paramLectorRfid.setDateend(fila.getString(9));
-            paramLectorRfid.setDispositivoid(fila.getString(10));
+            paramLectorRfid.setDateini(fila.getString(6));
+            paramLectorRfid.setDateend(fila.getString(7));
+            paramLectorRfid.setDispositivoid(fila.getString(8));
 
         }
 

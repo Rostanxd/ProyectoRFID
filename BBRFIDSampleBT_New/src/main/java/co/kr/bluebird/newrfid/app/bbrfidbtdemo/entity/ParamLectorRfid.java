@@ -1,9 +1,7 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 
 public class ParamLectorRfid {
-    public String host;
-    public String port;
-    public String hostPort;
+    public String endpoint;
     public String codbodega;
     public String descBodega;
     public String holding;
@@ -12,28 +10,12 @@ public class ParamLectorRfid {
     public String dateend;
     public String dispositivoid;
 
-    public String getHostPort() {
-        return hostPort;
+    public String getEndpoint() {
+        return endpoint;
     }
 
-    public void setHostPort(String hostPort) {
-        this.hostPort = hostPort;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     public String getCodbodega() {

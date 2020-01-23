@@ -22,7 +22,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 public class ParameterActivity extends Activity {
 
     private Context mContext;
-    private EditText medLocalHost, medLocalPort,medExtHost,medExtPort,medCodBodega,medDesBodega,medHolding, medTimeDuration,medDateIni,medDispositivoId,medDateFin;
+    private EditText medEndPointLocal,medEndPointExt,medCodBodega,medDesBodega,medHolding, medTimeDuration,medDateIni,medDispositivoId,medDateFin;
     private Spinner mspinTipoConexion;
     private Button mimgBtnSave;
 
@@ -43,20 +43,18 @@ public class ParameterActivity extends Activity {
         SQLiteDatabase base = admin.getWritableDatabase();
         int codigo = 1;
 
-        Cursor fila = base.rawQuery("select localhost,localport, exthost, extport, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = base.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
 
 
         if(fila.moveToFirst()){
             int indexLE;
-            medLocalHost.setText(fila.getString(0));
-            medLocalPort.setText(fila.getString(1));
-            medExtHost.setText(fila.getString(2));
+            medEndPointLocal.setText(fila.getString(0));
+            medEndPointExt.setText(fila.getString(1));
 
-            medExtPort.setText(fila.getString(3));
-            medCodBodega.setText(fila.getString(4));
-            medDesBodega.setText(fila.getString(5));
-            medHolding.setText(fila.getString(6));
-            if(fila.getString(7).equals("Local"))
+            medCodBodega.setText(fila.getString(2));
+            medDesBodega.setText(fila.getString(3));
+            medHolding.setText(fila.getString(4));
+            if(fila.getString(5).equals("Local"))
             {
                 indexLE = 0;
             }
@@ -64,9 +62,9 @@ public class ParameterActivity extends Activity {
                 indexLE = 1;
             }
             mspinTipoConexion.setSelection(indexLE);
-            medDateIni.setText(fila.getString(8));
-            medDateFin.setText(fila.getString(9));
-            medDispositivoId.setText(fila.getString(10));
+            medDateIni.setText(fila.getString(6));
+            medDateFin.setText(fila.getString(7));
+            medDispositivoId.setText(fila.getString(8));
 
         }
 
@@ -80,10 +78,8 @@ public class ParameterActivity extends Activity {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
         SQLiteDatabase base = admin.getWritableDatabase();
 
-        String localHost = medLocalHost.getText().toString();
-        String localPort = medLocalPort.getText().toString();
-        String extHost =  medExtHost.getText().toString();
-        String extPort = medExtPort.getText().toString();
+        String localEndpoint = medEndPointLocal.getText().toString();
+        String extEndpoint = medEndPointExt.getText().toString();
         String codBodega =  medCodBodega.getText().toString();
         String descBodega = medDesBodega.getText().toString();
         String Holding = medHolding.getText().toString();
@@ -94,7 +90,7 @@ public class ParameterActivity extends Activity {
 
 
         ContentValues registro = new ContentValues();
-        if (!localHost.trim().isEmpty() && !localPort.trim().isEmpty() && !extHost.trim().isEmpty() && !extPort.trim().isEmpty() && !codBodega.trim().isEmpty()
+        if (!localEndpoint.trim().isEmpty() && !extEndpoint.trim().isEmpty()  && !codBodega.trim().isEmpty()
                 && !descBodega.trim().isEmpty() && !Holding.trim().isEmpty() && !DispId.trim().isEmpty() ){
             Cursor fila1 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
             Cursor fila2 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
@@ -107,10 +103,8 @@ public class ParameterActivity extends Activity {
                 datefin_ = fila2.getString(0);
             }
             registro.put("codigo",1 );
-            registro.put("localhost",localHost );
-            registro.put("localport",localPort );
-            registro.put("exthost",extHost );
-            registro.put("extport",extPort );
+            registro.put("localendpoint",localEndpoint );
+            registro.put("extendpoint",extEndpoint );
 
             registro.put("codbodega",codBodega );
             registro.put("descbodega",descBodega);
@@ -188,11 +182,8 @@ public class ParameterActivity extends Activity {
 
     // methods controls iterations
     private void CleanControls(){
-        medLocalHost.setText("");
-        medLocalPort.setText("");
-        medExtHost.setText("");
-
-        medExtPort.setText("");
+        medEndPointLocal.setText("");
+        medEndPointExt.setText("");
         medCodBodega.setText("");
         medDesBodega.setText("");
         medHolding.setText("");
@@ -204,10 +195,9 @@ public class ParameterActivity extends Activity {
 
     private void InicializateControls(){
 
-        medLocalHost = (EditText)findViewById(R.id.edLocalHost);
-        medLocalPort= (EditText)findViewById(R.id.edLocalPort);
-        medExtHost= (EditText)findViewById(R.id.edExtHost);
-        medExtPort= (EditText)findViewById(R.id.edExtPort);
+        medEndPointLocal = (EditText)findViewById(R.id.edEndPointLocal);
+        medEndPointExt= (EditText)findViewById(R.id.edEndPointExt);
+
         medCodBodega= (EditText)findViewById(R.id.edCodBodega);
         medDesBodega= (EditText)findViewById(R.id.edDesBodega);
         medHolding= (EditText)findViewById(R.id.edHolding);

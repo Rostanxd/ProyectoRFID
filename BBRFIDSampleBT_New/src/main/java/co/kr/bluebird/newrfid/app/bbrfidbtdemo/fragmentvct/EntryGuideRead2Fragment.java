@@ -5,6 +5,7 @@ import java.lang.Object;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Constants;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.BankMemoryRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailGroupCod;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
@@ -242,6 +243,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     private RfidService rfidService;
     private EntryGuideDetail entryGuideDetail;
 
+
     private EGDetailResponse egDetailResponseLocating;
     private  EGTagsResponseItem egTagsResponseItem_;
 
@@ -266,7 +268,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     private ScrollView mscrollEntryGuideRead;
 
     //private boolean first ;
-    private String[] mWSParameters;
+    private String[] mWSParameters, mWSParametersGEProcesar;
     private LinearLayout mlayoutButtons ;
     private TableLayout mlayoutItemsLeidos;
 
@@ -275,6 +277,8 @@ public class EntryGuideRead2Fragment extends Fragment {
     private  int getValueSBar = 17;
     private ImageButton mibtnPotencia;
     private boolean lectureHasPc = false;
+
+    private EntryGuideCheckFragment mEntryGuideCheckFragment;
     //private boolean isRunningRead;
 
     public static EntryGuideRead2Fragment newInstance() {
@@ -442,6 +446,9 @@ public class EntryGuideRead2Fragment extends Fragment {
         mtvCantItemLeidos = (TextView) v.findViewById(R.id.tvCantItemLeidos) ;
         NoGuia = getArguments() != null ? getArguments().getString("NoGuia") : "0";
         String NoOrdenCompra = getArguments() != null ? getArguments().getString("NoOCompra") : "0";
+
+
+
         NoGuiaCantidad = getArguments() != null ? getArguments().getString("NoGuiaCant") : "0";
         medOrdenCompraGR.setText(NoOrdenCompra);
         metNumGuiaEntGR.setText(NoGuia);
@@ -960,6 +967,9 @@ public class EntryGuideRead2Fragment extends Fragment {
         mStopInvenButton.setEnabled(false);
         mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
 
+        btnProcesarEnabledDisabled(false);
+        btnProcesarManagement(false);
+
     }
 
     private void soapservice()
@@ -1122,6 +1132,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
                 if(egDetailResponse.getStatus() != null ){
                     if(egDetailResponse.getStatus().getCodigo().equals("00")){
+                        btnProcesarEnabledDisabled(false);
                         egDetailResponseLocating = egDetailResponse;
                         LlenarGrid(egDetailResponse);
                     }
@@ -1156,26 +1167,86 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
 
-    /*private  class SoapEnvioTagsGeneralAsync extends AsyncTask<Void, Void, Void> {
 
-        SendTags response;
+
+    private  class executeSoapGuiaEntradaProcesarAsync extends AsyncTask<Void, Void, Void> {
+
+        DataSourceDto dtoGuiaProcesar ;
+        ProgressDialog progressDialog  ;
         @Override
         protected Void doInBackground(Void... voids) {
-            // mWSParameters = getResources().getStringArray(R.array.WSparameter_RfidTest);
-            rfidService.SOAP_ACTION_ =  mWSParameters[0];
-            rfidService.METHOD_NAME_ =  mWSParameters[1];
-            rfidService.NAMESPACE_ = mWSParameters[2];
-            rfidService.URL_ = mWSParameters[3];
-            response = rfidService.EnvioTagsEpcGeneral(ListEpcRead);
+
+            rfidService.SOAP_ACTION_ =  mWSParametersGEProcesar[0];
+            rfidService.METHOD_NAME_ =  mWSParametersGEProcesar[1];
+            rfidService.NAMESPACE_ = mWSParametersGEProcesar[2];
+            rfidService.URL_ = mWSParametersGEProcesar[3];
+
+            dtoGuiaProcesar = rfidService.WSGuiaEntradaProcesar(NoGuia);
+
+            //egDetailResponse = rfidService.GuiaEntradaDetalleService2(NoGuia,listaEpcReal());
+
+            //entryGuideDetail = rfidService.GuiaEntradaDetalleService(NoGuia);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            //super.onPostExecute(aVoid);
 
-          Toast.makeText(mContext, response.getMessage(), Toast.LENGTH_LONG).show();
+            progressDialog.cancel();
+
+            if(dtoGuiaProcesar != null && dtoGuiaProcesar.getCodigo().equals("00") ){
+                //Toast.makeText(mContext, "Se ha procesado correctamente la Guia de Entrada: #"+NoGuia , Toast.LENGTH_SHORT).show();
+
+
+                // limpiar y volver a la pantalla EntryGuideCheck
+                //VolverEntryGuideCheck();
+                InvocarAlertEGProcesar("Se ha procesado correctamente la Guia de Entrada: #"+NoGuia, true);
+            }
+            else {
+                Toast.makeText(mContext, dtoGuiaProcesar.getDescripcion() , Toast.LENGTH_SHORT).show();
+            }
         }
-    }*/
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+
+        }
+    }
+
+    private void VolverEntryGuideCheck(){
+
+        if (mEntryGuideCheckFragment == null)
+            mEntryGuideCheckFragment = mEntryGuideCheckFragment.newInstance();
+
+        Bundle args = new Bundle();
+        args.putString("NoOCompra", medOrdenCompraGR.getText().toString().trim());
+        mEntryGuideCheckFragment.setArguments(args);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.content, mEntryGuideCheckFragment);
+
+        ft.addToBackStack(null);
+        ft.commit();
+
+
+
+        /*
+        getSupportFragmentManager().beginTransaction().
+        remove(getSupportFragmentManager().findFragmentById(R.id.frame)).commit();*/
+        //getFragmentManager().beginTransaction().remove(mFragment).commit();
+
+    }
+
+    public String getOrdenCompra(){
+        return medOrdenCompraGR.getText().toString().trim();
+    }
 
     private void LlenarGrid(EGDetailResponse detailResponse){
 
@@ -1185,6 +1256,15 @@ public class EntryGuideRead2Fragment extends Fragment {
         egProcesado = WSEGProcess(detailResponse);
         if(egProcesado != null && egProcesado.items != null && egProcesado.items.size() > 0)
         {
+            // verificar si es una Guia de Entrada Procesable.
+            /*if(!detailResponse.isProcesable){
+                btnProcesarManagement(true);
+                btnProcesarEnabledDisabled(true);
+            }*/
+
+            btnProcesarManagement(true);
+            btnProcesarEnabledDisabled(true);
+
             mlayoutHeader.setVisibility(View.VISIBLE);
             ProcesarLvItemsDif();
         }
@@ -2458,6 +2538,12 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
     private void EntryGuideProcesar(){
+        if(mWSParametersGEProcesar == null){
+            mWSParametersGEProcesar = getResources().getStringArray(R.array.WSparameter_GuiaEntradaProcesar);
+        }
+        executeSoapGuiaEntradaProcesarAsync entradaProcesarAsync = new executeSoapGuiaEntradaProcesarAsync();
+        entradaProcesarAsync.execute();
+
 
     }
     private void getListEpcsRead()
@@ -2523,6 +2609,31 @@ public class EntryGuideRead2Fragment extends Fragment {
         });
         dialog.show();
     }
+
+
+
+    private void InvocarAlertEGProcesar(String mensaje_, boolean isExitoso)
+    {
+        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
+        alerta.setMessage(mensaje_)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        if(isExitoso){
+                            dialog.dismiss();
+                            //VolverEntryGuideCheck();
+
+                        }
+                        else {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+        alerta.show();
+    }
+
     /*
 
     * */
