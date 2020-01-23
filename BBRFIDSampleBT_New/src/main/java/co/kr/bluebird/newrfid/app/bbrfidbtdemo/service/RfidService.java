@@ -1574,7 +1574,8 @@ public class RfidService {
         return ResponseToGenericSpinnerDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false),"secciones","descripcion",true);
     }
 
-    public DataSourceDtoEx WSTomaInventarioProcesar(ArrayList<String> ListEpc, String pConteo, String pUbicacion)
+    // tomaInventarioProcesar -> se usaba para homologar la etiquetas leidas antes de invocar al awsrfidtomaprocesar
+    /*public DataSourceDtoEx WSTomaInventarioProcesar(ArrayList<String> ListEpc, String pConteo, String pUbicacion)
     {
         EGDetailResponse detailResponse =  EPCHomologacionService(ListEpc);
         DataSourceDtoEx dtoEx = new DataSourceDtoEx();
@@ -1633,6 +1634,39 @@ public class RfidService {
 
 
         return dtoEx;
+    }*/
+
+
+    public DataSourceDto WSTomaInventarioProcesar2(ArrayList<String> ListEpc, String pConteo, String pUbicacion)
+    {
+        return   ResponseToDataSourceDto(CallService(GenerarRequestInvProcesar(ListEpc, pConteo,pUbicacion ),SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true, false));
+
+    }
+
+    private SoapObject GenerarRequestInvProcesar(ArrayList<String> ListEpc, String pConteo, String pUbicacion){
+        SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
+        SoapObject soNivel4;
+        SoapObject soNivel3 = new SoapObject(NAMESPACE_, null);
+        SoapObject soSdtrfidetiquetasrequest = new SoapObject(NAMESPACE_, null);
+
+        for (String epc:ListEpc) {
+            soNivel4 = new SoapObject(NAMESPACE_, null);
+            soNivel4.addProperty("epc",epc);
+
+            soNivel3.addProperty("etiqueta", soNivel4);
+        }
+
+        soSdtrfidetiquetasrequest.addProperty("dispositivoId",paramLectorRfid_.getDispositivoid() );
+        soSdtrfidetiquetasrequest.addProperty("etiquetas", soNivel3);
+
+
+        soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
+        soRequest.addProperty("Secconteo", pConteo);
+        soRequest.addProperty("Ubicodigo", pUbicacion);
+        soRequest.addProperty("Sdtrfidetiquetasrequest",soSdtrfidetiquetasrequest );
+        soRequest.addProperty("Usrcodigo",paramLogin_ != null ? paramLogin_.getUsuario() : "");
+
+        return soRequest;
     }
 
     // WS Inventario por tienda...
@@ -2171,13 +2205,48 @@ public class RfidService {
     private DataSourceDto ResponseToDataSourceDto(SoapObject response)
     {
         DataSourceDto sourceDto = null;
+        String msj_error = null;
         if(TriggerException == null)
         {
-            if(response != null && response.hasProperty("estado"))
-            {
-                SoapObject soEstado = (SoapObject)  response.getProperty("estado");
-                sourceDto = new DataSourceDto(soEstado.getPropertyAsString("codigo"), soEstado.getPropertyAsString("mensaje"), null);
+            try {
+                if(response != null ){
+
+                    if(response.hasProperty("faultcode")){
+
+                        msj_error = "Se ha producidon un error desconocido en el servicio";
+                        String sfaultcode = response.getPropertyAsString("faultcode");
+
+                        if(sfaultcode.equals("SOAP-ENV:Client")){
+                            msj_error = "Se ha producidon un error del lado del cliente...";
+                        }
+                        else {
+                            msj_error = "Se ha producidon un error del lado del servidor...";
+                        }
+
+                        sourceDto = new DataSourceDto("9998", msj_error, null);
+
+
+
+                    }
+                    else {
+                        if(response.hasProperty("estado")){
+                            SoapObject soEstado = (SoapObject)  response.getProperty("estado");
+                            sourceDto = new DataSourceDto(soEstado.getPropertyAsString("codigo"), soEstado.getPropertyAsString("mensaje"), null);
+                        }
+                        else {
+                            sourceDto = new DataSourceDto("9999", "El Servicio no devolvio ningun estado...", null);
+                        }
+                    }
+
+                }
+                else {
+                    sourceDto = new DataSourceDto("9999", "Se ha producidon un error desconocido en el servicio...", null);
+                }
             }
+            catch (Exception ex){
+                sourceDto = new DataSourceDto("9999", "Al Parecer la respuesta del servicio no es valida...", null);
+            }
+
         }
         else {
             sourceDto = new DataSourceDto("9999", TriggerException, null);
