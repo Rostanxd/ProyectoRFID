@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,6 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Guide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ICSeccion;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.InventoryControl;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginAcceso;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginProgram;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
@@ -486,6 +486,9 @@ public class RfidService {
         }
         catch (SocketException se){
             TriggerException = se.getMessage();
+        }
+        catch (UnknownHostException ue){
+            TriggerException = "ERRORHOST";
         }
         catch (Exception ex)
         {
@@ -1919,12 +1922,20 @@ public class RfidService {
         TriggerException = null;
         LoginData loginData = null;
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
-        soRequest.addProperty("Usrcodigo", user.trim());
-        soRequest.addProperty("Usrclave", pass.trim());
 
-        String url = URL_;
+
+        String url = null;
         if(!isAdministrador){
             url = paramLectorRfid_.getEndpoint()+URL_;
+
+            soRequest.addProperty("Usrcodigo", user.trim());
+            soRequest.addProperty("Usrclave", pass.trim());
+        }
+        else {
+            url = paramLectorRfid_.getEndpointExt()+URL_;
+            soRequest.addProperty("Usuario", user.trim());
+            soRequest.addProperty("Clave", pass.trim());
+            soRequest.addProperty("Dispositivoid", paramLectorRfid_.getDispositivoid());
         }
 
         SoapObject soResponse = CallService(soRequest,SOAP_ACTION_,url,true,false);
@@ -1955,42 +1966,53 @@ public class RfidService {
         DataSourceDto dtoUsuario = null;
         DataSourceDto dtoRol = null;
         LoginProgram loginProgram = null;
-        LoginAcceso loginAcceso = null;
-        List<LoginAcceso> accesoList = null;
+
+        SoapObject objSoap = null;
 
 
         List<LoginProgram> programList = null;
         if(response.hasProperty("estado")){
-            SoapObject soEstado = (SoapObject) response.getProperty("estado");
-            if(soEstado.hasProperty("codigo") && soEstado.hasProperty("mensaje"))
+            objSoap = (SoapObject) response.getProperty("estado");
+            if(objSoap.hasProperty("codigo") && objSoap.hasProperty("mensaje"))
             {
-                dtoEstado = new DataSourceDto(soEstado.getPropertyAsString("codigo"),soEstado.getPropertyAsString("mensaje"), null);
+                dtoEstado = new DataSourceDto(objSoap.getPropertyAsString("codigo"),objSoap.getPropertyAsString("mensaje"), null);
             }
         }
 
         if(response.hasProperty("data")){
-            SoapObject soData = (SoapObject) response.getProperty("data");
+            objSoap = (SoapObject) response.getProperty("data");
 
-            if(soData.hasProperty("usuario") ){
-                SoapObject soUsuario = (SoapObject) soData.getProperty("usuario");
+            if(objSoap.hasProperty("usuario") ){
+                SoapObject soUsuario = (SoapObject) objSoap.getProperty("usuario");
                 if(soUsuario.hasProperty("id") && soUsuario.hasProperty("nombre")){
                     dtoUsuario = new DataSourceDto(soUsuario.getPropertyAsString("id"), soUsuario.getPrimitivePropertyAsString("nombre"), null);
                 }
             }
 
-            if(soData.hasProperty("accesos")){
-                SoapObject soAccess = (SoapObject) soData.getProperty("accesos");
+            SoapObject objSoap2 = null;
+            if(objSoap.hasProperty("rol")){
 
-                if(soAccess.hasProperty("rol")){
+                objSoap2 = (SoapObject) objSoap.getProperty("rol");
+
+                if(objSoap2.hasProperty("id") && objSoap2.hasProperty("nombre")){
+                    dtoRol = new DataSourceDto(objSoap2.getPropertyAsString("id"), objSoap2.getPrimitivePropertyAsString("nombre"), null);
+                }
+
+            }
+
+            if(objSoap.hasProperty("accesos")){
+                objSoap2 = (SoapObject) objSoap.getProperty("accesos");
+
+                /*if(soAccess.hasProperty("rol")){
                     SoapObject soRol = (SoapObject) soAccess.getProperty("rol");
                     if(soRol.hasProperty("id") && soRol.hasProperty("nombre")){
                         dtoRol = new DataSourceDto(soRol.getPropertyAsString("id"), soRol.getPrimitivePropertyAsString("nombre"), null);
                     }
-                }
+                }*/
 
                 programList = new ArrayList<LoginProgram>();
-                for (int x=0; x<soAccess.getPropertyCount()-1;x++) {
-                    SoapObject soPrograma = (SoapObject) soAccess.getProperty(x);
+                for (int x=0; x<objSoap2.getPropertyCount();x++) {
+                    SoapObject soPrograma = (SoapObject) objSoap2.getProperty(x);
                     if(soPrograma.hasProperty("nombre") && soPrograma.hasProperty("ruta")){
                         loginProgram = new LoginProgram();
                         loginProgram.setNombre(soPrograma.getPropertyAsString("nombre"));
@@ -2001,12 +2023,7 @@ public class RfidService {
                     }
                 }
 
-                loginAcceso = new LoginAcceso();
-                loginAcceso.setRol(dtoRol);
-                loginAcceso.setListaprogramas(programList);
 
-                accesoList = new ArrayList<LoginAcceso>();
-                accesoList.add(loginAcceso);
 
             }
 
@@ -2015,7 +2032,8 @@ public class RfidService {
         loginData = new LoginData();
         loginData.setEstado(dtoEstado);
         loginData.setUsuario(dtoUsuario);
-        loginData.setAccesos(accesoList);
+        loginData.setRol(dtoRol);
+        loginData.setAccesos(programList);
 
         return loginData;
     }

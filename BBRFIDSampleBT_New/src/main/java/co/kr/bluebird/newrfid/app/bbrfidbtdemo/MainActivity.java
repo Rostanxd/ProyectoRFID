@@ -10,6 +10,7 @@
 
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
@@ -25,6 +26,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryContro
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryParticipantFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TestFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.PersistenceDataIteration;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import android.app.Activity;
@@ -191,6 +193,8 @@ public class MainActivity extends Activity {
             mcvTomaInventarioParticipante.setVisibility(View.GONE);
         }
 
+        //VerOptionByRol();
+
 
         if(isAdmin){
             mcvParametrizador.setVisibility(View.VISIBLE);
@@ -308,6 +312,17 @@ public class MainActivity extends Activity {
         mFragmentManager = getFragmentManager();
 
         mIsConnected = false;
+    }
+
+    private void VerOptionByRol(){
+
+        PersistenceDataIteration persistenceDataIteration = new PersistenceDataIteration(mContext);
+        LoginData loginData = persistenceDataIteration.LoginDataPersistence();
+
+        if(loginData != null){
+            Toast.makeText(mContext,loginData.getRol().getDescripcion(),Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void setSingleEvent(GridLayout mainGrid) {

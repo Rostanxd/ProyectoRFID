@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -30,18 +31,16 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-/*import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.RfidAutentication;*/
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginProgram;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAAcceso;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAData;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RAPrograma;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.RfidAutentication;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ParameterFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
@@ -54,13 +53,14 @@ public class LoginActivity extends Activity {
     private ParamRfidIteration paramRfidIteration = null;
     private EditText mtxtUser , mtxtPass;
     private Context mcontext;
-    private RfidAutentication rfidAutentication;
     private WebServiceHandler mWebServiceHandler = new WebServiceHandler(this);
     private String msgRespuesta = "";
     private Switch switchAdmin;
     private boolean isAdmin;
     private RfidService rfidService;
     private String[] mWSLoginParameters;
+
+    private boolean isLogeoForzoso = false;
 
 
 
@@ -139,10 +139,25 @@ public class LoginActivity extends Activity {
                    mWSLoginParameters = getResources().getStringArray(R.array.WSparameter_Login);
                }
 
-                executeWSLoginAsync tarea = new executeWSLoginAsync();
-                tarea.execute();
+
+               if((!ExistParametrizacion && switchAdmin.isChecked()) || isLogeoForzoso){
+                   if(ValidadPrimerInicioSeccionAdmin()){
+                       InvocarActivity(ParameterActivity.class);
+                   }
+                   else {
+                       Toast.makeText(mcontext, "usuario o clave de configuracion inicial incorrecta...", Toast.LENGTH_LONG).show();
+                   }
+               }
+               else {
+                   executeWSLoginAsync tarea = new executeWSLoginAsync();
+                   tarea.execute();
+               }
             }
         });
+    }
+
+    private boolean ValidadPrimerInicioSeccionAdmin(){
+        return (mtxtUser.getText().toString().equalsIgnoreCase("admin") && mtxtPass.getText().toString().equalsIgnoreCase("admin"));
     }
 
     @Override
@@ -165,6 +180,8 @@ public class LoginActivity extends Activity {
 
 
     private void OnStart_Extrated(){
+
+        isLogeoForzoso = false;
         paramLectorRfid_ =  paramRfidIteration.ConsultarParametros();
 
         ExistParametrizacion = VerificarCamposParametrizacionLlenos();
@@ -328,6 +345,8 @@ public class LoginActivity extends Activity {
                         dlogin.setUsuario(loginData.getUsuario().getCodigo());
 
                         paramRfidIteration.RegistrarModificarParamLogin(dlogin,false);
+
+                        PersistirDatosUsuario(loginData);
                         InvocarActivity(MainActivity.class);
 
                     }
@@ -341,7 +360,13 @@ public class LoginActivity extends Activity {
                 }
                 else {
 
-                    Toast.makeText(mcontext, loginData.getEstado().getDescripcion(),Toast.LENGTH_LONG).show();
+                    if(loginData.getEstado().getDescripcion().equals("ERRORHOST")){
+                        Toast.makeText(mcontext, "Existe un Error de Host, vuelva a logerse con admin y corriga el end-point", Toast.LENGTH_LONG).show();
+                        LogeoForzoso();
+                    }
+                    else {
+                        Toast.makeText(mcontext, loginData.getEstado().getDescripcion(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -393,6 +418,17 @@ public class LoginActivity extends Activity {
             progressDialog.show();
 
         }
+    }
+
+    private void LogeoForzoso(){
+        mtxtUser.setText("");
+        mtxtPass.setText("");
+
+        isLogeoForzoso = true;
+
+        switchAdmin.setChecked(true);
+        switchAdmin.setEnabled(false);
+
     }
 
 
@@ -463,4 +499,34 @@ public class LoginActivity extends Activity {
 
         }
     };
+
+
+    private void PersistirDatosUsuario(LoginData loginData){
+
+        if(loginData != null){
+
+            SharedPreferences prefs = getSharedPreferences("shared_login_data",   Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.clear();
+
+            editor.putString("userid", loginData.getUsuario().getCodigo());
+            editor.putString("username", loginData.getUsuario().getDescripcion());
+
+            editor.putString("rolid", loginData.getRol().getCodigo());
+            editor.putString("rolname", loginData.getRol().getDescripcion());
+
+            Set<String > hash_Set = new HashSet<String>();
+
+
+            for (LoginProgram program:loginData.getAccesos()) {
+                hash_Set.add(program.getNombre()+"|"+program.getRuta());
+            }
+
+            editor.putStringSet("accesos", hash_Set);
+
+            editor.commit();
+        }
+
+    }
 }
