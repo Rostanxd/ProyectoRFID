@@ -952,11 +952,19 @@
         <item>/awsrfidautenticacion.aspx</item>
     </string-array>
 
-    <string-array name="WSparameter_LoginAdministrador">
+    <!--<string-array name="WSparameter_LoginAdministrador">
         <item>WebSithaction/AWSRFIDAUTENTICACION.Execute</item>
         <item>WsRfidAutenticacion.Execute</item>
         <item>WebSith</item>
         <item>http://info.thgye.com.ec:80/awsrfidautenticacion.aspx</item>
+    </string-array>-->
+
+
+    <string-array name="WSparameter_LoginAdministrador">
+        <item>WebSithaction/AWSRFIDSUPERADMINAUTENTICACION.Execute</item>
+        <item>WsRfidSuperAdminAutenticacion.Execute</item>
+        <item>WebSith</item>
+        <item>/awsrfidsuperadminautenticacion.aspx</item>
     </string-array>
 
 

@@ -129,6 +129,7 @@ public class ParamRfidIteration {
 
 
             paramLectorRfid.setEndpoint(endpoint);
+            paramLectorRfid.setEndpointExt(fila.getString(1));
             paramLectorRfid.setCodbodega(fila.getString(2));
             paramLectorRfid.setDescBodega(fila.getString(3));
             paramLectorRfid.setHolding(fila.getString(4));

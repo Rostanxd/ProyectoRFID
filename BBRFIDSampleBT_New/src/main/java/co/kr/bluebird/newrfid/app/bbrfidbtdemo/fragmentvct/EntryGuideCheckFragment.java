@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -117,6 +118,8 @@ public class EntryGuideCheckFragment extends Fragment {
     }
 
     private void btnCargar_extracted(){
+
+
         ResposeEG = null;
         cantGuide = 0;
         numeroOrdenCompra = mOrdenCompraGR.getText().toString();

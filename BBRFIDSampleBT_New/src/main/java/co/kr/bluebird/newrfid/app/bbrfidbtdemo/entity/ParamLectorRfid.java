@@ -2,6 +2,7 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 
 public class ParamLectorRfid {
     public String endpoint;
+    public String endpointExt;
     public String codbodega;
     public String descBodega;
     public String holding;
@@ -16,6 +17,14 @@ public class ParamLectorRfid {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public String getEndpointExt() {
+        return endpointExt;
+    }
+
+    public void setEndpointExt(String endpointExt) {
+        this.endpointExt = endpointExt;
     }
 
     public String getCodbodega() {

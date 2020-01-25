@@ -473,7 +473,6 @@ public class DespatchGuideGenerateFragment extends Fragment {
         PrintHelper photoPrinter = new PrintHelper(mContext);
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
-
         /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.droids);*/
         photoPrinter.printBitmap("droids.jpg - test print", bitmap);

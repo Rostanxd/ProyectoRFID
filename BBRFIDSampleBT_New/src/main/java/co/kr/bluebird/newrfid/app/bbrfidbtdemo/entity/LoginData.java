@@ -6,7 +6,9 @@ public class LoginData {
 
     public DataSourceDto estado;
     public DataSourceDto usuario;
-    public List<LoginAcceso> accesos;
+    public DataSourceDto rol;
+    public List<LoginProgram> accesos;
+
 
     public DataSourceDto getEstado() {
         return estado;
@@ -24,11 +26,19 @@ public class LoginData {
         this.usuario = usuario;
     }
 
-    public List<LoginAcceso> getAccesos() {
+    public DataSourceDto getRol() {
+        return rol;
+    }
+
+    public void setRol(DataSourceDto rol) {
+        this.rol = rol;
+    }
+
+    public List<LoginProgram> getAccesos() {
         return accesos;
     }
 
-    public void setAccesos(List<LoginAcceso> accesos) {
+    public void setAccesos(List<LoginProgram> accesos) {
         this.accesos = accesos;
     }
 }
