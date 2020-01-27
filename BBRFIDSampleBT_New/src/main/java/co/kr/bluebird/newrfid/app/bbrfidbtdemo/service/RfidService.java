@@ -7,8 +7,10 @@ import android.widget.Switch;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.transport.HttpsServiceConnectionSE;
 import org.w3c.dom.Document;
 
 import java.lang.reflect.Array;
@@ -30,6 +32,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuideDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Etiqueta;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ExceptionData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Garment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSaleObj;
@@ -51,6 +54,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResidueExternDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SendTags;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.StoreExistence;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.WSException;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomMsgExceptions;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 
 public class RfidService {
@@ -62,6 +66,8 @@ public class RfidService {
     private ParamLogin paramLogin_;
 
     private String TriggerException;
+    private ExceptionData exceptionData = null;
+    private CustomMsgExceptions msgExceptions = new CustomMsgExceptions();
 
     public String SOAP_ACTION_ = null;
     public String METHOD_NAME_ = null;
@@ -483,18 +489,36 @@ public class RfidService {
         catch (SocketTimeoutException ste)
         {
             TriggerException = "Al Parecer no hay conexion a internet, Cod Error:" + ste.getMessage();
+            SetExceptionData("SocketTimeoutException", ste.getMessage(), 0);
         }
         catch (SocketException se){
             TriggerException = se.getMessage();
+            SetExceptionData("SocketException", se.getMessage(), 0);
         }
         catch (UnknownHostException ue){
             TriggerException = "ERRORHOST";
+            SetExceptionData("UnknownHostException", ue.getMessage(), 0 );
         }
+        catch (HttpResponseException hex)
+        {
+            TriggerException = "ERRORHOST";
+            SetExceptionData("HttpResponseException", hex.getMessage(), hex.getStatusCode());
+        }
+
         catch (Exception ex)
         {
             TriggerException = ex.getMessage();
+            SetExceptionData("Exception", ex.getMessage(), 0);
         }
         return resultRequestSOAP;
+    }
+
+    private void SetExceptionData(String typeException, String msgException, int statusCode){
+        exceptionData = new ExceptionData();
+        exceptionData.setTypeException(typeException);
+        exceptionData.setMsgException(msgException);
+        exceptionData.setMsgUsuario(msgExceptions.getCustomMsg(typeException, statusCode) );
+        exceptionData.setStatusCode(statusCode);
     }
 
 
