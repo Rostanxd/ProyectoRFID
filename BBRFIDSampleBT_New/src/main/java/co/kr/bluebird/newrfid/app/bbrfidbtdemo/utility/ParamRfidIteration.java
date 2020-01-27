@@ -60,7 +60,7 @@ public class ParamRfidIteration {
             DfechaActualFormat = objSDF.parse(objSDF.format(fechaActual));
 
 
-            long diff = DfechaUltimoInicioSeccion.getTime() - DfechaActualFormat.getTime();
+            long diff = DfechaActualFormat.getTime() - DfechaUltimoInicioSeccion.getTime() ;
 
             long segundos = diff / 1000;
             minutos = segundos / 60;

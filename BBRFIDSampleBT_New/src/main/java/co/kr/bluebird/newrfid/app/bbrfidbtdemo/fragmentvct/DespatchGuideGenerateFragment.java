@@ -15,10 +15,15 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.support.v4.print.PrintHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,10 +45,16 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.QrData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterDespatchGuide;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.PersistenceDataIteration;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.QRCodeGenerator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ReportsTemplate;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.RfidEpHomologacion;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.UtilityFuntions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +82,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
     private String[] spinnerArray = null;
     private HashMap<Integer,String> spinnerMap = null;
     private String[] mWSParametersBodega, mWSParametersGuiaDespachoProc;
+    private WebView mWb_qrcode;
 
 
 
@@ -382,6 +394,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
     private  class ExecSoapGuiaDespachoProcesarAsync extends AsyncTask<Void, Void, Void> {
 
         String lCodBodega = spinnerMap.get(mSpinnerDestino.getSelectedItemPosition());
+        String mdestino = mSpinnerDestino.getSelectedItem().toString();
         DataSourceDto dto;
         ProgressDialog progressDialog;
 
@@ -416,7 +429,11 @@ public class DespatchGuideGenerateFragment extends Fragment {
                 if(dto.getCodigo() != null ){
                     if(dto.getCodigo().equals("00")){
                         try {
-                            PrintScrenQr(dto.auxiliar);
+                            int cantidadtotal = 0 ;
+                            for (EGTagsResponseItem item :egDetailResponse.getItems()) {
+                                cantidadtotal += item.getCantidadLeidos();
+                            }
+                            PrintScrenQr(dto.auxiliar, mdestino, cantidadtotal);
                         }catch (Exception ex){
                             //Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
                             DialogMessage("Error al generar el codigo QR::"+ex.getMessage());
@@ -444,7 +461,15 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
     // metodos generales
 
-    private void PrintScrenQr(String cadenaQr) {
+    private void PrintScrenQr(String cadenaQr, String destino, int cantidadleidos) {
+
+        UtilityFuntions utilityFuntions = new UtilityFuntions();
+        ReportsTemplate reportsTemplate = new ReportsTemplate();
+        QrData qrData = new QrData();
+        PersistenceDataIteration persistenceDataIteration = new PersistenceDataIteration(mContext);
+        LoginData loginData = persistenceDataIteration.LoginDataPersistence();
+
+
         qrCodeGenerator = new QRCodeGenerator();
         Bitmap bitmap = qrCodeGenerator.QrCodePrint(cadenaQr);
 
@@ -453,30 +478,65 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
         ImageView imageView = (ImageView) dialog.findViewById(R.id.iv_qrcode);
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
+        mWb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        imageView.setImageBitmap(bitmap);
-        tvTittle.setText("Se ha generado correctamente la Guia de Despacho: Secuencia #: "+cadenaQr);
+
+        Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
+
+        qrData.setContenidoQr(cadenaQr);
+        qrData.setImageQrBase64(utilityFuntions.BitmapToBase64(bitmap1));
+        qrData.setUsuario(loginData.getUsuario().getCodigo().toUpperCase());
+        qrData.setMotivo(destino);
+        qrData.setCantidad(cantidadleidos+"");
+
+        String html = reportsTemplate.PlantillaHtmlQR(qrData);
+
+        mWb_qrcode.getSettings().setJavaScriptEnabled(true);
+        tvTittle.setText("Se ha generado correctamente la Guia de Despacho");
+        mWb_qrcode.loadData(html, "text/html", "UTF-8");
+        //imageView.setImageBitmap(bitmap);
+        /*tvTittle.setText("Se ha generado correctamente la Guia de Despacho: Secuencia #: "+cadenaQr);*/
+
 
         mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //dialog.dismiss();
-
-                doPhotoPrint(bitmap);
+                /*doPhotoPrint(bitmap);*/
+                createWebPrintJob(mWb_qrcode) ;
             }
         });
         dialog.show();
     }
 
-    private void doPhotoPrint(Bitmap bitmap) {
+    private void createWebPrintJob(WebView webView)
+    {
+        PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
+        String jobName = getString(R.string.app_name) + " Guia de Despacho";
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(jobName);
+        PrintAttributes.Builder builder = new PrintAttributes.Builder();
+        builder.setMediaSize(PrintAttributes.MediaSize.ISO_A6);
+        PrintJob printJob = printManager.print(jobName, printAdapter,builder.build());
+
+        if(printJob.isCompleted()){
+            Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+        }
+        else if(printJob.isFailed()) {
+            Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+   /* private void doPhotoPrint(Bitmap bitmap) {
         PrintHelper photoPrinter = new PrintHelper(mContext);
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
-        /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.droids);*/
+        *//*Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.droids);*//*
         photoPrinter.printBitmap("droids.jpg - test print", bitmap);
-    }
+    }*/
 
 
     // Dialogs
