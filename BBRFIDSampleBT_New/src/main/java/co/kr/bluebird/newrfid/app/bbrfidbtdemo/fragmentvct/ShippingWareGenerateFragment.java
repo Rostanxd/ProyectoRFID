@@ -13,10 +13,17 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.support.v4.print.PrintHelper;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +48,18 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDtoEx;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.QrData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterDespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.PersistenceDataIteration;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.QRCodeGenerator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ReportsTemplate;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.RfidEpHomologacion;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.UtilityFuntions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +91,8 @@ public class ShippingWareGenerateFragment extends Fragment {
     private String[] spinnerArray = null, spinnerArrayAlm = null;
     private HashMap<Integer,String> spinnerMap = null;
     private HashMap<Integer,String> spinnerMapAlm = null;
+
+    private WebView wb_qrcode;
 
     private LinearLayout mLayoutBodAlmacenamiento;
 
@@ -120,6 +136,8 @@ public class ShippingWareGenerateFragment extends Fragment {
         mtvNota = (TextView) v.findViewById(R.id.tvNota);
 
         mlv_detailSW = (ListView)v.findViewById(R.id.lv_detailSW);
+
+
 
         epcs = getArguments() != null ? getArguments().getStringArrayList("epcsLeidos") : new ArrayList<String>();
 
@@ -401,6 +419,8 @@ public class ShippingWareGenerateFragment extends Fragment {
     private  class ExecSoapEnvioMercaderiaProcesarAsync extends AsyncTask<Void, Void, Void> {
 
         String lMotivo = spinnerMap.get(mSpinnerMotivo.getSelectedItemPosition());
+        String motivoDesc = mSpinnerMotivo.getSelectedItem().toString();
+
         DataSourceDtoEx dto;
         ProgressDialog progressDialog;
 
@@ -422,6 +442,7 @@ public class ShippingWareGenerateFragment extends Fragment {
                 rfidService.NAMESPACE_ = mWSParametersEnvioMercaderiaProc[2];
                 rfidService.URL_ = mWSParametersEnvioMercaderiaProc[3];
 
+
                 dto= rfidService.WSEnvioMercaderiaProcesarService(mContext, egDetailResponse.getItems(),lMotivo,gNota);
 
 
@@ -437,7 +458,13 @@ public class ShippingWareGenerateFragment extends Fragment {
             if(!dto.getHandlerException().isExceptionExist()){
                 if(dto.getInformationDto() != null &&dto.getInformationDto().getCodigo().equals("00") ){
                     try {
-                        PrintScrenQr(dto.getInformationDto().getAuxiliar());
+                        int cantidadtotal = 0;
+                        for (EGTagsResponseItem item :egDetailResponse.getItems()) {
+
+                            cantidadtotal += item.getCantidadLeidos();
+
+                        }
+                        PrintScrenQr(dto.getInformationDto().getAuxiliar(), motivoDesc, cantidadtotal);
 
                     }catch (Exception ex){
                         Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
@@ -469,7 +496,16 @@ public class ShippingWareGenerateFragment extends Fragment {
 
     //
 
-    private void PrintScrenQr(String cadenaQr) {
+    private void PrintScrenQr(String cadenaQr, String motivoDesc, int CantLeidos ) {
+
+        UtilityFuntions utilityFuntions = new UtilityFuntions();
+        ReportsTemplate reportsTemplate = new ReportsTemplate();
+
+        QrData qrData = new QrData();
+        PersistenceDataIteration persistenceDataIteration = new PersistenceDataIteration(mContext);
+        LoginData loginData = persistenceDataIteration.LoginDataPersistence();
+
+
         qrCodeGenerator = new QRCodeGenerator();
         Bitmap bitmap = qrCodeGenerator.QrCodePrint(cadenaQr);
 
@@ -478,27 +514,79 @@ public class ShippingWareGenerateFragment extends Fragment {
 
         ImageView imageView = (ImageView) dialog.findViewById(R.id.iv_qrcode);
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
+        wb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        imageView.setImageBitmap(bitmap);
-        tvTittle.setText("Se ha generado correctamente el egreso de mercaderia: Secuencia #: "+cadenaQr);
+
+        Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
+
+        qrData.setContenidoQr(cadenaQr);
+        qrData.setImageQrBase64(utilityFuntions.BitmapToBase64(bitmap1));
+        qrData.setUsuario(loginData.getUsuario().getCodigo().toUpperCase());
+        qrData.setMotivo(motivoDesc);
+        qrData.setCantidad(CantLeidos+"");
+
+        String html = reportsTemplate.PlantillaHtmlQR(qrData);
+
+        wb_qrcode.getSettings().setJavaScriptEnabled(true);
+        //webView.loadUrl("http://www.google.com");
+
+        //String customHtml = "<html><body><h1>Hello, WebView</h1></body></html>";
+
+        tvTittle.setText("Se ha generado correctamente el egreso de mercaderia");
+        wb_qrcode.loadData(html, "text/html", "UTF-8");
+
+
+        //doWebViewPrint(html);
+        /*imageView.setImageBitmap(bitmap);
+        tvTittle.setText("Se ha generado correctamente el egreso de mercaderia: Secuencia #: "+cadenaQr);*/
 
         mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //dialog.dismiss();
-                doPhotoPrint(bitmap);
+                //doPhotoPrint(bitmap);
+
+                createWebPrintJob(wb_qrcode);
             }
         });
         dialog.show();
     }
 
-    private void doPhotoPrint(Bitmap bitmap) {
+
+    private void createWebPrintJob(WebView webView) {
+
+        // Get a PrintManager instance
+        PrintManager printManager = (PrintManager) getActivity()
+                .getSystemService(Context.PRINT_SERVICE);
+
+        String jobName = getString(R.string.app_name) + " Envio de Mercaderia";
+
+        // Get a print adapter instance
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(jobName);
+
+        PrintAttributes.Builder builder = new PrintAttributes.Builder();
+        builder.setMediaSize(PrintAttributes.MediaSize.ISO_A6);
+
+        // Create a print job with name and adapter instance
+        PrintJob printJob = printManager.print(jobName, printAdapter,
+                builder.build());
+
+        if(printJob.isCompleted()){
+            Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+        }
+        else if(printJob.isFailed()){
+            Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    /*private void doPhotoPrint(Bitmap bitmap) {
         PrintHelper photoPrinter = new PrintHelper(mContext);
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-        /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.droids);*/
+        *//*Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.droids);*//*
         photoPrinter.printBitmap("droids.jpg - test print", bitmap);
-    }
+    }*/
 
 
 

@@ -3,23 +3,58 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginRight="1sp"
+    android:layout_marginLeft="1sp"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/tvTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:textSize="18sp" />
+        android:orientation="vertical"
+        android:background="#D4F2E0"
+        android:layout_marginBottom="10sp"
+
+        >
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="250sp"
+        android:orientation="vertical"
+        android:layout_marginLeft="1sp"
+        android:layout_marginRight="1sp"
+        android:background="@drawable/borde"
+        android:layout_marginBottom="10sp">
+
+        <WebView
+            android:id="@+id/webview_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
     <ImageView
+
         android:id="@+id/iv_qrcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="25dp"
+        android:visibility="gone"/>
+
+
+
 
     <Button
         android:id="@+id/dialogBtnAceptar"
