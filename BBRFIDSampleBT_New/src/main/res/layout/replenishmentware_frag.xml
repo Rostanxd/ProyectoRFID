@@ -7,34 +7,17 @@
     android:orientation="vertical"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
-
-   <!-- <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/RUbicacion" />
-
-        <Spinner
-            android:id="@+id/spinnerUbicacionRW"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-
-    </LinearLayout>-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35sp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="10sp"
-        android:orientation="horizontal">
+            android:text="@string/RSeccion" />
 
         <!--<ImageButton
             android:id="@+id/ibtnPotencia"
@@ -42,73 +25,31 @@
             android:layout_height="30sp"
             android:src="@drawable/radio" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/RSeccion" />
-
         <Spinner
             android:id="@+id/spinnerSeccionRW"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
+
 
     </LinearLayout>
 
 
-   <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dip"
-        android:layout_marginTop="10dip"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/inven_imgbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/iniciar" />
-
-        <ImageButton
-            android:id="@+id/stop_inven_imgbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/detener" />
-
-        <ImageButton
-            android:id="@+id/clean_imgbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/limpiar" />
-
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#607d8b"
-            android:text="@string/clear_str"
-            android:visibility="gone" />
-
-    </LinearLayout>-->
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="5dip"
+        android:layout_marginTop="10sp"
         android:orientation="horizontal"
         >
 
 
-        <Switch
+        <!--<Switch
             android:id="@+id/pc_switch"
             android:layout_width="100sp"
             android:layout_height="match_parent"
             android:text="@string/remove_pc_str"
-            android:textSize="11sp" />
+            android:textSize="11sp" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,7 +60,7 @@
             android:id="@+id/ibtnPotencia"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:src="@drawable/radio" />
+            android:src="@drawable/rfpower24" />
     </LinearLayout>
 
     <LinearLayout

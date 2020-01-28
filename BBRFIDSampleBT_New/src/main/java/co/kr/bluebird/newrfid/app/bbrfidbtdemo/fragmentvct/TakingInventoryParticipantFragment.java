@@ -174,7 +174,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
     private Switch mToggleSwitch;
 
-    private Switch mPCSwitch;
+    /*private Switch mPCSwitch;*/
 
     private Switch mFileSwitch;
 
@@ -196,7 +196,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
     private boolean mToggle = false;
 
-    private boolean mIgnorePC = false;
+    private boolean mIgnorePC = true;
 
     private boolean mRssi = false;
 
@@ -283,7 +283,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
     private HashMap<Integer,String> spinnerMap = null;
 
     private ImageButton mibtnPotencia;
-    private  int getValueSBar = 30;
+    private  int RFPower = 30;
 
 
     //private boolean isRunningRead;
@@ -363,7 +363,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
         mToggleSwitch = (Switch)v.findViewById(R.id.toggle_switch);
 
-        mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);
+        /*mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);*/
 
         mFileSwitch = (Switch)v.findViewById(R.id.file_switch);
 
@@ -504,15 +504,15 @@ public class TakingInventoryParticipantFragment extends Fragment {
         int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
         mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
 
-        mSeekBarPower.setProgress(getValueSBar - maxPower);
-        mtvSelect.setText(getValueSBar+"");
+        mSeekBarPower.setProgress(RFPower - maxPower);
+        mtvSelect.setText(RFPower+"");
         mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int val = mSeekBarPower.getProgress();
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 val = i + mSeekBarPowerCorrection;
-                getValueSBar = val;
-                mtvSelect.setText(getValueSBar+"");
+                RFPower = val;
+                mtvSelect.setText(RFPower+"");
             }
 
             @Override
@@ -532,8 +532,8 @@ public class TakingInventoryParticipantFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //dialog.dismiss();
-                Toast.makeText(mContext,"El Valor es: "+getValueSBar+"", Toast.LENGTH_SHORT).show();
-                mReader.RF_SetRadioPowerState(getValueSBar);
+                /*Toast.makeText(mContext,"El Valor es: "+RFPower+"", Toast.LENGTH_SHORT).show();*/
+                mReader.RF_SetRadioPowerState(RFPower);
                 dialog.dismiss();
             }
         });
@@ -690,6 +690,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mReader = BTReader.getReader(mContext, mInventoryHandler);
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
+            mReader.RF_SetRadioPowerState(RFPower);
             updateButtonState();
         }
         else
@@ -1062,12 +1063,12 @@ public class TakingInventoryParticipantFragment extends Fragment {
                     }
                     break;
 
-                case R.id.pc_switch:
+                /*case R.id.pc_switch:
                     if (isChecked)
                         mIgnorePC = true;
                     else
                         mIgnorePC = false;
-                    break;
+                    break;*/
             }
         }
     };
@@ -1195,7 +1196,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mSoundSwitch.setEnabled(b);
         mMaskSwitch.setEnabled(b);
         mToggleSwitch.setEnabled(b);
-        mPCSwitch.setEnabled(b);
+       /* mPCSwitch.setEnabled(b);*/
         mFileSwitch.setEnabled(b);
         mSessionSpin.setEnabled(b);
         mSelFlagSpin.setEnabled(b);
@@ -1590,8 +1591,8 @@ public class TakingInventoryParticipantFragment extends Fragment {
         if (mToggleSwitch != null)
             mToggleSwitch.setOnCheckedChangeListener(sledcheckListener);
 
-        if (mPCSwitch != null)
-            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);
+        /*if (mPCSwitch != null)
+            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);*/
 
         if (mFileSwitch != null)
             mFileSwitch.setOnCheckedChangeListener(sledcheckListener);
@@ -1604,7 +1605,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
     }
 
     private void updateButtonState() {
-        mPCSwitch.setChecked(mIgnorePC);
+       /* mPCSwitch.setChecked(mIgnorePC);*/
 
         mFileSwitch.setChecked(mFile);
 

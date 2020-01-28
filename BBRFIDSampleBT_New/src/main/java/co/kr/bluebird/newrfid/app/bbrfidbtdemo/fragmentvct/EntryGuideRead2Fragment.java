@@ -158,7 +158,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private Switch mToggleSwitch;
 
-    private Switch mPCSwitch;
+    /*private Switch mPCSwitch;*/
 
     private Switch mFileSwitch;
 
@@ -180,7 +180,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private boolean mToggle = false;
 
-    private boolean mIgnorePC = false;
+    private boolean mIgnorePC = true;
 
     private boolean mRssi = false;
 
@@ -274,9 +274,10 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private LinearLayout mlayoutHeader;
 
-    private  int getValueSBar = 17;
+    private  int RFPower = 17;
     private ImageButton mibtnPotencia;
     private boolean lectureHasPc = false;
+    private boolean isWindowsInventoryLocated = false;
 
     private EntryGuideCheckFragment mEntryGuideCheckFragment;
     //private boolean isRunningRead;
@@ -358,7 +359,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
         mToggleSwitch = (Switch)v.findViewById(R.id.toggle_switch);
 
-        mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);
+       /* mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);*/
 
         mFileSwitch = (Switch)v.findViewById(R.id.file_switch);
 
@@ -584,6 +585,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 //        if (mLocate)
 //            mReader.RF_SetRssiTrackingState(SDConsts.RFRssi.ON);
         if (showList) {
+            isWindowsInventoryLocated = false;
             mListLayout.setVisibility(View.VISIBLE);
             mLocateLayout.setVisibility(View.GONE);
             mlayoutButtons.setVisibility(View.VISIBLE);
@@ -597,6 +599,8 @@ public class EntryGuideRead2Fragment extends Fragment {
             mLocateLayout.setVisibility(View.VISIBLE);
             mlayoutButtons.setVisibility(View.GONE);
             mlayoutItemsLeidos.setVisibility(View.GONE);
+
+            isWindowsInventoryLocated = true;
             //mInvenButton.setText(R.string.track_str);
             //mStopInvenButton.setText(R.string.stop_track_str);
         }
@@ -700,6 +704,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
             updateButtonState();
+            mReader.RF_SetRadioPowerState(RFPower);
         }
         else
             enableControl(false);
@@ -809,10 +814,11 @@ public class EntryGuideRead2Fragment extends Fragment {
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
                         Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
 
+                    clearAll();
                     switchLayout(true);
                     mLocateTv.setText("");
                     mLocateTag = null;
-                    clearAll();
+
                     break;
                 case R.id.inven_imgbutton:
                     if (!mInventory) {
@@ -1886,12 +1892,12 @@ public class EntryGuideRead2Fragment extends Fragment {
                     }
                     break;
 
-                case R.id.pc_switch:
+                /*case R.id.pc_switch:
                     if (isChecked)
                         mIgnorePC = true;
                     else
                         mIgnorePC = false;
-                    break;
+                    break;*/
             }
         }
     };
@@ -1941,9 +1947,12 @@ public class EntryGuideRead2Fragment extends Fragment {
     }
 
     private void updateCountText() {
-        if (D) Log.d(TAG, "updateCountText");
-        String text = Integer.toString(mAdapter.getCount());
-        mCountText.setText(text);
+        if(!isWindowsInventoryLocated){
+            if (D) Log.d(TAG, "updateCountText");
+            String text = Integer.toString(mAdapter.getCount());
+            mCountText.setText(text);
+        }
+
     }
 
     private void updateTimerText() {
@@ -2019,7 +2028,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         mSoundSwitch.setEnabled(b);
         mMaskSwitch.setEnabled(b);
         mToggleSwitch.setEnabled(b);
-        mPCSwitch.setEnabled(b);
+        /*mPCSwitch.setEnabled(b);*/
         mFileSwitch.setEnabled(b);
         mSessionSpin.setEnabled(b);
         mSelFlagSpin.setEnabled(b);
@@ -2112,11 +2121,13 @@ public class EntryGuideRead2Fragment extends Fragment {
 
             mTickCount++;
 
-            updateCountText();
+            if(!isWindowsInventoryLocated){
+                updateCountText();
+                String lmCountText = mCountText.getText().toString();
+                mtvCantItemLeidos.setText(lmCountText);
+                mprogress1.setProgress( Integer.parseInt(lmCountText) );
+            }
 
-            String lmCountText = mCountText.getText().toString();
-            mtvCantItemLeidos.setText(lmCountText);
-            mprogress1.setProgress( Integer.parseInt(lmCountText) );
 
             updateSpeedCountText();
 
@@ -2167,7 +2178,10 @@ public class EntryGuideRead2Fragment extends Fragment {
                                 ret = mReader.RF_PerformInventory(mIsTurbo, mMask, mIgnorePC);
                             //ret = mReader.RF_READ(SDConsts.RFMemType.EPC, 1, 7, "00000000", false);
                             if (ret == SDConsts.RFResult.SUCCESS) {
-                                btnProcesarEnabledDisabled(false);
+                                if(!isWindowsInventoryLocated){
+                                    btnProcesarEnabledDisabled(false);
+                                }
+
                                 startStopwatch();
                                 mInventory = true;
                                 enableControl(!mInventory);
@@ -2195,11 +2209,15 @@ public class EntryGuideRead2Fragment extends Fragment {
                             mInventory = false;
                             enableControl(!mInventory);
 
-                            btnProcesarManagement(false);
+                            if(!isWindowsInventoryLocated){
+                                btnProcesarManagement(false);
 
-                            if(!mCountText.getText().equals("0")){
-                                btnProcesarEnabledDisabled(true);
+                                if(!mCountText.getText().equals("0")){
+                                    btnProcesarEnabledDisabled(true);
+                                }
                             }
+
+
                         }
                         lectureHasPc = !mIgnorePC;
                         pauseStopwatch();
@@ -2414,8 +2432,8 @@ public class EntryGuideRead2Fragment extends Fragment {
         if (mToggleSwitch != null)
             mToggleSwitch.setOnCheckedChangeListener(sledcheckListener);
 
-        if (mPCSwitch != null)
-            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);
+        /*if (mPCSwitch != null)
+            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);*/
 
         if (mFileSwitch != null)
             mFileSwitch.setOnCheckedChangeListener(sledcheckListener);
@@ -2428,7 +2446,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     }
 
     private void updateButtonState() {
-        mPCSwitch.setChecked(mIgnorePC);
+        /*mPCSwitch.setChecked(mIgnorePC);*/
 
         mFileSwitch.setChecked(mFile);
 
@@ -2561,7 +2579,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         dialog.setContentView(R.layout.dialog_powerstate);
         int maxPower = 5;
 
-        //getValueSBar = 17;
+        //RFPower = 17;
 
 
         SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
@@ -2574,15 +2592,15 @@ public class EntryGuideRead2Fragment extends Fragment {
         int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
         mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
 
-        mSeekBarPower.setProgress(getValueSBar - maxPower);
-        mtvSelect.setText(getValueSBar+"");
+        mSeekBarPower.setProgress(RFPower - maxPower);
+        mtvSelect.setText(RFPower+"");
         mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int val = mSeekBarPower.getProgress();
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 val = i + mSeekBarPowerCorrection;
-                getValueSBar = val;
-                mtvSelect.setText(getValueSBar+"");
+                RFPower = val;
+                mtvSelect.setText(RFPower+"");
             }
 
             @Override
@@ -2602,8 +2620,7 @@ public class EntryGuideRead2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //dialog.dismiss();
-                Toast.makeText(mContext,"El Valor es: "+getValueSBar+"", Toast.LENGTH_SHORT).show();
-                mReader.RF_SetRadioPowerState(getValueSBar);
+                mReader.RF_SetRadioPowerState(RFPower);
                 dialog.dismiss();
             }
         });
