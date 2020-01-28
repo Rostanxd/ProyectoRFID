@@ -148,7 +148,7 @@ public class DespatchGuideReadFragment extends Fragment {
 
     private Switch mToggleSwitch;
 
-    private Switch mPCSwitch;
+    /*private Switch mPCSwitch;*/
 
     private Switch mFileSwitch;
 
@@ -170,7 +170,7 @@ public class DespatchGuideReadFragment extends Fragment {
 
     private boolean mToggle = false;
 
-    private boolean mIgnorePC = false;
+    private boolean mIgnorePC = true;
 
     private boolean mRssi = false;
 
@@ -252,7 +252,7 @@ public class DespatchGuideReadFragment extends Fragment {
 
 
     private ImageButton mibtnPotencia;
-    private  int getValueSBar = 17;
+    private  int RFPower = 17;
 
 
     //private boolean isRunningRead;
@@ -321,7 +321,7 @@ public class DespatchGuideReadFragment extends Fragment {
 
         mToggleSwitch = (Switch)v.findViewById(R.id.toggle_switch);
 
-        mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);
+        /*mPCSwitch = (Switch)v.findViewById(R.id.pc_switch);*/
 
         mFileSwitch = (Switch)v.findViewById(R.id.file_switch);
 
@@ -428,7 +428,7 @@ public class DespatchGuideReadFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_powerstate);
         int maxPower = 5;
 
-        //getValueSBar = 17;
+        //RFPower = 17;
 
 
         SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
@@ -441,15 +441,15 @@ public class DespatchGuideReadFragment extends Fragment {
         int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
         mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
 
-        mSeekBarPower.setProgress(getValueSBar - maxPower);
-        mtvSelect.setText(getValueSBar+"");
+        mSeekBarPower.setProgress(RFPower - maxPower);
+        mtvSelect.setText(RFPower+"");
         mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int val = mSeekBarPower.getProgress();
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 val = i + mSeekBarPowerCorrection;
-                getValueSBar = val;
-                mtvSelect.setText(getValueSBar+"");
+                RFPower = val;
+                mtvSelect.setText(RFPower+"");
             }
 
             @Override
@@ -469,8 +469,8 @@ public class DespatchGuideReadFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //dialog.dismiss();
-                Toast.makeText(mContext,"El Valor es: "+getValueSBar+"", Toast.LENGTH_SHORT).show();
-                mReader.RF_SetRadioPowerState(getValueSBar);
+
+                mReader.RF_SetRadioPowerState(RFPower);
                 dialog.dismiss();
             }
         });
@@ -651,6 +651,8 @@ public class DespatchGuideReadFragment extends Fragment {
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
             updateButtonState();
+
+            mReader.RF_SetRadioPowerState(RFPower);
         }
         else
             enableControl(false);
@@ -1059,12 +1061,12 @@ public class DespatchGuideReadFragment extends Fragment {
                     }
                     break;
 
-                case R.id.pc_switch:
+                /*case R.id.pc_switch:
                     if (isChecked)
                         mIgnorePC = true;
                     else
                         mIgnorePC = false;
-                    break;
+                    break;*/
             }
         }
     };
@@ -1192,7 +1194,7 @@ public class DespatchGuideReadFragment extends Fragment {
         mSoundSwitch.setEnabled(b);
         mMaskSwitch.setEnabled(b);
         mToggleSwitch.setEnabled(b);
-        mPCSwitch.setEnabled(b);
+        /*mPCSwitch.setEnabled(b);*/
         mFileSwitch.setEnabled(b);
         mSessionSpin.setEnabled(b);
         mSelFlagSpin.setEnabled(b);
@@ -1632,8 +1634,8 @@ public class DespatchGuideReadFragment extends Fragment {
         if (mToggleSwitch != null)
             mToggleSwitch.setOnCheckedChangeListener(sledcheckListener);
 
-        if (mPCSwitch != null)
-            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);
+        /*if (mPCSwitch != null)
+            mPCSwitch.setOnCheckedChangeListener(sledcheckListener);*/
 
         if (mFileSwitch != null)
             mFileSwitch.setOnCheckedChangeListener(sledcheckListener);
@@ -1646,7 +1648,7 @@ public class DespatchGuideReadFragment extends Fragment {
     }
 
     private void updateButtonState() {
-        mPCSwitch.setChecked(mIgnorePC);
+        /*mPCSwitch.setChecked(mIgnorePC);*/
 
         mFileSwitch.setChecked(mFile);
 

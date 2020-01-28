@@ -62,19 +62,19 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="5dip"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="20dip"
         android:orientation="horizontal"
         >
 
 
-        <Switch
+        <!--<Switch
             android:id="@+id/pc_switch"
             android:layout_width="100sp"
             android:layout_height="match_parent"
             android:text="@string/remove_pc_str"
-            android:textSize="11sp" />
+            android:textSize="11sp" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:id="@+id/ibtnPotencia"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:src="@drawable/radio" />
+            android:src="@drawable/rfpower24" />
     </LinearLayout>
 
     <LinearLayout
