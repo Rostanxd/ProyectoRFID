@@ -251,7 +251,7 @@ public class EntryGuideCheckFragment extends Fragment {
             rfidService.METHOD_NAME_ =  mWSParameters[1];
             rfidService.NAMESPACE_ = mWSParameters[2];
             rfidService.URL_ = mWSParameters[3];
-            ResposeEG = rfidService.GuiaEntradaService(numeroOrdenCompra);
+            ResposeEG = rfidService.WSGuiaEntradaByOrdenCompra(numeroOrdenCompra);
             return null;
         }
 
@@ -262,20 +262,16 @@ public class EntryGuideCheckFragment extends Fragment {
             progressDialog.cancel();
             if(ResposeEG.estado   != null ){
                 if(ResposeEG.estado.codigo.equals("00")){
-                    if(ResposeEG.data_ != null && ResposeEG.data_.guias.size() > 0){
+                    if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
                         LlenarGrid();
                     }
                     else {
                         Toast.makeText(mContext, "No hay informacion que mostrar..." , Toast.LENGTH_SHORT).show();
                     }
                 }
-                else if(ResposeEG.estado.codigo.equals("9999")){
-                    Toast.makeText(mContext, ResposeEG.estado.descripcion, Toast.LENGTH_LONG).show();
-                }
                 else {
                     Toast.makeText(mContext, ResposeEG.estado.descripcion , Toast.LENGTH_SHORT).show();
                 }
-
             }
         }
 

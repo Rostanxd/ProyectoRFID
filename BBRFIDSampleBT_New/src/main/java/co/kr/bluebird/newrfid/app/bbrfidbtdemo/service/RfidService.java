@@ -1,8 +1,7 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.service;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.widget.Switch;
+
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -11,9 +10,7 @@ import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.transport.HttpsServiceConnectionSE;
-import org.w3c.dom.Document;
 
-import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -25,13 +22,10 @@ import java.util.Map;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDtoEx;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DespatchGuide;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuideDetail;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Etiqueta;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ExceptionData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Garment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSale;
@@ -51,11 +45,11 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentWareResult;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Replenishments;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResidueExternDetail;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SendTags;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.StoreExistence;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.WSException;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomMsgExceptions;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ResponseSoapToObject;
 
 public class RfidService {
 
@@ -73,12 +67,13 @@ public class RfidService {
     public String METHOD_NAME_ = null;
     public String NAMESPACE_ = null;
     public String URL_;
+    private ResponseSoapToObject responseSoapToObject;
 
-    public RfidService()
+    /*public RfidService()
     {
         paramRfidIteration = null;
         paramLectorRfid_ =  null;
-    }
+    }*/
 
     public RfidService(Context mContext_)
     {
@@ -88,100 +83,16 @@ public class RfidService {
         globalContext = mContext_;
 
         gUsuario = paramLogin_ != null ? paramLogin_.getUsuario() :"";
+
+        responseSoapToObject = new ResponseSoapToObject();
     }
 
-    /*public RfidService(Context mContext_, String [] WSConsumo)
+    // invoque a awsrfidguiaentradaoc (Lista de Guia de entrada de una orden de compra)
+    public EntryGuide WSGuiaEntradaByOrdenCompra(String numOrdenCompra)
     {
-        paramRfidIteration = new ParamRfidIteration();
-        paramLectorRfid_ =  paramRfidIteration.ConsultarParametros(mContext_);
-        globalContext = mContext_;
-
-        if(WSConsumo != null && WSConsumo.length > 0){
-            SOAP_ACTION_ = WSConsumo[0];
-            METHOD_NAME_ = WSConsumo[1];
-            NAMESPACE_ = WSConsumo[2];
-            URL_ = paramLectorRfid_.getHostPort()+ WSConsumo[3];
-        }
-
-    }*/
-
-
-    // WS GUIA DE ENTRADA
-    public EntryGuide GuiaEntradaService(String numOrdenCompra)
-    {
-        /*String SOAP_ACTION = "WebSithaction/AWSRFIDGUIAENTRADAOC.Execute";
-        String METHOD_NAME = "WsRfidGuiaEntradaOC.Execute";
-        String NAMESPACE = "WebSith";
-        String URL = "http://info.thgye.com.ec/awsrfidguiaentradaoc.aspx";*/
-
-
-        DataSourceDto geEstado;
-        EGData data_;
-        Guide guide;
-        List<Guide> guides;
-        EntryGuide ResponseGuide = new EntryGuide(null,null);
-
-        String numero;
-        String estadoCodigo;
-        String estadoNombre;
-        int cantidad;
-        String CantidadTotal;
-
-        try {
-
-            SoapObject Request = new SoapObject(NAMESPACE_,METHOD_NAME_);
-            Request.addProperty("Ordencompranumero",numOrdenCompra);
-
-            SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.dotNet = true;
-
-            soapEnvelope.setOutputSoapObject(Request);
-
-            HttpTransportSE transportSE = new HttpTransportSE(paramLectorRfid_.getEndpoint()+URL_);
-            transportSE.debug = true;
-
-
-            transportSE.call(SOAP_ACTION_,soapEnvelope);
-            /*String requestDump = transportSE.requestDump;
-            String responseDump = transportSE.responseDump;*/
-
-            SoapObject resultRequestSOAP = (SoapObject) soapEnvelope.getResponse();
-
-            SoapPrimitive spEstado =(SoapPrimitive) ((SoapObject)resultRequestSOAP.getProperty("estado")).getProperty("codigo");
-            SoapPrimitive spMensaje =(SoapPrimitive) ((SoapObject)resultRequestSOAP.getProperty("estado")).getProperty("mensaje");
-            geEstado = new DataSourceDto(spEstado.getValue().toString(),spMensaje.getValue().toString(),null);
-            if(spEstado.getValue().toString().equals("00")){
-
-                CantidadTotal =  ((SoapObject)resultRequestSOAP.getProperty("data")).getPropertyAsString("cantidadTotal");
-
-                guides = new ArrayList<Guide>();
-                SoapObject soGuides = ((SoapObject) ((SoapObject)resultRequestSOAP.getProperty("data")).getProperty("guias"));
-                for (int x=0; x<soGuides.getPropertyCount();x++)
-                {
-                    SoapObject soGuide = (SoapObject) soGuides.getProperty(x);
-                    numero = soGuide.getPropertyAsString("numero");
-                    estadoCodigo = soGuide.getPropertyAsString("estadoCodigo");
-                    estadoNombre = soGuide.getPropertyAsString("estadoNombre");
-                    cantidad = Integer.parseInt(soGuide.getPropertyAsString("cantidad")) ;
-
-                    guide = new Guide(numero,estadoCodigo,estadoNombre,cantidad);
-                    guides.add(guide);
-                }
-
-                data_ = new EGData(Integer.parseInt(CantidadTotal) ,guides);
-                ResponseGuide = new EntryGuide(geEstado,data_);
-
-            }
-            else {
-                ResponseGuide = new EntryGuide( geEstado,null );
-            }
-
-        } catch (Exception ex){
-            geEstado =  new DataSourceDto("9999", "Error en la invocacion al servicio: "+ex.getMessage(),null);
-            ResponseGuide = new EntryGuide(geEstado, null);
-        }
-
-        return ResponseGuide;
+        SoapObject Request = new SoapObject(NAMESPACE_,METHOD_NAME_);
+        Request.addProperty("Ordencompranumero",numOrdenCompra);
+        return responseSoapToObject.GuiaEntradaOCResponse(CallService(Request, SOAP_ACTION_, paramLectorRfid_.getEndpoint()+URL_, true, false), exceptionData);
     }
 
     public DataSourceDto WSGuiaEntradaProcesar(String numGuia){
@@ -465,6 +376,7 @@ public class RfidService {
         //List<Map<String, String>> PROPERTIES
         SoapObject resultRequestSOAP = null;
         TriggerException = null;
+        exceptionData = null;
         try
         {
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);

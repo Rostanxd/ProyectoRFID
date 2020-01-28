@@ -18,7 +18,6 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.TagListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
@@ -230,7 +229,6 @@ public class DespatchGuideReadFragment extends Fragment {
     private int mTickCount = 0;
 
     private CopyOnWriteArrayList<ListItem> ArrLis;
-    private RfidService rfidService;
     private EntryGuideDetail entryGuideDetail;
 
     private UpdateStopwatchHandler mUpdateStopwatchHandler = new UpdateStopwatchHandler(this);
@@ -391,19 +389,10 @@ public class DespatchGuideReadFragment extends Fragment {
         mAdapter = new TagListAdapter(mContext);
         //mRfidList.setAdapter(mAdapter);
 
-
-
         bindStopwatchSvc();
-
-
-
-
 
         NoGuia = getArguments() != null ? getArguments().getString("NoGuia") : "0";
 
-
-
-        rfidService = new RfidService();
         entryGuideDetail = null;
 
         return v;
