@@ -1979,15 +1979,19 @@ public class RfidService {
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
         SoapObject soNivel4 ;
         SoapObject soNivel3 = new SoapObject(NAMESPACE_, "Nivel3");
+        SoapObject soSdtrfidetiquetasrequest = new SoapObject(NAMESPACE_, "Sdtrfidetiquetasrequest");
 
         for (String epc:listEpc) {
             soNivel4 = new SoapObject(NAMESPACE_, null);
             soNivel4.addProperty("epc",epc);
 
-            soNivel3.addProperty("etiquetas.etiqueta", soNivel4);
+            soNivel3.addProperty("etiqueta", soNivel4);
         }
 
-        soRequest.addProperty("Etiquetas", soNivel3);
+        soSdtrfidetiquetasrequest.addProperty("dispositivoId", paramLectorRfid_.getDispositivoid() );
+        soSdtrfidetiquetasrequest.addProperty("etiquetas", soNivel3 );
+        //soRequest.addProperty("etiquetas", soNivel3);
+        soRequest.addProperty("Sdtrfidetiquetasrequest", soSdtrfidetiquetasrequest );
         soRequest.addProperty("Lincodigo", Lincodigo);
         soRequest.addProperty("Prdcodigo", Prdcodigo);
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
@@ -2150,6 +2154,7 @@ public class RfidService {
         soRequest.addProperty("Lincodigo", Lincodigo);
         soRequest.addProperty("Prdcodigo", "");
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
+        soRequest.addProperty("Usrcodigo", gUsuario);
 
         TriggerException = null;
         return  ResponseToDataSourceDto(CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false));
