@@ -46,6 +46,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.QrData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
@@ -66,7 +67,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
     //private TableLayout tblGDDestino;
     private Context mContext;
     private RfidService rfidService;
-    private DespatchGuide despatchGuide;
+    private GenericSpinnerDto spinnerDtoBodega;
     private Button mprocesar_imgbtn;
     private QRCodeGenerator qrCodeGenerator;
     private EditText met_nGuiaEntrada;
@@ -141,7 +142,14 @@ public class DespatchGuideGenerateFragment extends Fragment {
         mprocesar_imgbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogProcesar();
+
+                String lCodBodega = spinnerMap.get(mSpinnerDestino.getSelectedItemPosition());
+                if(!met_nGuiaEntrada.getText().toString().equals("") && !lCodBodega.equals("0") ){
+                    DialogProcesar();
+                }
+                else {
+                    Toast.makeText(mContext, "Ingrese un número de Guia y/o seleccione un destino ", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -162,11 +170,11 @@ public class DespatchGuideGenerateFragment extends Fragment {
         mSpinnerDestino.setAdapter(adapter);*/
 
 
-        spinnerArray = new String[despatchGuide.bodegas.size()];
+        spinnerArray = new String[spinnerDtoBodega.getColeccion().size()];
         spinnerMap = new HashMap<Integer, String>();
 
         int i = 0;
-        for (DataSourceDto dto:despatchGuide.bodegas) {
+        for (DataSourceDto dto:spinnerDtoBodega.getColeccion()) {
             spinnerMap.put(i,dto.codigo);
             spinnerArray[i] = dto.descripcion;
             i++;
@@ -191,7 +199,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSParametersBodega[2];
             rfidService.URL_ = mWSParametersBodega[3];
 
-            despatchGuide = rfidService.WSBodegasOrMotivosService(true, mContext, "GDE", null);
+            spinnerDtoBodega = rfidService.WSBodegasOrMotivosService(true, "GDE", null);
             return null;
         }
 
@@ -199,16 +207,16 @@ public class DespatchGuideGenerateFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
 
-            if(despatchGuide != null && despatchGuide.getEstado() != null && despatchGuide.getEstado().getCodigo().equals("9999")){
-                Toast.makeText(mContext,despatchGuide.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+            if(spinnerDtoBodega != null && spinnerDtoBodega.getEstado() != null && spinnerDtoBodega.getEstado().getCodigo().equals("9999")){
+                Toast.makeText(mContext,spinnerDtoBodega.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
             }
             else {
-                if (despatchGuide.estado != null && despatchGuide.estado.codigo.equals("00")) {
+                if (spinnerDtoBodega.estado != null && spinnerDtoBodega.estado.codigo.equals("00")) {
                     SpinnerComplete();
                     progressDialog.cancel();
                 } else {
                     progressDialog.cancel();
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo::Codigo: " + despatchGuide.estado.codigo, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext,  spinnerDtoBodega.estado.codigo, Toast.LENGTH_SHORT).show();
                 }
             }
         }

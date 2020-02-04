@@ -26,8 +26,10 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.InventoryControl;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterTakInventoryControl;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +48,7 @@ public class TakingInventoryControlFragment extends Fragment {
     private TextView mtvContado;
     private String[] mWSparameterConteos, mWSparameterConteoDetalle;
     private LinearLayout mLayoutInvC;
+    private Validator validator;
 
 
     /*
@@ -73,6 +76,7 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
         first = true;
         mContext = inflater.getContext();
         rfidService =new RfidService(mContext);
+        validator = new Validator();
         mpbLeidos = (ProgressBar)v.findViewById(R.id.pbLeidos);
         mpbLeidos.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#07BDAB")));
         mtvContado = (TextView)v.findViewById(R.id.tvContado);
@@ -166,6 +170,7 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
     // Metodos Async
     private  class exWSConteoAsync extends AsyncTask<Void, Void, Void> {
 
+        ResponseVal responseVal;
         @Override
         protected Void doInBackground(Void... voids) {
             //despatchGuide = rfidService.GuiaDespachoBodegasService();
@@ -186,25 +191,18 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
 
-            if(genericSpinnerDto != null && genericSpinnerDto.estado != null && genericSpinnerDto.estado.getAuxiliar() != null){
-                Toast.makeText(mContext, "No existen conteos vigentes...", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if(genericSpinnerDto != null && genericSpinnerDto.estado != null && genericSpinnerDto.estado.codigo.equals("9999")){
-                    Toast.makeText(mContext,genericSpinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT ).show();
+
+            responseVal = validator.getValidateGenericDto(genericSpinnerDto);
+            if (responseVal.isValidAccess()) {
+                if (responseVal.isFullCollection()) {
+                    mspinnerConteoSetItems();
+                } else {
+                    Toast.makeText(mContext, R.string.INF_NoConteo, Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    if (genericSpinnerDto != null && genericSpinnerDto.estado != null && genericSpinnerDto.estado.codigo.equals("00")) {
-                        try {
-                            mspinnerConteoSetItems();
-                        } catch (Exception ex) {
-                            Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(mContext, "Ocurrio un error al cargar los conteos: " + genericSpinnerDto.estado.getDescripcion(), Toast.LENGTH_SHORT).show();
-                    }
-                }
+            } else {
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_SHORT).show();
             }
+
 
         }
     }
@@ -229,7 +227,10 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
 
-            if(inventoryDetail != null && inventoryDetail.estado != null && inventoryDetail.estado.codigo.equals("00")){
+            Validator validator = new Validator();
+            ResponseVal responseVal = validator.getValidateDataSourceDto(inventoryDetail.getEstado());
+
+            if(responseVal.isValidAccess()){
                 try{
 
                     mpbLeidos.setMax(inventoryDetail.getTotalEsperado());
@@ -241,13 +242,10 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
                 catch (Exception ex){
                     Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
-
             }
             else {
-                Toast.makeText(mContext, "Ocurrio un error en el Servicio: "+genericSpinnerDto.estado.getDescripcion() , Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 

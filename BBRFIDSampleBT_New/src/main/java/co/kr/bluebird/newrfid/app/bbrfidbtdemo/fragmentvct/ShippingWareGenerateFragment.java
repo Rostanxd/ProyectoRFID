@@ -49,9 +49,11 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.QrData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterDespatchGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
@@ -60,6 +62,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.QRCodeGenerator;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ReportsTemplate;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.RfidEpHomologacion;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.UtilityFuntions;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,7 +84,7 @@ public class ShippingWareGenerateFragment extends Fragment {
     private EGProcesado egProcesado;
     private ListView mlv_detailSW;
     private boolean first ;
-    private DespatchGuide despatchGuide;
+    private GenericSpinnerDto spinnerDto;
     private String gNota, CodBodAlmacenamiento = null;
     private String[] mWSParametersMotivos, mWSParametersEnvioMercaderiaProc, mWSParameterBodegas;
 
@@ -218,7 +221,13 @@ public class ShippingWareGenerateFragment extends Fragment {
         mprocesar_imgbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogProcesar();
+                String lMotivo = spinnerMap.get(mSpinnerMotivo.getSelectedItemPosition());
+                if(!lMotivo.equals("0") && !mtvNota.getText().toString().equals("") ){
+                    DialogProcesar();
+                }
+                else {
+                    Toast.makeText(mContext, "Seleccione un motivo y/o agregar una nota", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -243,11 +252,11 @@ public class ShippingWareGenerateFragment extends Fragment {
 
     private  void SpinnerComplete(){
 
-        spinnerArray = new String[despatchGuide.bodegas.size()];
+        spinnerArray = new String[spinnerDto.getColeccion().size()];
         spinnerMap = new HashMap<Integer, String>();
 
         int i = 0;
-        for (DataSourceDto dto:despatchGuide.bodegas) {
+        for (DataSourceDto dto:spinnerDto.getColeccion()) {
             spinnerMap.put(i,dto.codigo);
             spinnerArray[i] = dto.descripcion;
             i++;
@@ -261,11 +270,11 @@ public class ShippingWareGenerateFragment extends Fragment {
 
     private  void SpinnerBodegasComplete(){
 
-        spinnerArrayAlm = new String[despatchGuide.bodegas.size()];
+        spinnerArrayAlm = new String[spinnerDto.getColeccion().size()];
         spinnerMapAlm = new HashMap<Integer, String>();
 
         int i = 0;
-        for (DataSourceDto dto:despatchGuide.bodegas) {
+        for (DataSourceDto dto:spinnerDto.getColeccion()) {
             spinnerMapAlm.put(i,dto.codigo);
             spinnerArrayAlm[i] = dto.descripcion;
             i++;
@@ -288,7 +297,7 @@ public class ShippingWareGenerateFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSParametersMotivos[2];
             rfidService.URL_ = mWSParametersMotivos[3];
 
-            despatchGuide = rfidService.WSBodegasOrMotivosService(false, mContext, null, CodBodAlmacenamiento);
+            spinnerDto = rfidService.WSBodegasOrMotivosService(false, null, CodBodAlmacenamiento);
             return null;
         }
 
@@ -298,16 +307,18 @@ public class ShippingWareGenerateFragment extends Fragment {
             //SpinnerComplete();
 
             progressDialog.cancel();
-            if(despatchGuide != null && despatchGuide.getEstado() != null && despatchGuide.getEstado().getCodigo().equals("9999")){
-                Toast.makeText(mContext,despatchGuide.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if(despatchGuide.estado != null && despatchGuide.estado.codigo.equals("00")){
+
+            if(spinnerDto != null && spinnerDto.getEstado() != null && spinnerDto.getEstado().getCodigo().equals("00")){
+
+                if(spinnerDto.getColeccion() != null && spinnerDto.getColeccion().size() > 0){
                     SpinnerComplete();
                 }
                 else {
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo::Codigo: "+despatchGuide.estado.codigo , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
                 }
+            }
+            else {
+                Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
             }
 
 
@@ -337,7 +348,7 @@ public class ShippingWareGenerateFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSParameterBodegas[2];
             rfidService.URL_ = mWSParameterBodegas[3];
 
-            despatchGuide = rfidService.WSBodegasOrMotivosService(true, mContext, "ENV", null);
+            spinnerDto = rfidService.WSBodegasOrMotivosService(true, "ENV", null);
             return null;
         }
 
@@ -347,19 +358,19 @@ public class ShippingWareGenerateFragment extends Fragment {
             //SpinnerComplete();
 
             progressDialog.cancel();
-            if(despatchGuide != null && despatchGuide.getEstado() != null && despatchGuide.getEstado().getCodigo().equals("9999")){
-                Toast.makeText(mContext,despatchGuide.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if(despatchGuide.estado != null && despatchGuide.estado.codigo.equals("00")){
+
+            if(spinnerDto != null && spinnerDto.getEstado() != null && spinnerDto.getEstado().getCodigo().equals("00")){
+
+                if(spinnerDto.getColeccion() != null && spinnerDto.getColeccion().size() > 0){
                     SpinnerBodegasComplete();
                 }
                 else {
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo::Codigo: "+despatchGuide.estado.codigo , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
                 }
             }
-
-
+            else {
+                Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -421,30 +432,19 @@ public class ShippingWareGenerateFragment extends Fragment {
         String lMotivo = spinnerMap.get(mSpinnerMotivo.getSelectedItemPosition());
         String motivoDesc = mSpinnerMotivo.getSelectedItem().toString();
 
-        DataSourceDtoEx dto;
+        DataSourceDto dtoEnvioMercProcesar;
         ProgressDialog progressDialog;
 
         @Override
         protected Void doInBackground(Void... voids) {
             if(egDetailResponse.status.codigo.equals("00")){
 
-                /*try {
-                    dto= rfidService.WSEnvioMercaderiaProcesarService(mContext, egDetailResponse.getItems(),lMotivo,gNota);
-
-                } catch (Exception ex){
-                    dto = null;
-                    //Toast.makeText(mContext, ex.getMessage() , Toast.LENGTH_SHORT).show();
-                }*/
-
-
                 rfidService.SOAP_ACTION_ =  mWSParametersEnvioMercaderiaProc[0];
                 rfidService.METHOD_NAME_ =  mWSParametersEnvioMercaderiaProc[1];
                 rfidService.NAMESPACE_ = mWSParametersEnvioMercaderiaProc[2];
                 rfidService.URL_ = mWSParametersEnvioMercaderiaProc[3];
 
-
-                dto= rfidService.WSEnvioMercaderiaProcesarService(mContext, egDetailResponse.getItems(),lMotivo,gNota);
-
+                dtoEnvioMercProcesar= rfidService.WSEnvioMercaderiaProcesarService( egDetailResponse.getItems(),lMotivo,gNota);
 
             }
 
@@ -455,27 +455,30 @@ public class ShippingWareGenerateFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
             progressDialog.cancel();
-            if(!dto.getHandlerException().isExceptionExist()){
-                if(dto.getInformationDto() != null &&dto.getInformationDto().getCodigo().equals("00") ){
-                    try {
-                        int cantidadtotal = 0;
-                        for (EGTagsResponseItem item :egDetailResponse.getItems()) {
 
-                            cantidadtotal += item.getCantidadLeidos();
 
-                        }
-                        PrintScrenQr(dto.getInformationDto().getAuxiliar(), motivoDesc, cantidadtotal);
+            Validator validator = new Validator();
 
-                    }catch (Exception ex){
-                        Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
+            ResponseVal responseVal =  validator.getValidateDataSourceDto(dtoEnvioMercProcesar);
+
+            if(responseVal.isValidAccess()){
+                try {
+                    int cantidadtotal = 0;
+                    for (EGTagsResponseItem item :egDetailResponse.getItems()) {
+
+                        cantidadtotal += item.getCantidadLeidos();
+
                     }
+                    PrintScrenQr(dtoEnvioMercProcesar.getAuxiliar(), motivoDesc, cantidadtotal);
+
+                }catch (Exception ex){
+                    Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo:: "+dto.getInformationDto().getDescripcion() , Toast.LENGTH_SHORT).show();
-                }
+
             }
-            else{
-                Toast.makeText(mContext, "Llamada a Servicio Erroneo:: "+dto.getHandlerException().getExceptionMessage() , Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_LONG).show();
+
             }
 
         }

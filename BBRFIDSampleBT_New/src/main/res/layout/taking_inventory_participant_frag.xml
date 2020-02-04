@@ -23,16 +23,15 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:src="@drawable/radio" />-->
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="75dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/TIconteo" />
 
         <Spinner
             android:id="@+id/spinnerConteoIP"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
              />
 
     </LinearLayout>
@@ -45,9 +44,8 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="47dp"
+            android:layout_width="75dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/RUbicacion" />
 
         <Spinner

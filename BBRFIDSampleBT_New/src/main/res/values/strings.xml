@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Mensajes informativo y de errores-->
+    <string name="INF_NoConteo">No hay conteos vigentes</string>
+
+
+    <!--leyendas de controles -->
+    <string name="tags_other">Etiquetas sobrantes</string>
+    <string name="tags_no_enc">Etiquetas no encontradas</string>
+
+
     <string name="endpointlocal">Endpoint Local</string>
     <string name="endpointext">Endpoint externo</string>
     <string name="PhostLocal">Host Local</string>
@@ -14,6 +23,8 @@
     <string name="PDurTime">Tiempo Duracion</string>
     <string name="PDateIni">Fecha Inicio</string>
     <string name="PDateFin">Fecha Fin</string>
+
+    <string name="motivosNull">No existen motivos</string>
 
     <string name="RUbicacion">Ubicacion</string>
     <string name="RSeccion">Seccion</string>

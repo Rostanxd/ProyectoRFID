@@ -3,14 +3,14 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 import java.util.List;
 
 public class Replenishments {
-    public DataSourceDtoEx estado;
+    public DataSourceDto estado;
     public List<Replenishment> replenishments;
 
-    public DataSourceDtoEx getEstado() {
+    public DataSourceDto getEstado() {
         return estado;
     }
 
-    public void setEstado(DataSourceDtoEx estado) {
+    public void setEstado(DataSourceDto estado) {
         this.estado = estado;
     }
 

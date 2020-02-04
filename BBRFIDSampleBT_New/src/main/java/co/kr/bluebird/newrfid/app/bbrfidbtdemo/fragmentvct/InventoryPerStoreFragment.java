@@ -53,6 +53,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSaleObj;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GarmentSize;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.StoreExistence;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.StoreExistenceObj;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterInvPerStoreOtherSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ExpandableListAdapterInvPerStoreSaldos;
@@ -78,7 +79,7 @@ public class InventoryPerStoreFragment extends Fragment {
     private LinearLayout mLayoutSaldos, mLayoutInfo, mlayoutHeaderSale, mlayoutFooterSale;
     private String[] mFunctionsString;
     private String mItemCodigo = null;
-    private List<StoreExistence> existenceList = null;
+    private StoreExistenceObj storeExistenceObj = null;
     private String[] mWSparameterInvTiendaInfo, mWSparameterInvTiendaSaldo;
 
     private String mMessageTextView;
@@ -580,14 +581,27 @@ public class InventoryPerStoreFragment extends Fragment {
             rfidService.NAMESPACE_ = mFunctionsString[2];
             rfidService.URL_ = mFunctionsString[3];
 
-            existenceList = rfidService.WSInventoryPerStoreExistencePlace(mItemCodigo);
+            storeExistenceObj = rfidService.WSInventoryPerStoreExistencePlace(mItemCodigo);
             return null;
         }
         @Override
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
             progressDialog.cancel();
-            InvoqueDialogSaldoOtros();
+            // falta pedir a Robert que en el WS Agrege el estado
+            if(storeExistenceObj != null && storeExistenceObj.getEstado() != null && storeExistenceObj.getEstado().getCodigo().equals("00")){
+
+                if(storeExistenceObj.getExistencias() != null && storeExistenceObj.getExistencias().size() > 0){
+                    InvoqueDialogSaldoOtros();
+                }
+                else {
+                    Toast.makeText(mContext, "No hay existencias que mostrar...", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                Toast.makeText(mContext, storeExistenceObj.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+            }
+
         }
         @Override
         protected void onPreExecute() {
@@ -683,7 +697,7 @@ public class InventoryPerStoreFragment extends Fragment {
 
         lv.addHeaderView(headerview);
 
-        lv.setAdapter(new CustomListAdapterInvPerStoreOtherSale(mContext, existenceList));
+        lv.setAdapter(new CustomListAdapterInvPerStoreOtherSale(mContext, storeExistenceObj.getExistencias()));
         /*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
