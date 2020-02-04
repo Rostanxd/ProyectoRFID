@@ -42,6 +42,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDtoEx;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuideDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentWareResult;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fileutil.FileManager;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.ListItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity;
@@ -51,6 +52,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapter;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 
@@ -284,6 +286,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
     private ImageButton mibtnPotencia;
     private  int RFPower = 30;
+    private Validator validator;
 
 
     //private boolean isRunningRead;
@@ -300,6 +303,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mContext = inflater.getContext();
 
         mFragment = this;
+        validator = new Validator();
 
         mOptionHandler = ((MainActivity)getActivity()).mUpdateConnectHandler;
 
@@ -1679,6 +1683,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
     private  class exWSConteoAsync extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog progressDialog;
+        ResponseVal responseVal;
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -1706,46 +1711,28 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
             progressDialog.cancel();
 
-            if(genericSpinnerDto != null && genericSpinnerDto.getEstado() != null && genericSpinnerDto.getEstado().getAuxiliar() != null){
-                Toast.makeText(mContext, "No existen conteos vigentes...", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if(genericSpinnerDto != null && genericSpinnerDto.getEstado() != null && genericSpinnerDto.getEstado().getCodigo().equals("9999")){
-                    Toast.makeText(mContext, genericSpinnerDto.getEstado().getDescripcion(),Toast.LENGTH_SHORT).show();
+
+            responseVal = validator.getValidateGenericDto(genericSpinnerDto);
+            if (responseVal.isValidAccess()) {
+                if (responseVal.isFullCollection()) {
+                    mspinnerConteoSetItems();
+                } else {
+                    Toast.makeText(mContext, R.string.INF_NoConteo, Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    if(genericSpinnerDto != null && genericSpinnerDto.estado != null && genericSpinnerDto.estado.codigo.equals("00")){
-                        try{
-                            mspinnerConteoSetItems();
-                        }
-                        catch (Exception ex){
-                            Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else {
-                        Toast.makeText(mContext, "Ocurrio un error al cargar los conteos: "+genericSpinnerDto.estado.getDescripcion() , Toast.LENGTH_SHORT).show();
-                    }
-                }
+            } else {
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_SHORT).show();
             }
 
 
-
-
-            if(genericSpinnerDtoUbicacion != null && genericSpinnerDtoUbicacion.getEstado() != null && genericSpinnerDtoUbicacion.getEstado().getCodigo().equals("0000")){
-                Toast.makeText(mContext, genericSpinnerDtoUbicacion.getEstado().getDescripcion(),Toast.LENGTH_SHORT).show();
-            }
-            else {
-                if(genericSpinnerDtoUbicacion != null && genericSpinnerDtoUbicacion.estado != null && genericSpinnerDtoUbicacion.estado.codigo.equals("00")){
-                    try{
-                        mspinnerUbicacionSetItems();
-                    }
-                    catch (Exception ex){
-                        Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+            responseVal = validator.getValidateGenericDto(genericSpinnerDtoUbicacion);
+            if (responseVal.isValidAccess()) {
+                if (responseVal.isFullCollection()) {
+                    mspinnerUbicacionSetItems();
+                } else {
+                    Toast.makeText(mContext, "No hay Ubicaciones que mostrar", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Toast.makeText(mContext, "Ocurrio un error al cargar las Ubicaciones: "+genericSpinnerDtoUbicacion.estado.getDescripcion() , Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_SHORT).show();
             }
         }
 

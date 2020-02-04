@@ -11,6 +11,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReceiveWareDetail;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.TagNoRead;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.item;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fileutil.FileManager;
@@ -22,6 +23,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReceiveWare;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import co.kr.bluebird.sled.SelectionCriterias;
@@ -271,7 +273,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
 
     private EGTagsResponseItem itemEncontradoSeleccinado;
-    private DespatchGuide despatchGuideBodega = null;
+    private GenericSpinnerDto spinnerDto = null;
     private GenericSpinnerDto genericSpinnerDto = null;
     private String[] mWSParametersBodega, mWSParametersTipoMov, mWSparameterRecepcionDet, mWSParameterRecepcionCompara, mWSParameter_RecepcionProcesar;
 
@@ -1290,6 +1292,7 @@ public class ReceiveWareCheckFragment extends Fragment {
                 String tipoMov =  spinnerMapTipos.get(i);
                 if(tipoMov.equals("GDE")){
                     mspinOrigen.setEnabled(false);
+                    mspinOrigen.setSelection(0);
                     medAnio.setText("");
                     medAnio.setEnabled(false);
 
@@ -1320,8 +1323,31 @@ public class ReceiveWareCheckFragment extends Fragment {
                 String lCodTipo = spinnerMapTipos.get(mspinTipo.getSelectedItemPosition());
                 String lAnio = medAnio.getText().toString();
                 String lNumero = medNumero.getText().toString();
-                procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
-                dialog.dismiss();
+                if(!lCodTipo.equals("0")){
+                    if(lCodTipo.equals("GDE") ){
+                        if(!lNumero.trim().equals("")){
+                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
+                            dialog.dismiss();
+                        }
+                        else {
+                            Toast.makeText(mContext, "Ingrese un numero de documento", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        if(!lCodOrigen.equals("0") && !lAnio.trim().equals("") && !lNumero.trim().equals("")){
+                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
+                            dialog.dismiss();
+                        }
+                        else {
+                            Toast.makeText(mContext, "Seleccione y/o complete todos los campos", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                else {
+                    Toast.makeText(mContext, "Seleccione un tipo de Movimiento", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -1360,14 +1386,14 @@ public class ReceiveWareCheckFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             //despatchGuide = rfidService.GuiaDespachoBodegasService();
 
-            if(despatchGuideBodega == null)
+            if(spinnerDto == null)
             {
                 rfidService.SOAP_ACTION_ =  mWSParametersBodega[0];
                 rfidService.METHOD_NAME_ =  mWSParametersBodega[1];
                 rfidService.NAMESPACE_ = mWSParametersBodega[2];
                 rfidService.URL_ = mWSParametersBodega[3];
 
-                despatchGuideBodega = rfidService.WSBodegasOrMotivosService(true, mContext, "REC", null);
+                spinnerDto = rfidService.WSBodegasOrMotivosService(true, "REC", null);
             }
             if(genericSpinnerDto == null)
             {
@@ -1389,33 +1415,26 @@ public class ReceiveWareCheckFragment extends Fragment {
 
             progressDialog.cancel();
             postCallWSTiposMovOrigen();
-            if(despatchGuideBodega != null && despatchGuideBodega.getEstado() != null && despatchGuideBodega.getEstado().getCodigo().equals("9999")){
-                Toast.makeText(mContext,despatchGuideBodega.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-            }
-            else {
 
-                if (despatchGuideBodega.estado != null && despatchGuideBodega.estado.codigo.equals("00")) {
-                    try {
-                        SpinnerBodegaComplete();
-                    } catch (Exception ex) {
-                        Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    ToastMessage = "Bodegas de Origen";
-                    //Toast.makeText(mContext, "Llamada a Servicio Erroneo::Codigo: "+despatchGuide.estado.codigo , Toast.LENGTH_SHORT).show();
+            if(spinnerDto != null && spinnerDto.getEstado() != null && spinnerDto.getEstado().getCodigo().equals("00")){
+
+                if(spinnerDto.getColeccion() != null && spinnerDto.getColeccion().size() > 0){
+                    SpinnerBodegaComplete();
+                }
+                else {
+                    ToastMessage = "Bodegas de Origen vacias";
                 }
             }
-
-            if(genericSpinnerDto != null && genericSpinnerDto.getEstado() != null && genericSpinnerDto.getEstado().getCodigo().equals("9999") ){
-                ToastMessage = "";
-                Toast.makeText(mContext, genericSpinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-
-            }
             else {
+                Toast.makeText(mContext, spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+            }
 
-                if (genericSpinnerDto != null && genericSpinnerDto.getEstado().getCodigo().equals("00")) {
+
+            if(genericSpinnerDto != null && genericSpinnerDto.getEstado() != null && genericSpinnerDto.getEstado().getCodigo().equals("00")){
+                if(genericSpinnerDto.getColeccion() != null && genericSpinnerDto.getColeccion().size() > 0){
                     SpinnerTipoComplete();
-                } else {
+                }
+                else {
                     if (ToastMessage.isEmpty()) {
                         ToastMessage = "Tipos";
                     } else {
@@ -1423,6 +1442,10 @@ public class ReceiveWareCheckFragment extends Fragment {
                     }
                 }
             }
+            else {
+                Toast.makeText(mContext, genericSpinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+            }
+
 
             if(!ToastMessage.isEmpty()){
                 Toast.makeText(mContext, "Llamada a Servicio Erroneo "+ToastMessage , Toast.LENGTH_SHORT).show();
@@ -1451,12 +1474,12 @@ public class ReceiveWareCheckFragment extends Fragment {
     private void SpinnerBodegaComplete(){
         //spinnerArrayBodegas spinnerMapBodegas mspinTipo mspinOrigen
 
-        spinnerArrayBodegas = new String[despatchGuideBodega.getBodegas().size()];
+        spinnerArrayBodegas = new String[spinnerDto.getColeccion().size()];
         spinnerMapBodegas = new HashMap<Integer, String>();
 
         int i = 0;
         String exmsj = "";
-        for (DataSourceDto dto:despatchGuideBodega.getBodegas()) {
+        for (DataSourceDto dto:spinnerDto.getColeccion()) {
             spinnerMapBodegas.put(i,dto.codigo);
             spinnerArrayBodegas[i] = dto.descripcion;
             i++;
@@ -1469,7 +1492,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
         catch (Exception ex)
         {
-            exmsj = ex.getMessage();
+            Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -2166,10 +2189,10 @@ public class ReceiveWareCheckFragment extends Fragment {
 
             if(params[0].length > 0)
             {
-                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail(mContext, null,true, params[0]);
+                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( null,true, params[0]);
             }
             else {
-                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail(mContext, doc_origen,false,null);
+                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( doc_origen,false,null);
             }
 
 
@@ -2182,36 +2205,27 @@ public class ReceiveWareCheckFragment extends Fragment {
             //super.onPostExecute(aVoid);
 
             progressDialog.cancel();
-            if(receiveWareDetail != null ){
-                if(receiveWareDetail.getEstado() != null && receiveWareDetail.getEstado().getCodigo().equals("00"))
-                {
-                    if(doc_origen.isEmpty() && receiveWareDetail.getDocOrigen() != null)
-                    {
-                        doc_origen = receiveWareDetail.getDocOrigen().trim();
-                    }
-                    metDocOrigenRW.setText(doc_origen);
-                    metDocDestinoRW.setText(receiveWareDetail.getDocDestino());
-                    metMotivoRW.setText(receiveWareDetail.getMotDescription());
-                    mprogress1.setMax(receiveWareDetail.getCantidadTotal());
-                    mtvCantTotal.setText(receiveWareDetail.getCantidadTotal()+"");
-                    ProcesarLvItemsDif(false);
-                    ActivateButtons(true);
-                    DialogIndicadorComparacion(doc_origen);
-                }
-                else{
-                    if(receiveWareDetail.getEstado().getCodigo().equals("9999")){
-                        Toast.makeText(mContext, "Hubo una excepcion: " + receiveWareDetail.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(mContext, receiveWareDetail.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-                    }
-                }
+            Validator validator = new Validator();
 
+            ResponseVal responseVal =  validator.getValidateDataSourceDto(receiveWareDetail.getEstado());
+
+            if(responseVal.isValidAccess()){
+                if(doc_origen.isEmpty() && receiveWareDetail.getDocOrigen() != null)
+                {
+                    doc_origen = receiveWareDetail.getDocOrigen().trim();
+                }
+                metDocOrigenRW.setText(doc_origen);
+                metDocDestinoRW.setText(receiveWareDetail.getDocDestino());
+                metMotivoRW.setText(receiveWareDetail.getMotDescription());
+                mprogress1.setMax(receiveWareDetail.getCantidadTotal());
+                mtvCantTotal.setText(receiveWareDetail.getCantidadTotal()+"");
+                ProcesarLvItemsDif(false);
+                ActivateButtons(true);
+                DialogIndicadorComparacion(doc_origen);
             }
             else {
-                Toast.makeText(mContext, "Error desconocido: " , Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
             }
-
         }
 
         @Override
@@ -2267,29 +2281,22 @@ public class ReceiveWareCheckFragment extends Fragment {
 
             progressDialog.cancel();
 
-            if(egDetailResponse != null){
 
-                if(egDetailResponse.status != null && egDetailResponse.getStatus().getCodigo().equals("00") && egDetailResponse.getItems() != null )
-                {
+            Validator validator = new Validator();
+            ResponseVal responseVal = validator.getValidateDataSourceDto(egDetailResponse.getStatus());
+
+            if(responseVal.isValidAccess()){
+                if(egDetailResponse.getItems() != null && egDetailResponse.getItems().size() > 0){
                     btnConfirmarManagement(false);
                     ProcesarLvItemsDif(true);
                 }
                 else {
-                    Toast.makeText(mContext, "Error del servicio: "+ egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "No hay items con que comparar..." , Toast.LENGTH_LONG).show();
                 }
-
-            }else {
-                Toast.makeText(mContext, "Error desconocido " , Toast.LENGTH_SHORT).show();
             }
-
-            /*if(egDetailResponse != null && egDetailResponse.status == null && egDetailResponse.getItems() != null){
-
-                ProcesarLvItemsDif(true);
+            else {
+                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
             }
-            else{
-
-                Toast.makeText(mContext, "Error del servicio: "+ egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
-            }*/
 
         }
 
@@ -2357,11 +2364,29 @@ public class ReceiveWareCheckFragment extends Fragment {
             EGTagsResponseItem item_tagNoRead = findTagNoLeido(i.getItemCodigo());
             itemEncontradoSeleccinado = item_tagNoRead;
 
-            if(!item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS") && item_tagNoRead.getDataNoLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
+            /*if(!item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS") && item_tagNoRead.getDataNoLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
                 ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataNoLeido());
             }
             else {
                 Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
+            }*/
+
+            if(item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS")){
+                if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataLeido().size() > 0){
+                    ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataLeido());
+                }
+                else {
+                    Toast.makeText(mContext, "No existen otras etiquetas", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
+                    ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataNoLeido());
+                }
+                else {
+                    Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     };

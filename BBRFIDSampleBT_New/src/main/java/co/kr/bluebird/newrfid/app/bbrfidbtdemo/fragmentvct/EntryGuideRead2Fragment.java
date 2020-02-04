@@ -222,7 +222,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private ImageButton mBackButton;
 
-    private TextView mLocateTv, mtag_locate_grupo1,mtag_locate_grupo2,mtag_locate_grupo3;
+    private TextView mLocateTv, mtag_locate_grupo1,mtag_locate_grupo2,mtag_locate_grupo3, mtvTagsLocate;
 
     private boolean mLocate;
 
@@ -317,6 +317,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         mtag_locate_grupo1 = (TextView)v.findViewById(R.id.tag_locate_grupo1);
         mtag_locate_grupo2 = (TextView)v.findViewById(R.id.tag_locate_grupo2);
         mtag_locate_grupo3 = (TextView)v.findViewById(R.id.tag_locate_grupo3);
+        mtvTagsLocate = (TextView) v.findViewById(R.id.tvTagsLocate);
        /* mtag_locate_grupo4 = (TextView)v.findViewById(R.id.tag_locate_grupo4);
         mtag_locate_grupo5 = (TextView)v.findViewById(R.id.tag_locate_grupo5);*/
 
@@ -1493,55 +1494,6 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     }
 
-    private void CrearRow(){
-        for (item item_ : egProcesado.items){
-            TableRow tableRow = new TableRow(mContext);
-            tableRow.setLayoutParams(
-                    new TableRow.LayoutParams(
-                            TableRow.LayoutParams.FILL_PARENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                    )
-            );
-
-            tableRow.setOnClickListener( new View.OnClickListener(){
-                                             @Override
-                                             public  void  onClick(View view){
-                                                //LlenarGridTagNoEnc
-                                                 TableRow currentRow = (TableRow) view;
-                                                 String itemCodigo = ((TextView)currentRow.getChildAt(0)).getText().toString();
-                                                 LlenarGridTagNoEnc(itemCodigo);
-                                             }
-                                         }
-
-            );
-
-            TextView textViewEntrada = new TextView(mContext);
-            textViewEntrada.setText(item_.itemCodigo);
-            textViewEntrada.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            textViewEntrada.setPadding(5,5,5,0);
-            tableRow.addView(textViewEntrada);
-
-            TextView textViewCant = new TextView(mContext);
-            textViewCant.setText(String.valueOf(item_.cantidad));
-            textViewCant.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            textViewCant.setPadding(5,5,5,0);
-            tableRow.addView(textViewCant);
-
-            TextView textViewStatus = new TextView(mContext);
-            textViewStatus.setText(String.valueOf(item_.cantidadLeidos));
-            textViewStatus.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            textViewStatus.setPadding(5,5,5,0);
-            tableRow.addView(textViewStatus);
-
-
-
-            tblItemDif.addView(tableRow, new TableLayout.LayoutParams(
-                    TableRow.LayoutParams.FILL_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT
-            ));
-        }
-
-    }
 
     private void ProcesarLvItemsDif()
     {
@@ -1562,6 +1514,12 @@ public class EntryGuideRead2Fragment extends Fragment {
             item i = (item) mlv_itemsDif.getItemAtPosition(position);
             item item_tagNoRead = findTagNoLeido(i.itemCodigo);
             LlenarDatosProgressBarLocalizacion(item_tagNoRead.itemCodigo);
+            if(item_tagNoRead.itemCodigo.equals("OTROS")){
+                mtvTagsLocate.setText(R.string.tags_other);
+            }
+            else {
+                mtvTagsLocate.setText(R.string.tags_no_enc);
+            }
             ProcesarLv_tagsNoEnc(item_tagNoRead.tagsNoLeidos.getEpc());
         }
     };
@@ -1611,9 +1569,9 @@ public class EntryGuideRead2Fragment extends Fragment {
                         mLocateTv.setText(mLocateTag);
 
                         if(egTagsResponseItem_ != null){
-                            mtag_locate_grupo1.setText(egTagsResponseItem_.getItemGrupo1());
-                            mtag_locate_grupo2.setText(egTagsResponseItem_.getItemGrupo2());
-                            mtag_locate_grupo3.setText(egTagsResponseItem_.getItemGrupo3());
+                            mtag_locate_grupo1.setText(egTagsResponseItem_.getItemGrupo1().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo1());
+                            mtag_locate_grupo2.setText(egTagsResponseItem_.getItemGrupo2().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo2());
+                            mtag_locate_grupo3.setText(egTagsResponseItem_.getItemGrupo3().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo3());
                             /*mtag_locate_grupo4.setText(egTagsResponseItem_.getItemGrupo4());
                             mtag_locate_grupo5.setText(egTagsResponseItem_.getItemGrupo5());*/
                         }
@@ -1629,37 +1587,9 @@ public class EntryGuideRead2Fragment extends Fragment {
         });
     }
 
-    private EGProcesado SimularWSEGProcess()
-    {
-        EGProcesado egProcesado = new EGProcesado(null);
-        List<String> epcs = new ArrayList<String>();
-        epcs.add("42836557bf7194e4000001a85");
-        epcs.add("E20000193010025616706B68");
-        epcs.add("42836557bf7194e4000003a85");
-
-        TagNoRead tagNoRead = new TagNoRead(epcs);
-        item item1 = new item("M176531872ABLAR",100, 90,tagNoRead);
-        List<item> itemList = new ArrayList<item>();
-        itemList.add(item1);
-
-        //M176531872ABMED
-        epcs = new ArrayList<String>();
-        epcs.add("303556022843A3C00000000D");
-        epcs.add("15831457bf7194e4000002a85");
-        epcs.add("15831457bf7194e4000006a85");
-
-        tagNoRead = new TagNoRead(epcs);
-        item1 = new item("M176531872ABMED",80, 78,tagNoRead);
-        itemList.add(item1);
-
-        egProcesado = new EGProcesado(itemList);
-
-        return egProcesado;
-    }
-
-
     private EGProcesado WSEGProcess(EGDetailResponse detailResponse)
     {
+
         EGProcesado egProcesado = new EGProcesado(null);
         item _item = null;
         List<item> itemList = new ArrayList<item>();
@@ -1670,11 +1600,21 @@ public class EntryGuideRead2Fragment extends Fragment {
 
             taglectura = new ArrayList<String>();
 
-            for (String j :i.getDataNoLeido()) {
-                taglectura.add(j);
+            if(i.getItemCodigo().equals("OTROS")){
+                for (String j :i.getDataLeido()) {
+                    taglectura.add(j);
+                }
             }
+            else {
+                for (String j :i.getDataNoLeido()) {
+                    taglectura.add(j);
+                }
+            }
+
+
             tagNoRead = new TagNoRead(taglectura);
-            _item = new item(i.itemCodigo,(i.CantidadLeidos + i.CantidadNoLeidos),i.CantidadLeidos,tagNoRead);
+           /* _item = new item(i.itemCodigo,(i.CantidadLeidos + i.CantidadNoLeidos),i.CantidadLeidos,tagNoRead);*/
+            _item = new item(i.itemCodigo,i.getCantidadDoc(),i.CantidadLeidos,tagNoRead);
             itemList.add(_item);
         }
         egProcesado = new EGProcesado(itemList);

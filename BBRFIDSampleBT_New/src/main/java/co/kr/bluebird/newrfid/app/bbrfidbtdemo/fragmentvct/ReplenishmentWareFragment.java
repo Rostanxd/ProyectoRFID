@@ -9,6 +9,8 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Replenishment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenishmentWareResult;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Replenishments;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReplenismentSaleDetailsDto;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fileutil.FileManager;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.ListItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity;
@@ -20,6 +22,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReplenishment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReplenishmentSale;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 
@@ -423,9 +426,6 @@ public class ReplenishmentWareFragment extends Fragment {
                     msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
 
                 }
-
-                Toast.makeText(mContext,"item_seleccionado:" + i+"",Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -909,40 +909,6 @@ public class ReplenishmentWareFragment extends Fragment {
         });*/
         dialog.show();
 
-    }
-
-
-    private void result_imgbtn_Extrated()
-    {
-        // items , cantidad a reponer, ventas, egresos, saldos de bodegas internas, saldos de otros locales(detalle)
-
-
-        List<ReplenishmentWareResult> userList = rfidService.SimularReposicionService();
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_reposicion);
-
-        final ListView lv = (ListView) dialog.findViewById(R.id.lv_Replenishment);
-        //ViewGroup headerview = (ViewGroup) getLayoutInflater().inflate(R.layout.header_reposicion,lv,false);
-        View headerview = View.inflate(mContext, R.layout.header_reposicion, null);
-        lv.addHeaderView(headerview);
-
-        lv.setAdapter(new CustomListAdapter(mContext, userList));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                ReplenishmentWareResult replenishmentWareResult = (ReplenishmentWareResult) lv.getItemAtPosition(position);
-                Toast.makeText(mContext, "Selected :" + " " + replenishmentWareResult.getItems()+", "+ replenishmentWareResult.getReplenishmentCount(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-       /* mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });*/
-        dialog.show();
     }
 
     private void snapShot_imgbtn_Extrated()
@@ -1711,15 +1677,6 @@ public class ReplenishmentWareFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
 
-
-           /* rfidService.SOAP_ACTION_ =  mWSparameterUbicacion[0];
-            rfidService.METHOD_NAME_ =  mWSparameterUbicacion[1];
-            rfidService.NAMESPACE_ = mWSparameterUbicacion[2];
-            rfidService.URL_ = mWSparameterUbicacion[3];
-
-
-            genericSpinnerDtoUbicacion = rfidService.WSUbicacion();*/
-
             rfidService.SOAP_ACTION_ =  mWSparameterSeccion[0];
             rfidService.METHOD_NAME_ =  mWSparameterSeccion[1];
             rfidService.NAMESPACE_ = mWSparameterSeccion[2];
@@ -1733,19 +1690,6 @@ public class ReplenishmentWareFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             progressDialog.cancel();
-           /* if(genericSpinnerDtoUbicacion != null && genericSpinnerDtoUbicacion.estado != null && genericSpinnerDtoUbicacion.estado.codigo.equals("00")){
-                try{
-                    mspinnerUbicacionSetItems();
-                }
-                catch (Exception ex){
-                    Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-            else {
-                Toast.makeText(mContext, "Ocurrio un error al cargar las Ubicaciones: "+genericSpinnerDtoUbicacion.estado.getDescripcion() , Toast.LENGTH_SHORT).show();
-            }*/
-
-            //mspinnerSeccionSetItems
 
             if(genericSpinnerDtoSeccion != null && genericSpinnerDtoSeccion.estado != null && genericSpinnerDtoSeccion.estado.codigo.equals("00")){
                 try{
@@ -1796,20 +1740,18 @@ public class ReplenishmentWareFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(replenishmentList != null && replenishmentList.getEstado().getHandlerException() == null)
-            {
-                if(replenishmentList.getEstado().getInformationDto() != null && replenishmentList.getEstado().getInformationDto().getCodigo().equals("00") ){
-                    SetDataDialog(replenishmentList.getReplenishments());
-                }
-                else {
-                    Toast.makeText(mContext,replenishmentList.getEstado().getInformationDto().getDescripcion(),Toast.LENGTH_LONG).show();
-                }
+
+            Validator validator = new Validator();
+
+            ResponseVal responseVal = validator.getValidateDataSourceDto(replenishmentList.getEstado());
+
+            if(responseVal.isValidAccess()){
+                SetDataDialog(replenishmentList.getReplenishments());
             }
             else {
-                if(replenishmentList.getEstado().getHandlerException() != null && replenishmentList.getEstado().getHandlerException().isExceptionExist() ){
-                    Toast.makeText(mContext,"Se produjo una excepcion: "+replenishmentList.getEstado().getHandlerException().getExceptionMessage(),Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(mContext,replenishmentList.getEstado().getDescripcion(),Toast.LENGTH_LONG).show();
             }
+
             progressDialog.cancel();
         }
 
@@ -1829,7 +1771,7 @@ public class ReplenishmentWareFragment extends Fragment {
     private  class exWSReposicionSaldoAsync extends AsyncTask<String, Void, Void>
     {
         ProgressDialog progressDialog;
-        List<ReplenishmentSale> replenishmentSales;
+        ReplenismentSaleDetailsDto replenishmentSales;
 
         @Override
         protected Void doInBackground(String... itemCodigo) {
@@ -1847,7 +1789,21 @@ public class ReplenishmentWareFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(Void aVoid) {
-            setDialogSale(replenishmentSales);
+
+            Validator validator = new Validator();
+            ResponseVal responseVal =  validator.getValidateDataSourceDto(replenishmentSales.getEstado());
+            if(responseVal.isValidAccess()){
+                if(replenishmentSales.getReplenishmentSales() != null && replenishmentSales.getReplenishmentSales().size() > 0){
+                    setDialogSale(replenishmentSales.getReplenishmentSales());
+                }
+                else {
+                    Toast.makeText(mContext, "No existen saldos que mostrar", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_SHORT).show();
+            }
+
             progressDialog.cancel();
         }
 
@@ -1886,17 +1842,16 @@ public class ReplenishmentWareFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            if(dtoSnapShot != null && dtoSnapShot.getCodigo().equals("00")){
+            Validator validator = new Validator();
+            ResponseVal responseVal = validator.getValidateDataSourceDto(dtoSnapShot);
+
+            if(responseVal.isValidAccess()){
                 Toast.makeText(mContext, "El SnapShot fue Exitoso",Toast.LENGTH_LONG).show();
             }
             else {
-                if(dtoSnapShot.getCodigo().equals("9999")){
-                    Toast.makeText(mContext, "Se produjo un Excepcion: "+dtoSnapShot.getDescripcion(),Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(mContext, "Error de Servicio: "+ dtoSnapShot.getDescripcion(),Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(mContext, responseVal.getErrorMsg(),Toast.LENGTH_LONG).show();
             }
+
             progressDialog.cancel();
         }
 
