@@ -489,6 +489,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
         mWb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
+        Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
+
 
         Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
 
@@ -514,6 +516,26 @@ public class DespatchGuideGenerateFragment extends Fragment {
                 //dialog.dismiss();
                 /*doPhotoPrint(bitmap);*/
                 createWebPrintJob(mWb_qrcode) ;
+            }
+        });
+
+        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
+                alerta.setMessage("Esta seguro de cancelar la impresion")
+                        .setCancelable(false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog_, int which){
+                                dialog.dismiss();
+                                dialog_.dismiss();
+                            }
+                        });
+
+                alerta.show();
             }
         });
         dialog.show();
