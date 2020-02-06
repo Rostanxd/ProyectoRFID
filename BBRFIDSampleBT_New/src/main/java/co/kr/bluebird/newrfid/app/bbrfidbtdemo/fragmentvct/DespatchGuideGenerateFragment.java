@@ -483,6 +483,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
         final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_qrcode);
+        dialog.setCancelable(false);
 
         ImageView imageView = (ImageView) dialog.findViewById(R.id.iv_qrcode);
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);

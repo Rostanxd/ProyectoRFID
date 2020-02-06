@@ -5,6 +5,15 @@ public class item {
     public int cantidad;
     public int cantidadLeidos;
     public TagNoRead tagsNoLeidos;
+    public TagNoRead tagsLeidos;
+
+    public TagNoRead getTagsLeidos() {
+        return tagsLeidos;
+    }
+
+    public void setTagsLeidos(TagNoRead tagsLeidos) {
+        this.tagsLeidos = tagsLeidos;
+    }
 
     public String getItemCodigo() {
         return itemCodigo;

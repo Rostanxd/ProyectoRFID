@@ -1176,19 +1176,24 @@ public class EntryGuideRead2Fragment extends Fragment {
 
 
 
-    private  class executeSoapGuiaEntradaProcesarAsync extends AsyncTask<Void, Void, Void> {
+    private  class executeSoapGuiaEntradaProcesarAsync extends AsyncTask<List<String>, Void, Void> {
 
         DataSourceDto dtoGuiaProcesar ;
         ProgressDialog progressDialog  ;
+        //List<String> ListaEpcLeidos = new ArrayList<>();
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(List<String>...params) {
 
             rfidService.SOAP_ACTION_ =  mWSParametersGEProcesar[0];
             rfidService.METHOD_NAME_ =  mWSParametersGEProcesar[1];
             rfidService.NAMESPACE_ = mWSParametersGEProcesar[2];
             rfidService.URL_ = mWSParametersGEProcesar[3];
 
-            dtoGuiaProcesar = rfidService.WSGuiaEntradaProcesar(NoGuia);
+
+            List<String> ListaEpcLeidos = params[0];
+
+            dtoGuiaProcesar = rfidService.WSGuiaEntradaProcesar(NoGuia, ListaEpcLeidos );
+
 
             //egDetailResponse = rfidService.GuiaEntradaDetalleService2(NoGuia,listaEpcReal());
 
@@ -1208,7 +1213,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
                 // limpiar y volver a la pantalla EntryGuideCheck
                 //VolverEntryGuideCheck();
-                InvocarAlertEGProcesar("Se ha procesado correctamente la Guia de Entrada: #"+NoGuia, true);
+                InvocarAlertEGProcesar(dtoGuiaProcesar.getDescripcion(), true);
             }
             else {
                 Toast.makeText(mContext, dtoGuiaProcesar.getDescripcion() , Toast.LENGTH_SHORT).show();
@@ -1594,11 +1599,14 @@ public class EntryGuideRead2Fragment extends Fragment {
         item _item = null;
         List<item> itemList = new ArrayList<item>();
         TagNoRead tagNoRead = null ;
+        TagNoRead tagRead = null;
         List<String> taglectura = null;
+        List<String> taglecturaDataLeido = null;
 
         for (EGTagsResponseItem i :detailResponse.getItems()) {
 
             taglectura = new ArrayList<String>();
+            taglecturaDataLeido = new ArrayList<String>();
 
             if(i.getItemCodigo().equals("OTROS")){
                 for (String j :i.getDataLeido()) {
@@ -1609,12 +1617,27 @@ public class EntryGuideRead2Fragment extends Fragment {
                 for (String j :i.getDataNoLeido()) {
                     taglectura.add(j);
                 }
+
+                for (String m :i.getDataLeido()){
+                    taglecturaDataLeido.add(m);
+                }
             }
 
 
+
             tagNoRead = new TagNoRead(taglectura);
+
+            tagRead = new TagNoRead(taglecturaDataLeido);
            /* _item = new item(i.itemCodigo,(i.CantidadLeidos + i.CantidadNoLeidos),i.CantidadLeidos,tagNoRead);*/
-            _item = new item(i.itemCodigo,i.getCantidadDoc(),i.CantidadLeidos,tagNoRead);
+            /*_item = new item(i.itemCodigo,i.getCantidadDoc(),i.CantidadLeidos,tagNoRead);*/
+
+            _item = new item(i.itemCodigo,i.getEtiquetasDocPendientes(),i.CantidadLeidos,tagNoRead);
+
+            if(!i.getItemCodigo().equals("OTROS")){
+                _item.setTagsLeidos(tagRead);
+            }
+
+
             itemList.add(_item);
         }
         egProcesado = new EGProcesado(itemList);
@@ -2496,11 +2519,28 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
     private void EntryGuideProcesar(){
+        List<String> ListaEpcLeidos = new ArrayList<>();
         if(mWSParametersGEProcesar == null){
             mWSParametersGEProcesar = getResources().getStringArray(R.array.WSparameter_GuiaEntradaProcesar);
         }
-        executeSoapGuiaEntradaProcesarAsync entradaProcesarAsync = new executeSoapGuiaEntradaProcesarAsync();
-        entradaProcesarAsync.execute();
+
+        for (item i:egProcesado.getItems()) {
+            if(! i.getItemCodigo().equals("OTROS")){
+                for (String j :i.getTagsLeidos().getEpc()) {
+                    ListaEpcLeidos.add(j);
+                }
+
+            }
+        }
+        if(ListaEpcLeidos != null && ListaEpcLeidos.size() > 0){
+            executeSoapGuiaEntradaProcesarAsync entradaProcesarAsync = new executeSoapGuiaEntradaProcesarAsync();
+            entradaProcesarAsync.execute(ListaEpcLeidos);
+        }
+        else {
+            //Toast.makeText(mContext,"Ninguna de las etiquetas leidas pertenecen a esta Guia de entrada, o ya fueron activadas", Toast.LENGTH_LONG).show();
+            InvocarAlertEGProcesar("Ninguna de las etiquetas leidas pertenecen a esta Guia de entrada, o ya fueron activadas", false);
+        }
+
 
 
     }
@@ -2580,6 +2620,7 @@ public class EntryGuideRead2Fragment extends Fragment {
                         if(isExitoso){
                             dialog.dismiss();
                             //VolverEntryGuideCheck();
+                            CleanControls();
 
                         }
                         else {

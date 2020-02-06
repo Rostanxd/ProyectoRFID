@@ -6,6 +6,16 @@ public class Guide {
    public String codigo;
    public String descripcion;
    public int cantidad;
+   public  int saldo;
+
+
+    public int getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(int saldo) {
+        this.saldo = saldo;
+    }
 
     public String getNumero() {
         return numero;
@@ -39,10 +49,11 @@ public class Guide {
         this.cantidad = cantidad;
     }
 
-    public Guide(String numero, String codigo, String descripcion, int cantidad) {
+    public Guide(String numero, String codigo, String descripcion, int cantidad, int saldo) {
         this.numero = numero;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
+        this.saldo = saldo;
     }
 }

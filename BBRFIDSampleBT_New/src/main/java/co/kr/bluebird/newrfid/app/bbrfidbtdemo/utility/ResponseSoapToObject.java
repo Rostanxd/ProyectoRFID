@@ -53,42 +53,44 @@ public class ResponseSoapToObject {
             Guide guide;
             List<Guide> guides;
 
-            try {
-                if(response.hasProperty("estado")){
-                    SoapObject soapObject = (SoapObject) response.getProperty("estado");
-                    dtoEstado = new DataSourceDto (soapObject.getPropertyAsString("codigo"), soapObject.getPropertyAsString("mensaje"), null);
-                }
-                else {
-                    dtoEstado = new DataSourceDto("9999", appMessage.outputMsg(1), null );
-                }
-                if(response.hasProperty("data")){
-                    SoapObject soapObject = (SoapObject) response.getProperty("data");
-                    String cantTotal = soapObject.getPropertyAsString("cantidadTotal");
-                    cantidadtotal = (cantTotal != null && !cantTotal.equals("")) ? Integer.parseInt(cantTotal) : 0;
+            dtoEstado = StatusTagToDatasourceDto(response, exceptionData);
 
-                    if(soapObject.hasProperty("guias")){
+            if(dtoEstado.getCodigo().equals("00")){
+                try {
+                    if(response.hasProperty("data")){
+                        SoapObject soapObject = (SoapObject) response.getProperty("data");
+                        String cantTotal = soapObject.getPropertyAsString("cantidadTotal");
+                        cantidadtotal = (cantTotal != null && !cantTotal.equals("")) ? Integer.parseInt(cantTotal) : 0;
 
-                        SoapObject so_guides = (SoapObject) soapObject.getProperty("guias");
+                        if(soapObject.hasProperty("guias")){
 
-                        if(so_guides.getPropertyCount() > 0){
+                            SoapObject so_guides = (SoapObject) soapObject.getProperty("guias");
 
-                            guides = new ArrayList<Guide>();
-                            SoapObject so_guide;
-                            int cant = 0;
-                            for(int x=0; x<so_guides.getPropertyCount();x++){
-                                so_guide = (SoapObject) so_guides.getProperty(x);
-                                cant = Integer.parseInt(!so_guide.getPropertyAsString("cantidad").equals("") ? so_guide.getPropertyAsString("cantidad") : "0");
-                                guide = new Guide(so_guide.getPropertyAsString("numero"), so_guide.getPropertyAsString("estadoCodigo"), so_guide.getPropertyAsString("estadoNombre"), cant);
-                                guides.add(guide);
+                            if(so_guides.getPropertyCount() > 0){
+
+                                guides = new ArrayList<Guide>();
+                                SoapObject so_guide;
+                                int cant;
+                                int saldo = 0;
+                                for(int x=0; x<so_guides.getPropertyCount();x++){
+                                    so_guide = (SoapObject) so_guides.getProperty(x);
+                                    cant = Integer.parseInt(!so_guide.getPropertyAsString("cantidad").equals("") ? so_guide.getPropertyAsString("cantidad") : "0");
+                                    if(so_guide.hasProperty("saldo")){
+                                        saldo = ! so_guide.getPropertyAsString("saldo").equals("") ? Integer.parseInt(so_guide.getPropertyAsString("saldo")) : 0;
+                                    }
+
+                                    guide = new Guide(so_guide.getPropertyAsString("numero"), so_guide.getPropertyAsString("estadoCodigo"), so_guide.getPropertyAsString("estadoNombre"), cant, saldo );
+                                    guides.add(guide);
+                                }
+
+                                data_ = new EGData(cantidadtotal ,guides);
                             }
-
-                            data_ = new EGData(cantidadtotal ,guides);
                         }
                     }
                 }
-            }
-            catch (Exception ex){
-                dtoEstado = new DataSourceDto("9999", appMessage.outputMsg(2) +" -Guia entrada OC-", null);
+                catch (Exception ex){
+                    dtoEstado = new DataSourceDto("9999", appMessage.outputMsg(2) +" -Guia entrada OC-", null);
+                }
             }
 
         }
@@ -104,9 +106,9 @@ public class ResponseSoapToObject {
         return StatusTagToDatasourceDto(response, exceptionData);
     }
 
-    public EGDetailResponse ResponseToEGDetailResponse(SoapObject response, ExceptionData exceptionData){
+    public EGDetailResponse ResponseToEGDetailResponse(SoapObject response, ExceptionData exceptionData, String ProcessType){
 
-        DataSourceDto geEstado = null;
+        DataSourceDto geEstado ;
         EGDetailResponse egDetailResponse = new EGDetailResponse();
 
         if(exceptionData == null)
@@ -122,7 +124,7 @@ public class ResponseSoapToObject {
                         SoapObject so_data = (SoapObject) response.getProperty("data");
                         if(so_data.hasProperty("items")){
                             SoapObject so_items = (SoapObject) so_data.getProperty("items");
-                            egDetailResponse.setItems(DataItemHomologacionToListEGTagsResponseItem(so_items));
+                            egDetailResponse.setItems(DataItemHomologacionToListEGTagsResponseItem(so_items, ProcessType));
                             egDetailResponse.setProcesable(GuiaEntradaProcesable);
                         }
                     }
@@ -790,12 +792,12 @@ public class ResponseSoapToObject {
      * @param response
      * @return
      */
-    private List<EGTagsResponseItem> DataItemHomologacionToListEGTagsResponseItem(SoapObject response) {
+    private List<EGTagsResponseItem> DataItemHomologacionToListEGTagsResponseItem(SoapObject response, String ProcessType) {
         EGTagsResponseItem egTagsResponseItem;
         List<EGTagsResponseItem> egTagsResponseItemList = null;
 
         if(response != null && response.getPropertyCount() > 0){
-            String [] ItemValue =  new String[9];
+            String [] ItemValue =  new String[11];
             List<String> _tagNoRead;
             List<String> _tagRead;
             GuiaEntradaProcesable = true;
@@ -820,6 +822,13 @@ public class ResponseSoapToObject {
                     ItemValue[6] = TagRespItem.getPropertyAsString("CantidadLeidos");
                     ItemValue[7] = TagRespItem.getPropertyAsString("CantidadNoLeidos");
                     ItemValue[8] = TagRespItem.getPropertyAsString("CantidadDoc");
+
+
+                    if((ProcessType == "GEN") && TagRespItem.hasProperty("EtiquetasDocActivas") && TagRespItem.hasProperty("EtiquetasDocPendientes") )
+                    {
+                        ItemValue[9] = TagRespItem.getPropertyAsString("EtiquetasDocActivas");
+                        ItemValue[10] = TagRespItem.getPropertyAsString("EtiquetasDocPendientes");
+                    }
 
 
                     _tagNoRead = new ArrayList<String>();
@@ -893,13 +902,28 @@ public class ResponseSoapToObject {
 
                     egTagsResponseItem = new EGTagsResponseItem(ItemValue[0], ItemValue[1], ItemValue[2], ItemValue[3], ItemValue[4], ItemValue[5], Integer.valueOf(ItemValue[6]), Integer.valueOf(ItemValue[7]), _tagRead, _tagNoRead);
 
+                    if((ProcessType == "GEN") && ItemValue[9] != null && !ItemValue[9].equals("") && ItemValue[10] != null && !ItemValue[10].equals("") )
+                    {
+                        egTagsResponseItem.setEtiquetasDocActivas(Integer.parseInt(ItemValue[9]));
+                        egTagsResponseItem.setEtiquetasDocPendientes(Integer.parseInt(ItemValue[10]));
+                    }
+
+
+
                     egTagsResponseItem.setCantidadDoc(Integer.valueOf(ItemValue[8]));
 
                     // if(cant_leidos != cant_documentado)
                     if (Integer.valueOf(ItemValue[6]) != Integer.valueOf(ItemValue[8])) {
                         GuiaEntradaProcesable = false;
                     }
-                    egTagsResponseItemList.add(egTagsResponseItem);
+                    if(ProcessType == "GEN"){
+                        if(egTagsResponseItem.getEtiquetasDocPendientes() > 0 || ItemValue[0].equals("OTROS")){
+                            egTagsResponseItemList.add(egTagsResponseItem);
+                        }
+                    }
+                    else {
+                        egTagsResponseItemList.add(egTagsResponseItem);
+                    }
                 }
             }
         }
