@@ -2706,22 +2706,14 @@ public class ReceiveWareCheckFragment extends Fragment {
         DataSourceDto dtoResponse = null;
         //ProgressDialog progressDialog;
 
-        boolean error = false;
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                rfidService.SOAP_ACTION_ =  mWSParameter_RecepcionProcesar[0];
-                rfidService.METHOD_NAME_ =  mWSParameter_RecepcionProcesar[1];
-                rfidService.NAMESPACE_ = mWSParameter_RecepcionProcesar[2];
-                rfidService.URL_ = mWSParameter_RecepcionProcesar[3];
+            rfidService.SOAP_ACTION_ =  mWSParameter_RecepcionProcesar[0];
+            rfidService.METHOD_NAME_ =  mWSParameter_RecepcionProcesar[1];
+            rfidService.NAMESPACE_ = mWSParameter_RecepcionProcesar[2];
+            rfidService.URL_ = mWSParameter_RecepcionProcesar[3];
 
-                dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,listInc);
-            }
-            catch (Exception ex){
-                error = true;
-                Toast.makeText(mContext,ex.getMessage(),Toast.LENGTH_SHORT ).show();
-
-            }
+            dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,listInc);
             return null;
         }
 
@@ -2730,17 +2722,14 @@ public class ReceiveWareCheckFragment extends Fragment {
             //super.onPostExecute(aVoid);
 
             progressDialog.cancel();
-            if(!error){
-                if(dtoResponse != null && dtoResponse.getCodigo() != null && dtoResponse.getCodigo().equals("00")){
+            Validator validator = new Validator();
+            ResponseVal responseVal = validator.getValidateDataSourceDto(dtoResponse);
 
-                    //llamar al Dialog
-                    InvocarAlertIngresoMercaderia("Se ha generado correctamente el ingreso de la mercaderia", true);
-                }
-                else{
-
-                    //Toast.makeText(mContext, "Error del servicio: "+ dtoResponse.getDescripcion() , Toast.LENGTH_SHORT).show();
-                    InvocarAlertIngresoMercaderia("Error del Servicio: "+dtoResponse.getDescripcion(), false);
-                }
+            if(responseVal.isValidAccess()){
+                InvocarAlertIngresoMercaderia("Se ha generado correctamente el ingreso de la mercaderia", true);
+            }
+            else {
+                InvocarAlertIngresoMercaderia(responseVal.getErrorMsg(), false);
             }
 
         }

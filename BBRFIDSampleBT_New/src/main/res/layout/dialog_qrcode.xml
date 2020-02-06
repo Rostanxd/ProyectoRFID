@@ -53,12 +53,25 @@
         android:layout_marginTop="25dp"
         android:visibility="gone"/>
 
-
-
-
-    <Button
-        android:id="@+id/dialogBtnAceptar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Imprimir" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dialogBtnCancelar"
+            android:layout_width="120sp"
+            android:layout_height="wrap_content"
+            android:text="Cancelar" />
+
+        <Button
+            android:id="@+id/dialogBtnAceptar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Imprimir" />
+
+    </LinearLayout>
+
+
+
 </LinearLayout>

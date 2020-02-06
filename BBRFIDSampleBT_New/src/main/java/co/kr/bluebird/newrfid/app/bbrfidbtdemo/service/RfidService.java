@@ -305,7 +305,7 @@ public class RfidService {
         exceptionData = new ExceptionData();
         exceptionData.setTypeException(typeException);
         exceptionData.setMsgException(msgException);
-        exceptionData.setMsgUsuario(msgExceptions.getCustomMsg(typeException, statusCode) );
+        exceptionData.setMsgUsuario(msgExceptions.getCustomMsg(typeException, statusCode, msgException) );
         exceptionData.setStatusCode(statusCode);
     }
 
@@ -705,6 +705,7 @@ public class RfidService {
 
         SoapObject request = new SoapObject(NAMESPACE_, METHOD_NAME_);
         request.addProperty("Docorigen", Docorigen);
+        request.addProperty("Bodcodori", paramLectorRfid_.getCodbodega());
 
         SoapObject soNivel2 = new SoapObject(NAMESPACE_, "soNivel2");
         soNivel2.addProperty("dispositivoId",paramLectorRfid_.getDispositivoid());
@@ -737,6 +738,7 @@ public class RfidService {
     public   DataSourceDto WSRecepcionMercaderiaProcesar(String pDocOrigen, String pNota, List<EGTagsResponseItem> responseItems)
     {
         SoapObject soNivel1 = new SoapObject(NAMESPACE_, METHOD_NAME_);
+        soNivel1.addProperty("Bodcodori", paramLectorRfid_.getCodbodega());
         soNivel1.addProperty("Docorigen", pDocOrigen);
         soNivel1.addProperty("Nota", pNota);
         SoapObject response =AsemblerRequestRecepMercaderiaProcesar( soNivel1, SOAP_ACTION_, paramLectorRfid_.getEndpoint()+URL_, NAMESPACE_, responseItems,true);

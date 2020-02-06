@@ -100,33 +100,17 @@
                     android:orientation="vertical">
 
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="35sp"
                         android:layout_marginLeft="5sp"
                         android:layout_marginRight="5sp"
                         android:orientation="horizontal">
 
-
-                        <!--<ImageButton
-                            android:id="@+id/ibtnPotencia"
-                            android:layout_width="30sp"
-                            android:layout_height="30sp"
-                            android:src="@drawable/radio" />-->
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Doc. Origen:  " />
-
-                        <!--<EditText
-                            android:id="@+id/etDocOrigenRW"
-                            android:layout_width="230dip"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:enabled="false"
-                            android:inputType="text"
-                            android:textSize="12sp" />-->
 
                         <TextView
                             android:id="@+id/tvDocOrigenRW"
@@ -137,6 +121,35 @@
                         <Button
                             android:id="@+id/scanQR_imgbutton"
                             android:layout_width="40sp"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#1F9375"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Doc. Origen:  "
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tvDocOrigenRW"
+                            android:layout_width="230dip"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp" />
+
+
+                        <Button
+                            android:id="@+id/scanQR_imgbutton"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="#1F9375"
                             android:textColor="#FFFFFF"
@@ -154,7 +167,9 @@
                             android:id="@+id/textView3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/RWDocDestino" />
+                            android:text="Doc.Destino: "
+                            android:textStyle="bold"
+                            />
 
                         <TextView
                             android:id="@+id/tvDocDestinoRW"
@@ -162,14 +177,6 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp" />
 
-                        <!-- <EditText
-                             android:id="@+id/etDocDestinoRW"
-                             android:layout_width="230dip"
-                             android:layout_height="wrap_content"
-                             android:ems="10"
-                             android:enabled="false"
-                             android:inputType="textPersonName"
-                             android:textSize="12sp" />-->
 
                         <Button
                             android:id="@+id/search_imgbutton"
@@ -190,7 +197,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Motivo:          " />
+                            android:text="Motivo:          "
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvMotivoRW"
@@ -1156,7 +1164,7 @@
                     android:layout_marginTop="2dip"
                     android:textColor="#FFFFFF"
                     android:background="@drawable/borderedondo"
-                    android:text="@string/BTN_confirmar"
+                    android:text="@string/BTN_procesar"
                     android:textAlignment="center" />
 
             </LinearLayout>
