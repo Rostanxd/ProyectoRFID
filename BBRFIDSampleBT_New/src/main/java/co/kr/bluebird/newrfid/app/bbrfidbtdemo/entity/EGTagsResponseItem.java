@@ -14,6 +14,26 @@ public class EGTagsResponseItem implements Serializable {
     public int CantidadLeidos;
     public int CantidadNoLeidos;
     public int CantidadDoc;
+    public int etiquetasDocActivas;
+    public int etiquetasDocPendientes;
+    public List<String> DataLeido;
+    public List<String> DataNoLeido;
+
+    public int getEtiquetasDocActivas() {
+        return etiquetasDocActivas;
+    }
+
+    public void setEtiquetasDocActivas(int etiquetasDocActivas) {
+        this.etiquetasDocActivas = etiquetasDocActivas;
+    }
+
+    public int getEtiquetasDocPendientes() {
+        return etiquetasDocPendientes;
+    }
+
+    public void setEtiquetasDocPendientes(int etiquetasDocPendientes) {
+        this.etiquetasDocPendientes = etiquetasDocPendientes;
+    }
 
     public int getCantidadDoc() {
         return CantidadDoc;
@@ -23,8 +43,6 @@ public class EGTagsResponseItem implements Serializable {
         CantidadDoc = cantidadDoc;
     }
 
-    public List<String> DataLeido;
-    public List<String> DataNoLeido;
 
     public String getItemCodigo() {
         return itemCodigo;

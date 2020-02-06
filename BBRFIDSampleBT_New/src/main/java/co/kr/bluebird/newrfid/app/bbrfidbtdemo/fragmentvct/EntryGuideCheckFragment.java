@@ -177,9 +177,19 @@ public class EntryGuideCheckFragment extends Fragment {
                     String nombre = i.descripcion;
                     String NoGuia = i.numero;
                     String NoOCompra = mOrdenCompraGR.getText().toString();
-                    String NoGuiaCant = String.valueOf(i.getCantidad()) ;
+                    int saldo = i.getSaldo();
+                    boolean val_procesar = false;
+
+                    if(saldo > 0 ){
+                        val_procesar = true;
+                    }
+
+
+                    /*String NoGuiaCant = String.valueOf(i.getCantidad()) ;*/
+                    String NoGuiaCant = String.valueOf(i.getSaldo()) ;
                     AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-                    if(!nombre.equalsIgnoreCase("pendiente")){
+                    //if(!nombre.equalsIgnoreCase("pendiente")){
+                    if(val_procesar){
                         alerta.setMessage("Desea Transaccionar con el No. Guia: "+NoGuia +", con estado "+nombre)
                                 .setCancelable(false)
                                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -214,7 +224,7 @@ public class EntryGuideCheckFragment extends Fragment {
                                 });
                     }
                     else {
-                        alerta.setMessage("La Guia: "+NoGuia +", ya se encuentra procesada")
+                        alerta.setMessage("La Guia: "+NoGuia +", no tiene saldos pendientes")
                                 .setCancelable(true)
                                 .setNeutralButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override

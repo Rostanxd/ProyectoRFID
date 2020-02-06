@@ -25,6 +25,8 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.item;
  */
 public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
     private List<Guide> listData;
+    private String cantidad = "";
+    int cant ;
     private LayoutInflater layoutInflater;
     public CustomListAdapterEntryGuideCheck(Context aContext, List<Guide> listData) {
         this.listData = listData;
@@ -57,8 +59,20 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
             holder = (ViewHolder) v.getTag();
         }
 
+        cant = listData.get(position).getCantidad();
+
+
+        /*holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidad()));*/
+        if(listData.get(position).getSaldo() > 0 && cant != listData.get(position).getSaldo() ){
+            cantidad = cant+" [" + listData.get(position).getSaldo()+"]";
+        }
+        else
+        {
+            cantidad = cant+"";
+        }
+
         holder.uNumGuia.setText(listData.get(position).getNumero());
-        holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidad()));
+        holder.uCantidad.setText(cantidad);
         holder.uEstado.setText( String.valueOf(listData.get(position).getDescripcion()) );
 
         return v;
