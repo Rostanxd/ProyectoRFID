@@ -18,6 +18,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -44,6 +45,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ParameterFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 
 public class LoginActivity extends Activity {
@@ -113,6 +115,10 @@ public class LoginActivity extends Activity {
         mbtnIngresarLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Prueba para mostrar mensajes
+                //clsMensaje poMensaje = new clsMensaje(LoginActivity.this);
+                //ViewGroup poVistaContent = findViewById(android.R.id.content);
+                //poMensaje.gMostrarMensajeOk(poVistaContent);
                /* if(ValidarUsuario(mtxtUser.getText().toString(), mtxtPass.getText().toString()))
                 {
                     Intent intent = new Intent(mcontext, MainActivity.class);
@@ -122,6 +128,7 @@ public class LoginActivity extends Activity {
 
                     Toast.makeText(mcontext, "Usuario/password no validos...", Toast.LENGTH_SHORT).show();
                 }*/
+
                isAdmin = switchAdmin.isChecked();
 
                /*if(isAdmin){
@@ -213,7 +220,7 @@ public class LoginActivity extends Activity {
 
     private void EnabledDisabledBtnLogin(boolean isEnabled){
         mbtnIngresarLogin.setEnabled(isEnabled);
-        mbtnIngresarLogin.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor((isEnabled ? "#00897B":"#D5D7D6"))));
+        mbtnIngresarLogin.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor((isEnabled ? "#3bbdfa":"#D5D7D6"))));
     }
 
     private boolean ExistLoggeo(){

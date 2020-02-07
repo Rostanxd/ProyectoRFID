@@ -7,4 +7,18 @@
     <color name="bat_start">#00FF00</color>
     <color name="bat_center">#FFFF00</color>
     <color name="bat_end">#FF0000</color>
+
+    <!-- Paleta Colores -->
+    <color name="gColorAzulClaro">#3bbdfa</color>
+    <color name="gColorAzul_n50">#e3f2fd</color>
+    <color name="gColorAzul_n300">#64b5f6</color>
+    <color name="gColorAzul_n800">#1565c0</color>
+    <color name="gColorIndigo_n100">#c5cae9</color>
+    <color name="gColorIndigo_n700">#303f9f</color>
+    <color name="gColorAzulDark">#005cb2</color>
+    <color name="gColorBlanco">#FFFFFF</color>
+    <color name="gColorGris">#37474f</color>
+    <color name="gColorIndigoLight">#5f5fc4</color>
+    <color name="gColorVerdeDark">#00b248</color>
+    <color name="gColorRojoLight">#ff5f52</color>
 </resources>

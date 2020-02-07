@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gColorBlanco"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gColorIndigoLight">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/gColorBlanco"
+            android:background="@drawable/ic_buscar" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/lblTextoLabel"
+            android:textColor="@color/gColorGris"
+            android:textSize="10dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/borde_edittext"
+            android:textColor="@color/gColorGris"
+            android:id="@+id/txtTextoIngreso"
+            android:width="200dp"
+            android:textSize="15dp"
+            android:layout_marginTop="10dp">
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center" android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/btnConfirmar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorVerdeDark"
+                android:text="Aceptar"
+                android:textColor="@color/gColorBlanco" />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorRojoLight"
+                android:text="Cancelar"
+                android:textColor="@color/gColorBlanco" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
