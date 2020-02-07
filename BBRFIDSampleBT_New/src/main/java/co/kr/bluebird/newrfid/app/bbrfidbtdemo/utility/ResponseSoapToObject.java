@@ -692,7 +692,7 @@ public class ResponseSoapToObject {
         if(responseData.hasProperty("itemsCantidades")){
             SoapObject SoDataItems = (SoapObject) responseData.getProperty("itemsCantidades");
 
-            String [] ItemValue =  new String[8];
+            String [] ItemValue =  new String[9];
             responseItemList = new ArrayList<EGTagsResponseItem>();
 
             for (int x=0; x<SoDataItems.getPropertyCount();x++)
@@ -707,8 +707,10 @@ public class ResponseSoapToObject {
                 ItemValue[5] = TagRespItem.getPropertyAsString("itemGrupo5");
                 ItemValue[6] = TagRespItem.getPropertyAsString("CantidadLeidos");
                 ItemValue[7] = TagRespItem.getPropertyAsString("CantidadNoLeidos");
+                ItemValue[8] = TagRespItem.getPropertyAsString("CantidadDoc");
 
                 responseItem = new EGTagsResponseItem(ItemValue[0],ItemValue[1],ItemValue[2],ItemValue[3],ItemValue[4],ItemValue[5], Integer.valueOf(ItemValue[6]) ,Integer.valueOf(ItemValue[7]),null,null);
+                responseItem.setCantidadDoc(Integer.valueOf(ItemValue[8]));
                 responseItemList.add(responseItem);
             }
         }

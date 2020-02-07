@@ -27,7 +27,8 @@ public class RfidEpHomologacion {
                 taglectura.add(j);
             }
             tagNoRead = new TagNoRead(taglectura);
-            _item = new item(i.itemCodigo,(i.CantidadLeidos + i.CantidadNoLeidos),i.CantidadLeidos,tagNoRead);
+            //_item = new item(i.itemCodigo,(i.CantidadLeidos + i.CantidadNoLeidos),i.CantidadLeidos,tagNoRead);
+            _item = new item(i.getItemCodigo(),i.getCantidadLeidos(),i.getCantidadLeidos(),tagNoRead);
             itemList.add(_item);
 
             totalcant += _item.getCantidad();

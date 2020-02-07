@@ -1241,12 +1241,17 @@ public class ReceiveWareCheckFragment extends Fragment {
         {
             responseItemList = new ArrayList<EGTagsResponseItem>();
             for (EGTagsResponseItem item :egDetailResponse.getItems()) {
-                cant_total = item.getCantidadLeidos() + item.getCantidadNoLeidos();
+                /*cant_total = item.getCantidadLeidos() + item.getCantidadNoLeidos();*/
 
-                if(cant_total != item.getCantidadLeidos()){
+                /*if(cant_total != item.getCantidadLeidos()){
+                    responseItemList.add(item);
+                }*/
+
+                if(item.getCantidadDoc() != item.getCantidadLeidos()){
                     responseItemList.add(item);
                 }
             }
+
         }
         return responseItemList;
     }

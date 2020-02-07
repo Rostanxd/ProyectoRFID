@@ -52,18 +52,24 @@ public class CustomListAdapterReceiveWare extends BaseAdapter {
         } else{
             holder = (ViewHolder) v.getTag();
         }
-        int cantidadtotal = listData.get(position).getCantidadLeidos() + listData.get(position).getCantidadNoLeidos();
+        int cantidadtotal = listData.get(position).getCantidadDoc();
         int cantidadLeidos = listData.get(position).getCantidadLeidos();
 
         holder.uCodItem.setText(listData.get(position).getItemCodigo());
-        holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidadLeidos() + listData.get(position).getCantidadNoLeidos()));
-       /* holder.uLeidos.setText( null );
+        /*holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidadLeidos() + listData.get(position).getCantidadNoLeidos()));*/
+        holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidadDoc()));
+        /* holder.uLeidos.setText( null );
         holder.uDif.setText( null);*/
 
         if(isComplete)
         {
             holder.uLeidos.setText( String.valueOf( listData.get(position).getCantidadLeidos()));
-            holder.uDif.setText(String.valueOf(cantidadLeidos- cantidadtotal) );
+            if(!listData.get(position).getItemCodigo().equals("OTROS")){
+                holder.uDif.setText(String.valueOf(cantidadtotal - cantidadLeidos) );
+            }
+            else {
+                holder.uDif.setText(null);
+            }
         }
         else
         {
