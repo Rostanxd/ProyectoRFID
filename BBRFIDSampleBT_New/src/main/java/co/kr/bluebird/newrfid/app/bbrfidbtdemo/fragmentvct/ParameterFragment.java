@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 
 /**
@@ -33,6 +34,8 @@ public class ParameterFragment extends Fragment {
     private EditText medLocalHost, medLocalPort,medExtHost,medExtPort,medCodBodega,medDesBodega,medHolding, medTimeDuration,medDateIni,medDispositivoId,medDateFin;
     private Spinner mspinTipoConexion;
     private Button mimgBtnSave;
+    private clsDatabase loDatabase;
+    private SQLiteDatabase loExecute;
     private int dia, mes, anio,hora, minutos;
     public ParameterFragment() {
         // Required empty public constructor
@@ -51,7 +54,7 @@ public class ParameterFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.parameter_frag, container, false);
         mContext = inflater.getContext();
-
+        loDatabase = new clsDatabase(mContext);
         InicialiarAtributos(v);
 
         Drawable myIcon = null;
@@ -180,11 +183,11 @@ public class ParameterFragment extends Fragment {
 
 
     private void LLenarCampos(){
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        loExecute = loDatabase.getWritableDatabase();
         int codigo = 1;
 
-        Cursor fila = base.rawQuery("select localhost,localport, exthost, extport, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select localhost,localport, exthost, extport, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
 
 
         if(fila.moveToFirst()){
@@ -212,16 +215,16 @@ public class ParameterFragment extends Fragment {
         }
 
 
-        base.close();
+        loExecute.close();
     }
 
 
     public void RegistrarModificar()
     {
 
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
-
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        //SQLiteDatabase base = admin.getWritableDatabase();
+        loExecute = loDatabase.getWritableDatabase();
 
         String localHost = medLocalHost.getText().toString();
         String localPort = medLocalPort.getText().toString();
@@ -245,8 +248,8 @@ public class ParameterFragment extends Fragment {
             /*String dateini_ = "(SELECT datetime('NOW', 'LOCALTIME'))";
             String datefin_ = "(SELECT datetime('NOW', 'LOCALTIME', '"+timeDuration+" MINUTES'))";*/
 
-            Cursor fila1 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
-            Cursor fila2 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
+            Cursor fila1 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
+            Cursor fila2 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
 
             String dateini_ = null, datefin_ = null;
             if(fila1.moveToFirst()) {
@@ -275,16 +278,16 @@ public class ParameterFragment extends Fragment {
             Toast.makeText(mContext,"Debe llenar Todos los Campos", Toast.LENGTH_LONG);
         }
 
-        Cursor fila = base.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
 
         if(!fila.moveToFirst()){
             // insert
 
-            final long parametro = base.insert("parameterservice", null, registro);
+            final long parametro = loExecute.insert("parameterservice", null, registro);
 
 
             if(parametro > 0){
-                RegistrarPrimerInicioSession(base);
+                RegistrarPrimerInicioSession(loExecute);
                 Toast.makeText(mContext,"Registro correcto: "+ parametro, Toast.LENGTH_LONG).show();
                 CleanControls();
                 LLenarCampos();
@@ -292,15 +295,15 @@ public class ParameterFragment extends Fragment {
             else {
                 Toast.makeText(mContext,"Registro Incorrecto", Toast.LENGTH_LONG);
             }
-            base.close();
+            loExecute.close();
 
             //verDataInicioSeccion();
         }
         else
         {
             //update
-            int cant = base.update("parameterservice",registro, "codigo="+codigo, null);
-            base.close();
+            int cant = loExecute.update("parameterservice",registro, "codigo="+codigo, null);
+            loExecute.close();
 
             if(cant == 1){
                 Toast.makeText(mContext,"Modificado Exitosamente",Toast.LENGTH_SHORT).show();

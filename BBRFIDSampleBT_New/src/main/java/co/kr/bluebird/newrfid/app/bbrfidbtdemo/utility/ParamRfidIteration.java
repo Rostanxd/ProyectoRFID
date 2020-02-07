@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 
@@ -19,18 +20,20 @@ import java.text.SimpleDateFormat;
 public class ParamRfidIteration {
 
     private Context mContext;
-
+    private clsDatabase loDatabase;
+    private SQLiteDatabase loExecute;
     public ParamRfidIteration(Context context){
         mContext = context;
+        loDatabase = new clsDatabase(mContext);
     }
 
     public ParamLogin ConsultarParametrosLogin(){
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        loExecute = loDatabase.getWritableDatabase();
         int codigo = 1;
         ParamLogin paramLogin = null;
 
-        Cursor fila = base.rawQuery("select startdate, user, estado from paramlogin where codigo=" +codigo, null);
+        Cursor fila = loExecute.rawQuery("select startdate, user, estado from paramlogin where codigo=" +codigo, null);
 
         if(fila.moveToFirst()){
             //String estado = fila.getString(3);
@@ -78,15 +81,15 @@ public class ParamRfidIteration {
     }
 
     public ParamLectorRfid ConsultarParametros(){
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
-
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        //SQLiteDatabase base = admin.getWritableDatabase();
+        loExecute = loDatabase.getReadableDatabase();
         int codigo = 1;
         ParamLectorRfid paramLectorRfid = null;
 
 
 
-        Cursor fila = base.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
         if(fila.moveToFirst()){
             paramLectorRfid = new ParamLectorRfid();
             int indexLE;
@@ -149,7 +152,7 @@ public class ParamRfidIteration {
 
         }
 
-        base.close();
+        loExecute.close();
 
         return paramLectorRfid;
     }
@@ -180,14 +183,15 @@ public class ParamRfidIteration {
     public boolean RegistrarModificarParamLogin( ParamLogin paramLogin, boolean isChangeStatus)
     {
 
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        //SQLiteDatabase base = admin.getWritableDatabase();
+        loExecute = loDatabase.getReadableDatabase();
 
         int codigo = 1;
         boolean isIngModExitosa = false;
 
 
-        Cursor fila1 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
+        Cursor fila1 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
         String startdate = null;
         if(fila1.moveToFirst()){
             startdate = fila1.getString(0);
@@ -206,25 +210,25 @@ public class ParamRfidIteration {
 
 
 
-        Cursor fila = base.rawQuery("select codigo from paramlogin where codigo ="+codigo, null);
-
+        Cursor fila = loExecute.rawQuery("select codigo from paramlogin where codigo ="+codigo, null);
+        loExecute = loDatabase.getWritableDatabase();
         if(!fila.moveToFirst()){
             // insert
 
-            final long parametro = base.insert("paramlogin", null, registro);
+            final long parametro = loExecute.insert("paramlogin", null, registro);
             if(parametro > 0){
                 isIngModExitosa = true;
             }
-            base.close();
+            loExecute.close();
         }
         else
         {
             //update
-            int cant = base.update("paramlogin",registro, "codigo="+codigo, null);
+            int cant = loExecute.update("paramlogin",registro, "codigo="+codigo, null);
             if(cant  > 0 ){
                 isIngModExitosa = true;
             }
-            base.close();
+            loExecute.close();
 
         }
         return isIngModExitosa;

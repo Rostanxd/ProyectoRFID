@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
 
 public class ParameterActivity extends Activity {
 
@@ -25,13 +26,15 @@ public class ParameterActivity extends Activity {
     private EditText medEndPointLocal,medEndPointExt,medCodBodega,medDesBodega,medHolding, medTimeDuration,medDateIni,medDispositivoId,medDateFin;
     private Spinner mspinTipoConexion;
     private Button mimgBtnSave;
-
+    private clsDatabase loDatabase;
+    private SQLiteDatabase loExecute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parameter);
 
         mContext = this;
+        loDatabase = new clsDatabase(mContext);
         InicializateControls();
     }
 
@@ -39,11 +42,11 @@ public class ParameterActivity extends Activity {
 
     // funciones de transaccion sqlite
     private void LLenarCampos(){
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        loExecute = loDatabase.getWritableDatabase();
         int codigo = 1;
 
-        Cursor fila = base.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
 
 
         if(fila.moveToFirst()){
@@ -69,14 +72,14 @@ public class ParameterActivity extends Activity {
         }
 
 
-        base.close();
+        loExecute.close();
     }
 
     public void RegistrarModificar()
     {
 
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        SQLiteDatabase base = admin.getWritableDatabase();
+        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+        loExecute = loDatabase.getWritableDatabase();
 
         String localEndpoint = medEndPointLocal.getText().toString();
         String extEndpoint = medEndPointExt.getText().toString();
@@ -92,8 +95,8 @@ public class ParameterActivity extends Activity {
         ContentValues registro = new ContentValues();
         if (!localEndpoint.trim().isEmpty() && !extEndpoint.trim().isEmpty()  && !codBodega.trim().isEmpty()
                 && !descBodega.trim().isEmpty() && !Holding.trim().isEmpty() && !DispId.trim().isEmpty() ){
-            Cursor fila1 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
-            Cursor fila2 = base.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
+            Cursor fila1 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
+            Cursor fila2 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
 
             String dateini_ = null, datefin_ = null;
             if(fila1.moveToFirst()) {
@@ -120,16 +123,16 @@ public class ParameterActivity extends Activity {
             Toast.makeText(mContext,"Debe llenar Todos los Campos", Toast.LENGTH_LONG);
         }
 
-        Cursor fila = base.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
 
         if(!fila.moveToFirst()){
             // insert
 
-            final long parametro = base.insert("parameterservice", null, registro);
+            final long parametro = loExecute.insert("parameterservice", null, registro);
 
 
             if(parametro > 0){
-                RegistrarPrimerInicioSession(base);
+                RegistrarPrimerInicioSession(loExecute);
                 Toast.makeText(mContext,"Ingreso exitoso: "+ parametro, Toast.LENGTH_LONG).show();
                 CleanControls();
                 LLenarCampos();
@@ -137,13 +140,13 @@ public class ParameterActivity extends Activity {
             else {
                 Toast.makeText(mContext,"Registro Incorrecto", Toast.LENGTH_LONG);
             }
-            base.close();
+            loExecute.close();
         }
         else
         {
             //update
-            int cant = base.update("parameterservice",registro, "codigo="+codigo, null);
-            base.close();
+            int cant = loExecute.update("parameterservice",registro, "codigo="+codigo, null);
+            loExecute.close();
 
             if(cant == 1){
                 Toast.makeText(mContext,"Modificado Exitosamente",Toast.LENGTH_SHORT).show();
