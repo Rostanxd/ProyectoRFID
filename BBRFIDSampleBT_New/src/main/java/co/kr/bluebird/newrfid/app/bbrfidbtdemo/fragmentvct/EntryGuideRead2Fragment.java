@@ -23,6 +23,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterEntryGuide;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import co.kr.bluebird.sled.SelectionCriterias;
@@ -58,6 +59,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -283,6 +285,8 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private EntryGuideCheckFragment mEntryGuideCheckFragment;
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
     //private boolean isRunningRead;
 
     public static EntryGuideRead2Fragment newInstance() {
@@ -492,6 +496,11 @@ public class EntryGuideRead2Fragment extends Fragment {
                 return false;
             }
         });
+
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
 
         v.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -812,7 +821,8 @@ public class EntryGuideRead2Fragment extends Fragment {
                 DialogPowerState();
             }
             else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "El Dispositivo esta desconectado de la pistola RFID");
+                //Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -835,7 +845,8 @@ public class EntryGuideRead2Fragment extends Fragment {
                         enableControl(!mInventory);
                         pauseStopwatch();
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
-                        Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Operación fallida al procesar Inventario");
+                        //Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
 
                     clearAll();
                     switchLayout(true);
@@ -891,9 +902,11 @@ public class EntryGuideRead2Fragment extends Fragment {
                             mInventory = true;
                             enableControl(!mInventory);
                         } else if (ret == SDConsts.RFResult.MODE_ERROR)
-                            Toast.makeText(mContext, "Start Inventory failed, Please check RFR900 MODE", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Start Inventory failed, Please check RFR900 MODE", Toast.LENGTH_SHORT).show();
+                            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No se pudo iniciar la lectura. Revise en que modo se encuentra la pistola");
                         else if (ret == SDConsts.RFResult.LOW_BATTERY)
-                            Toast.makeText(mContext, "Start Inventory failed, LOW_BATTERY", Toast.LENGTH_SHORT).show();
+                            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Alerta, la bateria esta baja en la pistola");
+                            //Toast.makeText(mContext, "Start Inventory failed, LOW_BATTERY", Toast.LENGTH_SHORT).show();
                         else
                         if (D) Log.d(TAG, "Start Inventory failed");
                     }
@@ -957,6 +970,32 @@ public class EntryGuideRead2Fragment extends Fragment {
     }
 
     private void DialogCleanControls(){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                CleanControls();
+
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
                 .setCancelable(false)
@@ -973,6 +1012,7 @@ public class EntryGuideRead2Fragment extends Fragment {
                     }
                 });
         alerta.show();
+        */
     }
     private void CleanControls(){
         //medOrdenCompraGR metNumGuiaEntGR mCountText mtvCantTotal mtvCantItemLeidos mlv_itemsDif mlv_tagsNoEnc
@@ -1166,7 +1206,8 @@ public class EntryGuideRead2Fragment extends Fragment {
                         LlenarGrid(egDetailResponse);
                     }
                     else {
-                        Toast.makeText(mContext, egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, egDetailResponse.getStatus().getDescripcion());
+                        //Toast.makeText(mContext, egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
                     }
                 }
 

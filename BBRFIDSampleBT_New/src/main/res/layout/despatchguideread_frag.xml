@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
 
@@ -50,6 +51,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorBlanco"
             android:text="@string/GDLecturaTag" />
     </LinearLayout>
 
@@ -71,6 +73,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorBlanco"
             android:text="Potencia RFID"/>
 
         <ImageButton
@@ -526,17 +529,16 @@
 
                 <Button
                     android:id="@+id/next_imgbtn"
-                    android:backgroundTint="#00897B"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dip"
                     android:layout_marginLeft="5dip"
-                    android:layout_marginBottom="5dip"
                     android:layout_marginTop="5dip"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/borderedondo"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginBottom="5dip"
+                    android:background="@color/gColorAzulClaro"
                     android:text="@string/BTN_continuar"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/gColorBlanco" />
             </LinearLayout>
 
 

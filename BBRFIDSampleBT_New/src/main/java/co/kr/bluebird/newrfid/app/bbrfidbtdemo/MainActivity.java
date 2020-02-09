@@ -357,11 +357,13 @@ public class MainActivity extends Activity {
     private void selectItem(int position) {
         switch (position) {
             case 0:
+                //################# CONECTIVIDAD ################################
                 if (mBTConnectivityFragment == null)
                     mBTConnectivityFragment = BTConnectivityFragment.newInstance();
                 mCurrentFragment = mBTConnectivityFragment;
                 break;
             case 1:
+
                 if (mSDFragment == null)
                     mSDFragment = SDFragment.newInstance();
                 mCurrentFragment = mSDFragment;
@@ -387,6 +389,7 @@ public class MainActivity extends Activity {
                 mCurrentFragment = mRapidFragment;
                 break;
             case 6:
+                //################# RF CONFIGURACION ########################
                 if (mInventoryFragment == null)
                     mInventoryFragment = InventoryFragment.newInstance();
                 mCurrentFragment = mInventoryFragment;
@@ -478,6 +481,7 @@ public class MainActivity extends Activity {
                 break;
 
             case 14:
+                //##################### ENVIO DE MERCADERIA ###############################
                 if (mShippingWareReadFragment == null)
                     mShippingWareReadFragment = ShippingWareReadFragment.newInstance();
                 mCurrentFragment = mShippingWareReadFragment;
@@ -635,7 +639,37 @@ public class MainActivity extends Activity {
             //super.onBackPressed();
             //getFragmentManager().popBackStack();
 
+            View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+            builder.setView(dialogView);
+            final AlertDialog alertDialog = builder.create();
+            Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+            Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+            TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+            poLabelTexto.setText("¿Esta seguro que desea Cerrar Sesión?");
 
+
+            btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    ParamRfidIteration paramRfidIteration = new ParamRfidIteration(mContext);
+                    ParamLogin paramLogin = new ParamLogin();
+                    paramLogin.setEstado(0);
+                    paramRfidIteration.RegistrarModificarParamLogin(paramLogin, true);
+
+                    finish();
+
+                }
+            });
+            btnCancelar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
+            /*
             AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
             alerta.setMessage("Desea Cerrar Session...")
                     .setCancelable(false)
@@ -663,7 +697,7 @@ public class MainActivity extends Activity {
             AlertDialog title = alerta.create();
             title.setTitle("salida");
             title.show();
-
+            */
         }
     }
 
@@ -836,6 +870,30 @@ public class MainActivity extends Activity {
     }
 
     private void DialogConfirmacionBack(String msj_){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(msj_);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                switchToHome();
+
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage(msj_)
                 .setCancelable(false)
@@ -852,6 +910,7 @@ public class MainActivity extends Activity {
                     }
                 });
         alerta.show();
+        */
     }
 
 

@@ -34,6 +34,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Guide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.models.EntryGuideModel;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterEntryGuideCheck;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +62,8 @@ public class EntryGuideCheckFragment extends Fragment {
     private ViewGroup loVistaContent;
 
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
 
     public EntryGuideCheckFragment() {
         // Required empty public constructor
@@ -101,6 +104,10 @@ public class EntryGuideCheckFragment extends Fragment {
             }
         });
         */
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
         if(getArguments() != null)
         {
             ResposeEG = (co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide)getArguments().getSerializable("objectResponse");
@@ -108,6 +115,7 @@ public class EntryGuideCheckFragment extends Fragment {
                 LlenarGrid();
             }
         }
+
         return  v;
     }
 
@@ -282,6 +290,8 @@ public class EntryGuideCheckFragment extends Fragment {
                     */
                     }
                     else {
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaContent, "La Guia: "+NoGuia +", no tiene saldos pendientes");
+                        /*
                         alerta.setMessage("La Guia: "+NoGuia +", no tiene saldos pendientes")
                                 .setCancelable(true)
                                 .setNeutralButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -290,6 +300,7 @@ public class EntryGuideCheckFragment extends Fragment {
                                         dialogInterface.dismiss();
                                     }
                                 });
+                        */
                     }
 
                     //AlertDialog title = alerta.create();

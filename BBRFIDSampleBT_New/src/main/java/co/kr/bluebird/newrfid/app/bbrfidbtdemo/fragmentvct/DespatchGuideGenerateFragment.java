@@ -3,6 +3,7 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
 import android.support.v4.print.PrintHelper;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +58,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.QRCodeGenerator;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ReportsTemplate;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.RfidEpHomologacion;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.UtilityFuntions;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,7 +87,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
     private HashMap<Integer,String> spinnerMap = null;
     private String[] mWSParametersBodega, mWSParametersGuiaDespachoProc;
     private WebView mWb_qrcode;
-
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
 
 
 
@@ -103,6 +107,10 @@ public class DespatchGuideGenerateFragment extends Fragment {
         //return inflater.inflate(R.layout.despatchguidegenerate_frag, container, false);
         View v = inflater.inflate(R.layout.despatchguidegenerate_frag, container, false);
         mContext = inflater.getContext();
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
         mSpinnerDestino = (Spinner)v.findViewById(R.id.spinnerDestino);
         //tblGDDestino = (TableLayout)v.findViewById(R.id.tablelayoutDetalleGD);
         mlv_detailGD = (ListView)v.findViewById(R.id.lv_detailGD);
@@ -148,7 +156,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     DialogProcesar();
                 }
                 else {
-                    Toast.makeText(mContext, "Ingrese un número de Guia y/o seleccione un destino ", Toast.LENGTH_LONG).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Ingrese un número de Guia y/o Seleccione un destino");
+                    //Toast.makeText(mContext, "Ingrese un número de Guia y/o seleccione un destino ", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -208,7 +217,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
             //super.onPostExecute(aVoid);
 
             if(spinnerDtoBodega != null && spinnerDtoBodega.getEstado() != null && spinnerDtoBodega.getEstado().getCodigo().equals("9999")){
-                Toast.makeText(mContext,spinnerDtoBodega.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext,spinnerDtoBodega.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, spinnerDtoBodega.getEstado().getDescripcion());
             }
             else {
                 if (spinnerDtoBodega.estado != null && spinnerDtoBodega.estado.codigo.equals("00")) {
@@ -216,7 +226,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     progressDialog.cancel();
                 } else {
                     progressDialog.cancel();
-                    Toast.makeText(mContext,  spinnerDtoBodega.estado.codigo, Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, spinnerDtoBodega.estado.codigo);
+                    //Toast.makeText(mContext,  spinnerDtoBodega.estado.codigo, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -256,7 +267,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     LlenarGrid(egDetailResponse);
                     //Toast.makeText(mContext, "Llamada a Web Services Correctamente", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo:: " + egDetailResponse.status.descripcion, Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Llamada a Servicio Erroneo:: " + egDetailResponse.status.descripcion);
+                    //Toast.makeText(mContext, "Llamada a Servicio Erroneo:: " + egDetailResponse.status.descripcion, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -420,7 +432,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
                 } catch (Exception ex){
                     dto = null;
-                    Toast.makeText(mContext, ex.getMessage() , Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeError(loVistaDialogo, ex.getMessage());
+                    //Toast.makeText(mContext, ex.getMessage() , Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -443,13 +456,14 @@ public class DespatchGuideGenerateFragment extends Fragment {
                             }
                             PrintScrenQr(dto.auxiliar, mdestino, cantidadtotal);
                         }catch (Exception ex){
-                            //Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
-                            DialogMessage("Error al generar el codigo QR::"+ex.getMessage());
+
+                            //DialogMessage("Error al generar el codigo QR::"+ex.getMessage());
+                            loDialogo.gMostrarMensajeError(loVistaDialogo, "Error al generar el codigo QR::"+ex.getMessage());
                         }
                     }
                     else {
-                        //Toast.makeText(mContext,dto.getDescripcion(), Toast.LENGTH_SHORT).show();
-                        DialogMessage(dto.getDescripcion());
+                        //DialogMessage(dto.getDescripcion());
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, dto.getDescripcion());
                     }
                 }
             }
@@ -523,7 +537,31 @@ public class DespatchGuideGenerateFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                poLabelTexto.setText("¿Esta seguro que desea cancelar la impresión?");
 
+
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+
+                    }
+                });
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+                /*
                 AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
                 alerta.setMessage("Esta seguro de cancelar la impresion")
                         .setCancelable(false)
@@ -536,6 +574,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
                         });
 
                 alerta.show();
+                */
             }
         });
         dialog.show();
@@ -551,10 +590,12 @@ public class DespatchGuideGenerateFragment extends Fragment {
         PrintJob printJob = printManager.print(jobName, printAdapter,builder.build());
 
         if(printJob.isCompleted()){
-            Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+            loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
         }
         else if(printJob.isFailed()) {
-            Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Se presento probleas en la Impresión.");
         }
 
     }
@@ -573,6 +614,42 @@ public class DespatchGuideGenerateFragment extends Fragment {
     // Dialogs
 
     private void DialogProcesar(){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea Generar la Guia de Salida?");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                gGuiaEntrada = met_nGuiaEntrada.getText().toString();
+
+                if(!gGuiaEntrada.trim().isEmpty()){
+                    mWSParametersGuiaDespachoProc = getResources().getStringArray(R.array.WSparameter_GuiaDespachoProcesar);
+                    ExecSoapGuiaDespachoProcesarAsync tarea = new ExecSoapGuiaDespachoProcesarAsync();
+                    tarea.execute();
+                }else {
+
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Ingrese un Numero de Guia");
+                    //Toast.makeText(mContext,"Ingrese un Numero de Guia",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de Generar la Guia de Salida...")
                 .setCancelable(false)
@@ -598,6 +675,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     }
                 });
         alerta.show();
+        */
     }
 
     private void DialogMessage(String msj){

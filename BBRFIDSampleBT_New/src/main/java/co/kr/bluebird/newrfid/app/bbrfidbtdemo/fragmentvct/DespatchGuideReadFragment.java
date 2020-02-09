@@ -19,6 +19,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.TagListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import co.kr.bluebird.sled.SelectionCriterias;
@@ -52,6 +53,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -251,7 +253,8 @@ public class DespatchGuideReadFragment extends Fragment {
 
     private ImageButton mibtnPotencia;
     private  int RFPower = 17;
-
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
 
     //private boolean isRunningRead;
 
@@ -266,6 +269,10 @@ public class DespatchGuideReadFragment extends Fragment {
 
         mContext = inflater.getContext();
 
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
         mFragment = this;
 
         mOptionHandler = ((MainActivity)getActivity()).mUpdateConnectHandler;
@@ -366,7 +373,7 @@ public class DespatchGuideReadFragment extends Fragment {
         myIcon.setColorFilter(filter);
 
         mnext_imgbtn = (Button)v.findViewById(R.id.next_imgbtn);
-        mnext_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        //mnext_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
         mnext_imgbtn.setOnClickListener(sledListener);
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
@@ -757,7 +764,7 @@ public class DespatchGuideReadFragment extends Fragment {
                             mInvenButton.setEnabled(false);
                             mnext_imgbtn.setEnabled(false);
                             mclean_imgbtn.setEnabled(false);
-                            mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+                            //mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
                             mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
                             mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
 
@@ -786,7 +793,7 @@ public class DespatchGuideReadFragment extends Fragment {
                         mnext_imgbtn.setEnabled(true);
                         mclean_imgbtn.setEnabled(true);
                         mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
-                        mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00897B")));
+                        //mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00897B")));
                         mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
                         Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
@@ -814,7 +821,8 @@ public class DespatchGuideReadFragment extends Fragment {
                         ft.commit();
                     }
                     else {
-                        Toast.makeText(mContext,"No hay etiquetas que procesar...", Toast.LENGTH_SHORT).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No se encontraron etiquetas que procesar");
+                        //Toast.makeText(mContext,"No hay etiquetas que procesar...", Toast.LENGTH_SHORT).show();
                     }
 
                     break;
@@ -824,6 +832,31 @@ public class DespatchGuideReadFragment extends Fragment {
 
 
     private void DialogCleanControls(){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                clearAll();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
                 .setCancelable(false)
@@ -840,6 +873,7 @@ public class DespatchGuideReadFragment extends Fragment {
                     }
                 });
         alerta.show();
+        */
     }
 
     public item findTagNoLeido(String itemCodigo)

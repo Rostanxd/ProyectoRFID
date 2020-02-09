@@ -19,6 +19,7 @@ import android.print.PrintJob;
 import android.print.PrintManager;
 import android.support.v4.print.PrintHelper;
 import android.util.Base64;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.QrData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
@@ -63,6 +65,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ReportsTemplate;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.RfidEpHomologacion;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.UtilityFuntions;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,7 +101,8 @@ public class ShippingWareGenerateFragment extends Fragment {
     private WebView wb_qrcode;
 
     private LinearLayout mLayoutBodAlmacenamiento;
-
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
     public ShippingWareGenerateFragment() {
         // Required empty public constructor
     }
@@ -113,6 +117,10 @@ public class ShippingWareGenerateFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.shippingwaregenerate_frag, container, false);
         mContext = inflater.getContext();
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
         mSpinnerMotivo = (Spinner)v.findViewById(R.id.spinnerMotivo);
         mSpinnerBodAlmacenamiento = (Spinner)v.findViewById(R.id.spinnerBodAlmacenamiento);
         //tblGDDestino = (TableLayout)v.findViewById(R.id.tablelayoutDetalleGD);
@@ -226,7 +234,8 @@ public class ShippingWareGenerateFragment extends Fragment {
                     DialogProcesar();
                 }
                 else {
-                    Toast.makeText(mContext, "Seleccione un motivo y/o agregar una nota", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(mContext, "Seleccione un motivo y/o agregar una nota", Toast.LENGTH_LONG).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Seleccione un motivo y/o agregar una nota");
                 }
             }
         });
@@ -314,11 +323,13 @@ public class ShippingWareGenerateFragment extends Fragment {
                     SpinnerComplete();
                 }
                 else {
-                    Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No existen motivos");
                 }
             }
             else {
-                Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, spinnerDto.getEstado().getDescripcion());
             }
 
 
@@ -365,7 +376,8 @@ public class ShippingWareGenerateFragment extends Fragment {
                     SpinnerBodegasComplete();
                 }
                 else {
-                    Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext,R.string.motivosNull, Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No existen motivos");
                 }
             }
             else {
@@ -409,7 +421,8 @@ public class ShippingWareGenerateFragment extends Fragment {
                     //Toast.makeText(mContext, "Llamada a Web Services Correctamente", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(mContext, "Llamada a Servicio Erroneo:: "+egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "Llamada a Servicio Erroneo:: "+egDetailResponse.getStatus().getDescripcion() , Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Llamada a Servicio Erroneo:: "+egDetailResponse.getStatus().getDescripcion());
                 }
             }
 
@@ -472,13 +485,14 @@ public class ShippingWareGenerateFragment extends Fragment {
                     PrintScrenQr(dtoEnvioMercProcesar.getAuxiliar(), motivoDesc, cantidadtotal);
 
                 }catch (Exception ex){
-                    Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "Error al generar el codigo QR::"+ex.getMessage(),Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Error al generar el codigo QR::"+ex.getMessage());
                 }
 
             }
             else {
                 Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_LONG).show();
-
+                loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());
             }
 
         }
@@ -596,10 +610,12 @@ public class ShippingWareGenerateFragment extends Fragment {
                 builder.build());
 
         if(printJob.isCompleted()){
-            Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
+            loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
         }
         else if(printJob.isFailed()){
-            Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
+            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Se presento un problema en la impresión.");
         }
     }
 
@@ -644,6 +660,50 @@ public class ShippingWareGenerateFragment extends Fragment {
     // Dialogs
 
     private void DialogProcesar(){
+
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea realizar el Egreso de Mercaderia?");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                gNota = mtvNota.getText().toString();
+
+                if(!gNota.trim().isEmpty()){
+                    try {
+                        //WSparameter_EnvioMercaderiaProcesar
+                        mWSParametersEnvioMercaderiaProc = getResources().getStringArray(R.array.WSparameter_EnvioMercaderiaProcesar);
+                        ExecSoapEnvioMercaderiaProcesarAsync tarea = new ExecSoapEnvioMercaderiaProcesarAsync();
+                        tarea.execute();
+                    }
+                    catch (Exception ex){
+                        //Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
+                        loDialogo.gMostrarMensajeError(loVistaDialogo, ex.getMessage());
+                    }
+
+                }else {
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Falta ingresar una nota");
+                    //Toast.makeText(mContext,"Ingrese una nota",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro realizar el Egreso de Mercaderia...")
                 .setCancelable(false)
@@ -676,6 +736,7 @@ public class ShippingWareGenerateFragment extends Fragment {
                     }
                 });
         alerta.show();
+        */
     }
 
 }

@@ -14,6 +14,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.TagListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.permission.PermissionHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 
@@ -48,6 +49,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,7 +239,8 @@ public class ShippingWareReadFragment extends Fragment {
 
     private ImageButton mibtnPotencia;
     private int RFPower = 17;
-
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
     //private boolean isRunningRead;
 
     public static ShippingWareReadFragment newInstance() {
@@ -250,7 +253,10 @@ public class ShippingWareReadFragment extends Fragment {
         View v = inflater.inflate(R.layout.shippingwareread_frag, container, false);
 
         mContext = inflater.getContext();
-
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
         mFragment = this;
 
         mOptionHandler = ((MainActivity)getActivity()).mUpdateConnectHandler;
@@ -754,6 +760,31 @@ public class ShippingWareReadFragment extends Fragment {
 
 
     private void DialogCleanControls(){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro de realizar un limpieza se perderan todos los datos recolectados?");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                clearAll();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        /*
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
                 .setCancelable(false)
@@ -770,6 +801,7 @@ public class ShippingWareReadFragment extends Fragment {
                     }
                 });
         alerta.show();
+        */
     }
 
 
@@ -1503,7 +1535,8 @@ public class ShippingWareReadFragment extends Fragment {
                 DialogPowerState();
             }
             else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "El Dispositivo esta desconectado de la pistola RFID");
+                //Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
             }
 
         }
