@@ -16,12 +16,16 @@
             android:id="@+id/tvCol1"
             android:layout_width="200dip"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorBlanco"
+            android:textSize="14dp"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tvCol2"
             android:layout_width="100dip"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorNaranja_n500"
+            android:textSize="14dp"
             android:layout_weight="1" />
 
         <TextView
@@ -29,6 +33,7 @@
             android:layout_width="100dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/gColorGris_n800"
             android:textSize="14dp" />
 
 

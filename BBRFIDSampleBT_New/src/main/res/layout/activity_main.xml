@@ -921,7 +921,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@drawable/bg"
+                android:background="@drawable/fondo_gradiente"
                 android:gravity="center"
                 android:layout_weight="1">
 
@@ -951,6 +951,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorAmarillo_n500"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -959,6 +960,7 @@
                             android:layout_margin="16dp"
                             android:orientation="vertical"
                             android:layout_width="wrap_content"
+
                             android:layout_height="wrap_content">
 
                             <ImageView
@@ -978,7 +980,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Conectividad"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -998,6 +1000,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorVerde_n600"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1025,7 +1028,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="RF Configuracion"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1048,6 +1051,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorRojoLight"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1073,8 +1077,9 @@
                             <TextView
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
-                                android:text="Guia de Entrada"
-                                android:textColor="#000"
+                                android:text="Guía de Entrada"
+
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1094,6 +1099,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorAzulClaro"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1120,7 +1126,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Guia de Despacho"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1142,6 +1148,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorIndigo_n700"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1168,7 +1175,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Envio de Mercaderia"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1188,6 +1195,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorPurpura_n400"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1213,8 +1221,8 @@
                             <TextView
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
-                                android:text="Recepcion Mercaderia"
-                                android:textColor="#000"
+                                android:text="Recepción Mercaderia"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1238,6 +1246,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorRosado_n400"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1263,8 +1272,8 @@
                             <TextView
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
-                                android:text="Inventario por tienda"
-                                android:textColor="#000"
+                                android:text="Inventario por Tienda"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1285,6 +1294,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         app:cardElevation="8dp"
+                        app:cardBackgroundColor="@color/gColorCyan_n700"
                         app:cardCornerRadius="8dp">
 
                         <LinearLayout
@@ -1309,8 +1319,8 @@
                             <TextView
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
-                                android:text="Reposicion de Stock"
-                                android:textColor="#000"
+                                android:text="Reposición de Stock"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1332,6 +1342,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorCafe_n300"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1358,7 +1369,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Inventario Controlador"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1378,6 +1389,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+                        app:cardBackgroundColor="@color/gColorGrisAzul_n500"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1405,7 +1417,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Inventario Participante"
-                                android:textColor="#000"
+                                android:textColor="@color/gColorBlanco"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1427,6 +1439,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
+
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 

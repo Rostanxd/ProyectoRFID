@@ -1,6 +1,8 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 
-public class EntryGuide {
+import java.io.Serializable;
+
+public class EntryGuide implements Serializable {
     public DataSourceDto estado;
     public EGData data_;
 

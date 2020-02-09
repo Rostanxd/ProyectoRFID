@@ -25,8 +25,10 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ShippingWareReadFragm
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryControlFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TakingInventoryParticipantFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TestFragment;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.PersistenceDataIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import android.app.Activity;
@@ -34,10 +36,12 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,12 +51,17 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -117,38 +126,22 @@ public class MainActivity extends Activity {
 
     private LinearLayout mUILayout, mlayouttvParam;
     private TextView mtvParam1;
-
     private Fragment mCurrentFragment;
-
     private boolean isAdmin, isExistParametrizacion;
     private CardView mcvParametrizador,mcvConectividad,mcvConfiguracion,mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
-    /*private ImageButton mConnectButton;
-    private ImageButton mSDFunctionButton;
-    private ImageButton mRFConfigButton;
-    private ImageButton mRFAccessButton;
-    private ImageButton mRFSelectButton;
-    private ImageButton mRapidButton;
-    private ImageButton mInventoryButton;
-    private ImageButton mBCBarcodeButton;
-    private ImageButton mSBBarcodeButton;
-    private ImageButton mBatteryButton;
-    private ImageButton mInformationButton;
-    private ImageView mCILogoImage;
-
-    private ImageButton mPruebaButton;
-    private ImageButton mTestButton;*/
-
     private GridLayout mainGrid;
 
     public  String pato;
-
     private  int PositionFrag;
     private String mDispositivoBTRfidSelect ;
-
     private final MainHandler mMainHandler = new MainHandler(this);
-
     public final UpdateConnectHandler mUpdateConnectHandler = new UpdateConnectHandler(this);
-
+    private RfidService rfidService;
+    private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
+    private String[] mWSParameters;
+    private String lsNumeroOrden;
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (D) Log.d(TAG, "onCreate");
@@ -156,7 +149,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
-
+        rfidService = new RfidService(mContext);
         mlayouttvParam = (LinearLayout) findViewById(R.id.layouttvParam);
         mtvParam1 = (TextView) findViewById(R.id.tvParam1);
 
@@ -221,71 +214,6 @@ public class MainActivity extends Activity {
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
         int buttonHeight = size.x / 3;
-
-        /*mConnectButton = (ImageButton)findViewById(R.id.connect_bt);
-        mConnectButton.setMinimumHeight(buttonHeight);
-
-        mSDFunctionButton = (ImageButton)findViewById(R.id.sdfunc_bt);
-        mSDFunctionButton.setMinimumHeight(buttonHeight);
-
-        mRFConfigButton = (ImageButton)findViewById(R.id.rfconf_bt);
-        mRFConfigButton.setMinimumHeight(buttonHeight);
-
-        mRFAccessButton = (ImageButton)findViewById(R.id.rfacc_bt);
-        mRFAccessButton.setMinimumHeight(buttonHeight);
-
-        mRFSelectButton = (ImageButton)findViewById(R.id.rfsel_bt);
-        mRFSelectButton.setMinimumHeight(buttonHeight);
-
-        mRapidButton = (ImageButton)findViewById(R.id.rapid_bt);
-        mRapidButton.setMinimumHeight(buttonHeight);
-
-        mInventoryButton = (ImageButton)findViewById(R.id.inv_bt);
-        mInventoryButton.setMinimumHeight(buttonHeight);
-
-        mBCBarcodeButton = (ImageButton)findViewById(R.id.bar_bt);
-        mBCBarcodeButton.setMinimumHeight(buttonHeight);
-
-        mSBBarcodeButton = (ImageButton)findViewById(R.id.bar_sb_bt);
-        mSBBarcodeButton.setMinimumHeight(buttonHeight);
-
-        mBatteryButton = (ImageButton)findViewById(R.id.bat_bt);
-        mBatteryButton.setMinimumHeight(buttonHeight);
-
-        mInformationButton = (ImageButton)findViewById(R.id.info_bt);
-        mInformationButton.setMinimumHeight(buttonHeight);
-
-        mCILogoImage = (ImageView)findViewById(R.id.ci_logo);
-        mCILogoImage.setMinimumHeight(buttonHeight);*/
-
-
-
-       /* mPruebaButton = (ImageButton)findViewById(R.id.bt_prueba);
-        mPruebaButton.setMinimumHeight(buttonHeight);*/
-
-        //bt_test
-
-        /*mTestButton = (ImageButton)findViewById(R.id.bt_test);
-        mTestButton.setMinimumHeight(buttonHeight);*/
-
-
-       /* mConnectButton.setOnClickListener(buttonListener);
-        mSDFunctionButton.setOnClickListener(buttonListener);
-        mRFConfigButton.setOnClickListener(buttonListener);
-        mRFAccessButton.setOnClickListener(buttonListener);
-        mRFSelectButton.setOnClickListener(buttonListener);
-        mRapidButton.setOnClickListener(buttonListener);
-        mInventoryButton.setOnClickListener(buttonListener);
-        mBCBarcodeButton.setOnClickListener(buttonListener);
-        mSBBarcodeButton.setOnClickListener(buttonListener);
-        mBatteryButton.setOnClickListener(buttonListener);
-        mInformationButton.setOnClickListener(buttonListener);
-
-        mPruebaButton.setOnClickListener(buttonListener);
-        mTestButton.setOnClickListener(buttonListener);*/
-
-
-
         mainGrid = (GridLayout) findViewById(R.id.mainGrid);
 
         //Set Event
@@ -312,6 +240,10 @@ public class MainActivity extends Activity {
         mFragmentManager = getFragmentManager();
 
         mIsConnected = false;
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = findViewById(android.R.id.content);
+        //###################################################################
     }
 
     private void VerOptionByRol(){
@@ -343,19 +275,6 @@ public class MainActivity extends Activity {
                         case R.id.cvConfiguracion:
                             id = 6;
                             break;
-
-                        /*case R.id.cvInventario:
-                            id = 6;
-                            break;*/
-
-
-                       /* case R.id.cvBCBarcode:
-                            id = 7;
-                            break;
-                        case R.id.cvSBBarcode:
-                            id = 3;
-                            break;*/
-
                         case R.id.cvGuiaEntrada:
                             id = 12;
                             break;
@@ -393,56 +312,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    /*public View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int id = 0;
-            switch(v.getId()) {
-                case R.id.connect_bt:
-                    id = 0;
-                    break;
-                case R.id.sdfunc_bt:
-                    id = 1;
-                    break;
-                case R.id.rfconf_bt:
-                    id = 2;
-                    break;
-                case R.id.rfacc_bt:
-                    id = 3;
-                    break;
-                case R.id.rfsel_bt:
-                    id = 4;
-                    break;
-                case R.id.rapid_bt:
-                    id = 5;
-                    break;
-                case R.id.inv_bt:
-                    id = 6;
-                    break;
-                case R.id.bar_bt:
-                    id = 7;
-                    break;
-                case R.id.bar_sb_bt:
-                    id = 8;
-                    break;
-                case R.id.bat_bt:
-                    id = 9;
-                    break;
-                case R.id.info_bt:
-                    id = 10;
-                    break;
-                case R.id.bt_prueba:
-                    id = 11;
-                    break;
-                //bt_prueba
-
-                case R.id.bt_test:
-                    id = 12;
-                    break;
-            }
-            selectItem(id);
-        }
-    };*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -554,19 +423,51 @@ public class MainActivity extends Activity {
                 break;
 
             case 12:
-                /*if (mTestFragment == null)
-                    mTestFragment = TestFragment.newInstance();
-                mCurrentFragment = mTestFragment;
-                break;*/
+                //################# GUIA DE ENTRADA ###############################
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialogo_ingresotexto, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                EditText poTxtTexto = dialogView.findViewById(R.id.txtTextoIngreso);
+                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                poLabelTexto.setText("Por favor, ingrese un número de guía válido");
 
+
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(poTxtTexto.getText().toString() !="")
+                        {
+                            lsNumeroOrden = poTxtTexto.getText().toString();
+                            mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
+                            clsSoapAsync tarea = new clsSoapAsync();
+                            tarea.execute();
+                        }else{
+                            Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
+                        }
+                        alertDialog.dismiss();
+                    }
+                });
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+                /*
                 if (mEntryGuideCheckFragment == null){
                     mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
-                    /*Bundle args = new Bundle();
-                    args.putString("NoOCompra", null);
-                    mDespatchGuideReadFragment.setArguments(args);*/
                 }
                 mCurrentFragment = mEntryGuideCheckFragment;
+                */
                 break;
+
+
+
             case 13:
                 if (mDespatchGuideReadFragment == null) {
                     mDespatchGuideReadFragment = DespatchGuideReadFragment.newInstance();
@@ -619,14 +520,16 @@ public class MainActivity extends Activity {
             default:
                 return;
         }
-        PositionFrag = position;
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.replace(R.id.content, mCurrentFragment);
-        ft.commit();
-        //mDrawerList.setItemChecked(position, true);
-        setTitle(mFunctionsString[position]);
-        //mDrawerLayout.closeDrawer(mDrawerList);
-        mUILayout.setVisibility(View.GONE);
+        if(mCurrentFragment !=null)
+        {
+            PositionFrag = position;
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.replace(R.id.content, mCurrentFragment);
+            ft.commit();
+            setTitle(mFunctionsString[position]);
+            mUILayout.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -725,36 +628,7 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (mCurrentFragment != null) {
-
             OnBackPressedValidate();
-            /*if (mCurrentFragment.equals(mEntryGuideCheckFragment) && mEntryGuideCheckFragment.mEntryGuideReadFragment != null)
-            {
-                mDrawerLayout.closeDrawer(mDrawerList);
-                if (mEntryGuideCheckFragment != null) {
-                    FragmentTransaction ft = mFragmentManager.beginTransaction();
-                    ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
-                    ft.commit();
-                    mEntryGuideCheckFragment.mEntryGuideReadFragment = null;
-
-                    FragmentTransaction ft1 = mFragmentManager.beginTransaction();
-                    ft1.replace(R.id.content, mCurrentFragment);
-                    ft1.commit();
-                    mDrawerList.setItemChecked(PositionFrag, true);
-                    setTitle(mFunctionsString[PositionFrag]);
-                    mDrawerLayout.closeDrawer(mDrawerList);
-                    mUILayout.setVisibility(View.GONE);
-                    //mCurrentFragment = mEntryGuideCheckFragment;
-                    //mReader = BTReader.getReader(mContext, mMainHandler);
-                }
-
-                *//*setTitle(getString(R.string.app_name));
-                if (mUILayout.getVisibility() != View.VISIBLE)
-                    mUILayout.setVisibility(View.VISIBLE);*//*
-            }
-            else {
-                switchToHome();
-            }*/
-
         }
         else{
 
@@ -806,16 +680,24 @@ public class MainActivity extends Activity {
 
         if (mCurrentFragment.equals(mEntryGuideCheckFragment) )
         {
-            mEntryGuideCheckFragment.CleanControls();
+            //mEntryGuideCheckFragment.CleanControls();
             if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
 
                 noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
-
+                ResposeEG = mEntryGuideCheckFragment.mEntryGuideReadFragment.getResposeEG();
                 isFirstFragment = false;
                 //mDrawerLayout.closeDrawer(mDrawerList);
                 if (mEntryGuideCheckFragment != null) {
+                    Bundle poArgumentos = new Bundle();
+                    poArgumentos.putSerializable("objectResponse", ResposeEG);
+                    mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                    mEntryGuideCheckFragment.setArguments(poArgumentos);
+                    poArgumentos.putString("NoOCompra", noOrdenComprar);
+                    mEntryGuideCheckFragment.setArguments(poArgumentos);
+
+
                     FragmentTransaction ft = mFragmentManager.beginTransaction();
-                    ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
+                    //ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
                     ft.commit();
                     mEntryGuideCheckFragment.mEntryGuideReadFragment = null;
 
@@ -1044,10 +926,10 @@ public class MainActivity extends Activity {
 
                 if (mCurrentFragment.equals(mEntryGuideCheckFragment) )
                 {
-                    mEntryGuideCheckFragment.CleanControls();
+                    //mEntryGuideCheckFragment.CleanControls();
                     if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
                         if (mEntryGuideCheckFragment != null) {
-                            mEntryGuideCheckFragment.CleanControls();
+                            //mEntryGuideCheckFragment.CleanControls();
                             FragmentTransaction ft = mFragmentManager.beginTransaction();
                             ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
                             ft.commit();
@@ -1130,4 +1012,81 @@ public class MainActivity extends Activity {
         else if (m.what == MSG_BACK_PRESSED)
             switchToHome();
     }
+
+
+
+    //#################### PROCESO DE CONSUMIR WEB SERVICES #####################
+    private  class clsSoapAsync extends AsyncTask<Void, Void, Void> {
+
+        //WSparameter_GuiaEntradaOC
+        ProgressDialog progressDialog;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            rfidService.SOAP_ACTION_ =  mWSParameters[0];
+            rfidService.METHOD_NAME_ =  mWSParameters[1];
+            rfidService.NAMESPACE_ = mWSParameters[2];
+            rfidService.URL_ = mWSParameters[3];
+            ResposeEG = rfidService.WSGuiaEntradaByOrdenCompra(lsNumeroOrden);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //super.onPostExecute(aVoid);
+
+            progressDialog.cancel();
+            if(ResposeEG.estado   != null ){
+                if(ResposeEG.estado.codigo.equals("00")){
+                    if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
+                        //Aqui se muestra la siguiente actividad
+                        if (mEntryGuideCheckFragment == null)
+                        {
+                            Bundle poArgumentos = new Bundle();
+                            poArgumentos.putSerializable("objectResponse", ResposeEG);
+                            mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                            mEntryGuideCheckFragment.setArguments(poArgumentos);
+
+                            poArgumentos.putString("NoOCompra", lsNumeroOrden);
+                            mEntryGuideCheckFragment.setArguments(poArgumentos);
+                        }
+                        mCurrentFragment = mEntryGuideCheckFragment;
+                        if(mCurrentFragment !=null)
+                        {
+                            PositionFrag = 12;
+                            FragmentTransaction ft = mFragmentManager.beginTransaction();
+                            ft.replace(R.id.content, mCurrentFragment);
+                            ft.commit();
+                            //mDrawerList.setItemChecked(position, true);
+                            setTitle(mFunctionsString[12]);
+                            //mDrawerLayout.closeDrawer(mDrawerList);
+                            mUILayout.setVisibility(View.GONE);
+                        }
+
+
+                    }
+                    else {
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No hay informacion que mostrar");
+                        //Toast.makeText(mContext, "No hay informacion que mostrar..." , Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, ResposeEG.estado.descripcion);
+                    //Toast.makeText(mContext, ResposeEG.estado.descripcion , Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+
+        }
+    }
+    //############################################################################
 }

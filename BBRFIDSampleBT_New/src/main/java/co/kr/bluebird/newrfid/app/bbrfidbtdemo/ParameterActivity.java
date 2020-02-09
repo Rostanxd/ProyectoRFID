@@ -3,6 +3,7 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -10,7 +11,9 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 public class ParameterActivity extends Activity {
 
@@ -28,6 +32,8 @@ public class ParameterActivity extends Activity {
     private Button mimgBtnSave;
     private clsDatabase loDatabase;
     private SQLiteDatabase loExecute;
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,10 @@ public class ParameterActivity extends Activity {
 
         mContext = this;
         loDatabase = new clsDatabase(mContext);
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = findViewById(android.R.id.content);
+        //###################################################################
         InicializateControls();
     }
 
@@ -77,24 +87,54 @@ public class ParameterActivity extends Activity {
 
     public void RegistrarModificar()
     {
+        try{
+            //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
+            loExecute = loDatabase.getWritableDatabase();
 
-        //AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(mContext,"dbBluebirdRFID", null, 1);
-        loExecute = loDatabase.getWritableDatabase();
+            String localEndpoint = medEndPointLocal.getText().toString();
+            String extEndpoint = medEndPointExt.getText().toString();
+            String codBodega =  medCodBodega.getText().toString();
+            String descBodega = medDesBodega.getText().toString();
+            String Holding = medHolding.getText().toString();
+            String timeDuration= medTimeDuration.getText().toString();
+            String DispId = medDispositivoId.getText().toString();
 
-        String localEndpoint = medEndPointLocal.getText().toString();
-        String extEndpoint = medEndPointExt.getText().toString();
-        String codBodega =  medCodBodega.getText().toString();
-        String descBodega = medDesBodega.getText().toString();
-        String Holding = medHolding.getText().toString();
-        String timeDuration= medTimeDuration.getText().toString();
-        String DispId = medDispositivoId.getText().toString();
-
-        int codigo = 1;
+            int codigo = 1;
 
 
-        ContentValues registro = new ContentValues();
-        if (!localEndpoint.trim().isEmpty() && !extEndpoint.trim().isEmpty()  && !codBodega.trim().isEmpty()
-                && !descBodega.trim().isEmpty() && !Holding.trim().isEmpty() && !DispId.trim().isEmpty() ){
+            ContentValues registro = new ContentValues();
+            if(localEndpoint.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir el EndPoint Local");
+                return;
+            }
+            if(extEndpoint.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir el EndPoint Externo");
+                return;
+            }
+            if(codBodega.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir el Código Bodega");
+                return;
+            }
+            if(descBodega.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir la Descripción Bodega");
+                return;
+            }
+            if(Holding.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir el Holding");
+                return;
+            }
+            if(DispId.trim().isEmpty())
+            {
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Falta definir el Dispositivo ID");
+                return;
+            }
+            //if (!localEndpoint.trim().isEmpty() && !extEndpoint.trim().isEmpty()  && !codBodega.trim().isEmpty() && !descBodega.trim().isEmpty() && !Holding.trim().isEmpty() && !DispId.trim().isEmpty() ){
+
             Cursor fila1 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME')", null);
             Cursor fila2 = loExecute.rawQuery("SELECT datetime('NOW', 'LOCALTIME', '+"+timeDuration+" MINUTES')", null);
 
@@ -118,45 +158,55 @@ public class ParameterActivity extends Activity {
             registro.put("dateend",datefin_ );
             registro.put("dispositivoid",DispId);
 
-        }
-        else {
-            Toast.makeText(mContext,"Debe llenar Todos los Campos", Toast.LENGTH_LONG);
-        }
+            //}
+            //else {
+                //Toast.makeText(mContext,"Debe llenar Todos los Campos", Toast.LENGTH_LONG);
+            //}
 
-        Cursor fila = loExecute.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
+            Cursor fila = loExecute.rawQuery("select codigo from parameterservice where codigo ="+codigo, null);
 
-        if(!fila.moveToFirst()){
-            // insert
+            if(!fila.moveToFirst()){
+                // insert
 
-            final long parametro = loExecute.insert("parameterservice", null, registro);
+                final long parametro = loExecute.insert("parameterservice", null, registro);
 
 
-            if(parametro > 0){
-                RegistrarPrimerInicioSession(loExecute);
-                Toast.makeText(mContext,"Ingreso exitoso: "+ parametro, Toast.LENGTH_LONG).show();
-                CleanControls();
-                LLenarCampos();
+                if(parametro > 0){
+                    RegistrarPrimerInicioSession(loExecute);
+                    //Toast.makeText(mContext,"Ingreso exitoso: "+ parametro, Toast.LENGTH_LONG).show();
+                    loDialogo.gMostrarMensajeOk(loVistaDialogo, new Intent(ParameterActivity.this, LoginActivity.class));
+
+                    //CleanControls();
+                    //LLenarCampos();
+                }
+                else {
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"Registro Incorrecto");
+                    //Toast.makeText(mContext,"Registro Incorrecto", Toast.LENGTH_LONG);
+                }
+                loExecute.close();
             }
-            else {
-                Toast.makeText(mContext,"Registro Incorrecto", Toast.LENGTH_LONG);
+            else
+            {
+                //update
+                int cant = loExecute.update("parameterservice",registro, "codigo="+codigo, null);
+                loExecute.close();
+
+                if(cant == 1){
+                    //Toast.makeText(mContext,"Modificado Exitosamente",Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeOk(loVistaDialogo, new Intent(ParameterActivity.this, LoginActivity.class));
+                    //CleanControls();
+                    //LLenarCampos();
+                }
+                else {
+                    //Toast.makeText(mContext,"El Registro no existe",Toast.LENGTH_SHORT).show();
+                    loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo,"El Registro No Existe");
+                }
             }
-            loExecute.close();
-        }
-        else
+        }catch (Exception ex)
         {
-            //update
-            int cant = loExecute.update("parameterservice",registro, "codigo="+codigo, null);
-            loExecute.close();
-
-            if(cant == 1){
-                Toast.makeText(mContext,"Modificado Exitosamente",Toast.LENGTH_SHORT).show();
-                CleanControls();
-                LLenarCampos();
-            }
-            else {
-                Toast.makeText(mContext,"El Registro no existe",Toast.LENGTH_SHORT).show();
-            }
+            loDialogo.gMostrarMensajeError(loVistaDialogo,ex.toString());
         }
+
 
 
     }
@@ -218,7 +268,7 @@ public class ParameterActivity extends Activity {
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
-        mimgBtnSave.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        //mimgBtnSave.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
 
         LLenarCampos();
 

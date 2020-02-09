@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
             holder = new ViewHolder();
             holder.uNumGuia = (TextView) v.findViewById(R.id.tvCol1);
             holder.uCantidad = (TextView) v.findViewById(R.id.tvCol2);
-            holder.uEstado = (TextView) v.findViewById(R.id.tvCol3);
-
+            //holder.uEstado = (TextView) v.findViewById(R.id.tvCol3);
+            holder.uImagen = (ImageView) v.findViewById(R.id.imgListView);
 
             v.setTag(holder);
         } else{
@@ -73,7 +74,13 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
 
         holder.uNumGuia.setText(listData.get(position).getNumero());
         holder.uCantidad.setText(cantidad);
-        holder.uEstado.setText( String.valueOf(listData.get(position).getDescripcion()) );
+        //holder.uEstado.setText( String.valueOf(listData.get(position).getDescripcion()) );
+        if(String.valueOf(listData.get(position).getDescripcion()).toLowerCase().contains("pendiente"))
+        {
+            holder.uImagen.setImageResource(R.drawable.ic_procesado);
+        }else{
+            holder.uImagen.setImageResource(R.drawable.ic_activo);
+        }
 
         return v;
     }
@@ -84,7 +91,7 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
 
         TextView uNumGuia;
         TextView uCantidad;
-        TextView uEstado;
-
+        //TextView uEstado;
+        ImageView uImagen;
     }
 }

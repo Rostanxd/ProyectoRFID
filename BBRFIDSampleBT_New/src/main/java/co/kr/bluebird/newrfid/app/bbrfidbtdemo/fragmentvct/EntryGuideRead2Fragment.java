@@ -56,7 +56,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -280,6 +282,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     private boolean isWindowsInventoryLocated = false;
 
     private EntryGuideCheckFragment mEntryGuideCheckFragment;
+    private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
     //private boolean isRunningRead;
 
     public static EntryGuideRead2Fragment newInstance() {
@@ -489,6 +492,25 @@ public class EntryGuideRead2Fragment extends Fragment {
                 return false;
             }
         });
+
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    getActivity().getActionBar().show();
+                    Log.i(getTag(), "onKey Back listener is working!!!");
+                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    // String cameback="CameBack";
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+        if(getArguments() != null)
+        {
+            ResposeEG = (co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide)getArguments().getSerializable("objectResponse");
+        }
 
         return v;
     }
@@ -1258,6 +1280,11 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     public String getOrdenCompra(){
         return medOrdenCompraGR.getText().toString().trim();
+    }
+
+    public co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide getResposeEG()
+    {
+        return ResposeEG;
     }
 
     private void LlenarGrid(EGDetailResponse detailResponse){
@@ -2631,6 +2658,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
         alerta.show();
     }
+
 
     /*
 

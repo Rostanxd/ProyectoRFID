@@ -8,14 +8,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/gColorAzulClaro">
+        android:background="@color/gColorVerde_n600">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:backgroundTint="@color/gColorBlanco"
-            android:background="@drawable/ic_buscar" />
+            android:background="@drawable/ic_confirmacion" />
 
     </RelativeLayout>
 
@@ -30,20 +30,9 @@
             android:layout_height="wrap_content"
             android:text=""
             android:id="@+id/lblTextoLabel"
-            android:textColor="@color/gColorGris"
-            android:textSize="13dp" />
+            android:textColor="@color/gColorRojoLight"
+            android:textSize="15dp" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/borde_edittext"
-            android:textColor="@color/gColorGris"
-            android:id="@+id/txtTextoIngreso"
-            android:width="200dp"
-            android:textSize="15dp"
-            android:layout_marginTop="10dp">
-            <requestFocus />
-        </EditText>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,5 +63,4 @@
 
 
     </LinearLayout>
-
 </LinearLayout>

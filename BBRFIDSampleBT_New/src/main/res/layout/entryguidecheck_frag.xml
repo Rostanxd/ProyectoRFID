@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
 <!--
@@ -30,11 +31,12 @@
             android:layout_marginBottom="1dip">
 
 
+            <!--
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/GENoOrdenEntrada" />
-
             <EditText
                 android:id="@+id/et_nGuiaEntrada"
                 android:layout_width="130dp"
@@ -53,6 +55,7 @@
                 android:layout_marginEnd="5dip"
                 android:background="@drawable/borderedondo"
                 android:text="@string/GEbtnCargar" />
+            -->
         </TableRow>
 
         <TableRow
