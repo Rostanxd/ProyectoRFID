@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
     <LinearLayout
@@ -68,6 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/timer_des_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="12sp" />
 
                 <TextView
@@ -76,12 +78,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/timer_str"
+                    android:textColor="@color/gColorNaranja_n800"
                     android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/speed_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="12sp" />
 
                 <TextView
@@ -90,6 +94,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/empty_str"
+                    android:textColor="@color/gColorNaranja_n800"
                     android:textSize="12sp" />
 
                 <ProgressBar
@@ -112,6 +117,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/turbo_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="4sp" />
 
                 <Switch
@@ -120,6 +126,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/rssi_str2"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="4sp" />
 
                 <Switch
@@ -128,6 +135,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/sound_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="4sp" />
 
                 <Switch
@@ -136,6 +144,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/remove_pc_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="4sp" />
 
                 <Switch
@@ -186,6 +195,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/filter_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="8sp"
                     tools:visibility="visible" />
 
@@ -240,6 +250,7 @@
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:text="@string/file_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="8sp" />
 
                 <Switch
@@ -247,6 +258,7 @@
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
                     android:text="@string/selection_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="8sp"
                     android:visibility="invisible" />
 
@@ -265,6 +277,7 @@
                     android:layout_weight="1.4"
                     android:gravity="center"
                     android:text="@string/session_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="11sp" />
 
                 <Spinner
@@ -283,6 +296,7 @@
                     android:layout_weight="1.3"
                     android:gravity="center"
                     android:text="@string/sel_flag_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="14sp" />
 
                 <Spinner
@@ -306,6 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/battery_state_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="12sp" />
 
                 <TextView
@@ -327,6 +342,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/count_des_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -337,7 +353,7 @@
                     android:layout_weight="1"
                     android:text="@string/count_str"
                     android:textAlignment="inherit"
-                    android:textColor="#960012"
+                    android:textColor="@color/gColorNaranja_n800"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -345,6 +361,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/avr_speed_str"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="12sp" />
 
                 <TextView
@@ -352,6 +369,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textColor="@color/gColorNaranja_n800"
                     android:text="@string/empty_str"
                     android:textSize="12sp" />
 

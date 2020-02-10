@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Guide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.models.EntryGuideModel;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterEntryGuideCheck;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +46,7 @@ public class EntryGuideCheckFragment extends Fragment {
     private Context mContext;
     public EntryGuideRead2Fragment mEntryGuideReadFragment;
     private FragmentManager mFragmentManager;
-    private Button btnCargar;
+    //private Button btnCargar;
 
     private TextView mtvCantidadOCGR;
     //private TextView mtvCantidadTotalval;
@@ -57,9 +59,11 @@ public class EntryGuideCheckFragment extends Fragment {
 
     private String[] mWSParameters;
     private String NoOrdenCompra = null;
-
+    private ViewGroup loVistaContent;
 
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
 
     public EntryGuideCheckFragment() {
         // Required empty public constructor
@@ -80,16 +84,17 @@ public class EntryGuideCheckFragment extends Fragment {
 
         mContext = inflater.getContext();
         rfidService = new RfidService(mContext);
-        mOrdenCompraGR = (EditText)v.findViewById(R.id.et_nGuiaEntrada);
-        btnCargar = (Button)v.findViewById(R.id.btnCargarCE);
+        //mOrdenCompraGR = (EditText)v.findViewById(R.id.et_nGuiaEntrada);
+        //btnCargar = (Button)v.findViewById(R.id.btnCargarCE);
         //metCantidadOCGR = (EditText)v.findViewById(R.id.edOrdenCompraGR);
         mtvCantidadOCGR = (TextView)v.findViewById(R.id.tvCantidadOCGR);
         //mtvCantidadTotalval = (TextView)v.findViewById(R.id.tvCantidadTotalval);
         mlv_entriesGuide = (ListView)v.findViewById(R.id.lv_entriesGuide);
 
         NoOrdenCompra = getArguments() != null ? getArguments().getString("NoOCompra") : "0";
-
+        loVistaContent= v.findViewById(android.R.id.content);
         first = true;
+        /*
         btnCargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,6 +103,18 @@ public class EntryGuideCheckFragment extends Fragment {
 
             }
         });
+        */
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
+        if(getArguments() != null)
+        {
+            ResposeEG = (co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide)getArguments().getSerializable("objectResponse");
+            if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
+                LlenarGrid();
+            }
+        }
 
         return  v;
     }
@@ -106,20 +123,19 @@ public class EntryGuideCheckFragment extends Fragment {
     public void onStart() {
 
         super.onStart();
-
+        /*
         if(!mOrdenCompraGR.getText().toString().trim().equals("") || (NoOrdenCompra != null && !NoOrdenCompra.equals("0") )){
 
             if(NoOrdenCompra != null && !NoOrdenCompra.equals("0")){
                 mOrdenCompraGR.setText(NoOrdenCompra);
             }
-            btnCargar_extracted();
+            //btnCargar_extracted();
         }
-
+        */
     }
 
+    /*
     private void btnCargar_extracted(){
-
-
         ResposeEG = null;
         cantGuide = 0;
         numeroOrdenCompra = mOrdenCompraGR.getText().toString();
@@ -132,6 +148,7 @@ public class EntryGuideCheckFragment extends Fragment {
             Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
         }
     }
+    */
 
     public void CleanControls(){
         mOrdenCompraGR.setText("");
@@ -176,7 +193,7 @@ public class EntryGuideCheckFragment extends Fragment {
 
                     String nombre = i.descripcion;
                     String NoGuia = i.numero;
-                    String NoOCompra = mOrdenCompraGR.getText().toString();
+                    String NoOCompra = NoOrdenCompra;//mOrdenCompraGR.getText().toString();
                     int saldo = i.getSaldo();
                     boolean val_procesar = false;
 
@@ -190,6 +207,53 @@ public class EntryGuideCheckFragment extends Fragment {
                     AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
                     //if(!nombre.equalsIgnoreCase("pendiente")){
                     if(val_procesar){
+                        //Mostrando Dialogo de confirmacion
+
+                        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaContent, false);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                        builder.setView(dialogView);
+                        final AlertDialog alertDialog = builder.create();
+                        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                        poLabelTexto.setText("¿Esta seguro que desea Transaccionar con el No. Guia: "+NoGuia +", con estado "+nombre+"?");
+
+
+                        btnOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                if (mEntryGuideReadFragment == null)
+                                    mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
+                                Bundle args = new Bundle();
+                                args.putString("NoGuia", NoGuia);
+                                args.putString("NoOCompra",NoOCompra);
+                                args.putString("NoGuiaCant", NoGuiaCant);
+                                args.putSerializable("objectResponse", ResposeEG);
+                                mEntryGuideReadFragment.setArguments(args);
+
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                ft.replace(R.id.content, mEntryGuideReadFragment);
+                                ft.addToBackStack(null);
+
+                                //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                                //ft.addToBackStack(null);
+                                ft.commit();
+
+                            }
+                        });
+                        btnCancelar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+                        alertDialog.show();
+
+
+
+
+                        /*
                         alerta.setMessage("Desea Transaccionar con el No. Guia: "+NoGuia +", con estado "+nombre)
                                 .setCancelable(false)
                                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -222,8 +286,12 @@ public class EntryGuideCheckFragment extends Fragment {
                                         dialogInterface.cancel();
                                     }
                                 });
+
+                    */
                     }
                     else {
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaContent, "La Guia: "+NoGuia +", no tiene saldos pendientes");
+                        /*
                         alerta.setMessage("La Guia: "+NoGuia +", no tiene saldos pendientes")
                                 .setCancelable(true)
                                 .setNeutralButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -232,11 +300,12 @@ public class EntryGuideCheckFragment extends Fragment {
                                         dialogInterface.dismiss();
                                     }
                                 });
+                        */
                     }
 
-                    AlertDialog title = alerta.create();
-                    title.setTitle("Información");
-                    title.show();
+                    //AlertDialog title = alerta.create();
+                    ///title.setTitle("Información");
+                    //title.show();
                 }
             });
         }
@@ -249,7 +318,7 @@ public class EntryGuideCheckFragment extends Fragment {
     }
 
 
-
+    /*
     private  class executeSoapAsync extends AsyncTask<Void, Void, Void> {
 
         //WSparameter_GuiaEntradaOC
@@ -296,4 +365,5 @@ public class EntryGuideCheckFragment extends Fragment {
 
         }
     }
+    */
 }

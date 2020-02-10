@@ -38,6 +38,7 @@ public class EntryGuideReadFragment extends Fragment {
     Handler handler = new Handler();
 
     private int i;
+    private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
 
     public EntryGuideReadFragment() {
         // Required empty public constructor
@@ -63,7 +64,10 @@ public class EntryGuideReadFragment extends Fragment {
         mbtnIniciarGR = (Button) v.findViewById(R.id.btnIniciarGR);
         txtCount = (TextView) v.findViewById(R.id.tvCantItemLeidos);
 
-
+        if(getArguments() != null)
+        {
+            ResposeEG = (co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide)getArguments().getSerializable("objectResponse");
+        }
         mbtnIniciarGR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

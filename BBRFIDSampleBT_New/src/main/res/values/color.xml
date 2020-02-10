@@ -21,4 +21,16 @@
     <color name="gColorIndigoLight">#5f5fc4</color>
     <color name="gColorVerdeDark">#00b248</color>
     <color name="gColorRojoLight">#ff5f52</color>
+    <color name="gColorNaranja_n500">#ff5722</color>
+    <color name="gColorNaranja_n800">#d84315</color>
+    <color name="gColorVerde_n600">#43a047</color>
+    <color name="gColorAmarillo_n500">#ffeb3b</color>
+    <color name="gColorAmarillo_n300">#fff176</color>
+    <color name="gColorAmarillo_n100">#fff9c4</color>
+    <color name="gColorGris_n800">#37474f</color>
+    <color name="gColorPurpura_n400">#7e57c2</color>
+    <color name="gColorRosado_n400">#ec407a</color>
+    <color name="gColorCyan_n700">#0097a7</color>
+    <color name="gColorCafe_n300">#a1887f</color>
+    <color name="gColorGrisAzul_n500">#607d8b</color>
 </resources>

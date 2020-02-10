@@ -3,19 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gColorBlanco"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/gColorAzulClaro">
+        android:background="@color/gColorNaranja_n500">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:backgroundTint="@color/gColorBlanco"
-            android:background="@drawable/ic_ok" />
+            android:background="@drawable/ic_alerta" />
 
     </RelativeLayout>
 
@@ -28,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Aviso"
+            android:text="Alerta"
             android:textAlignment="center"
             android:textColor="@color/gColorGris"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
@@ -37,19 +38,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Operación Correcta."
+            android:id="@+id/txtMensaje"
             android:textAlignment="center"
-            android:textColor="@color/gColorAzulClaro"
+            android:textColor="@color/gColorGris"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Button
-            android:id="@+id/buttonOk"
+            android:id="@+id/buttonCerrar"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:background="@color/gColorAzulClaro"
-            android:text="Ok"
+            android:text="Cerrar"
             android:textColor="@color/gColorBlanco" />
 
     </LinearLayout>

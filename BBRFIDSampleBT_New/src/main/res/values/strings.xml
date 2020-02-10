@@ -37,14 +37,15 @@
 
     <string name="GENoOrdenEntrada">No. O/C:</string>
     <string name="GEbtnCargar">Cargar</string>
-    <string name="GECantidad">Cantidad</string>
-    <string name="GECantidadTotal">Total</string>
+    <string name="GECantidad">CANTIDAD</string>
+    <string name="GEEstado">ESTADO</string>
+    <string name="GECantidadTotal">TOTAL</string>
     <string name="GEitemsSearch">Items Leidos</string>
     <string name="GEitems">0/0</string>
     <string name="GEiniciar">Iniciar</string>
     <string name="GEfinalizar">Finalizar</string>
     <string name="GElimpiar">Limpiar</string>
-    <string name="GENoGuiaEntrada">No.G.Entrada</string>
+    <string name="GENoGuiaEntrada"># GUIA ENTRADA</string>
     <string name="GECodItems">Cod. Item</string>
     <string name="GDDestino">Destino</string>
     <string name="GDQrCode">Se ha generado correctamente la Guia de Despacho</string>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/scrollEntryGuideRead"
+    android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
 
@@ -90,6 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/GENoOrdenEntrada"
+                    android:textColor="@color/gColorBlanco"
                     android:textSize="14sp" />
 
                 <TextView
@@ -97,12 +99,13 @@
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textSize="14sp" />
+                    android:textColor="@color/gColorNaranja_n800"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:textColor="@color/gColorBlanco"
                     android:text="No.Guia:"
                     android:textSize="14sp" />
 
@@ -111,7 +114,8 @@
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textSize="14sp" />
+                    android:textColor="@color/gColorNaranja_n800"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -129,6 +133,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorBlanco"
                         android:text="@string/GEitemsSearch" />
 
                     <ProgressBar
@@ -136,12 +141,15 @@
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
+                        android:scrollbarSize="20dp"
                         android:layout_marginLeft="30dp" />
 
                     <TextView
                         android:id="@+id/tvCantItemLeidos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorBlanco"
+                        android:textSize="15dp"
                         android:text="0" />
 
                     <TextView
@@ -154,6 +162,8 @@
                         android:id="@+id/tvCantTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorBlanco"
+                        android:textSize="15dp"
                         android:text="0" />
 
                 </TableRow>
@@ -212,6 +222,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gColorBlanco"
                     android:text="Potencia RFID"/>
 
                 <ImageButton
@@ -322,6 +333,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/timer_des_str"
                             android:textSize="12sp" />
 
@@ -329,6 +341,7 @@
                             android:id="@+id/timer_text"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:layout_weight="1"
                             android:text="@string/timer_str"
                             android:textSize="12sp" />
@@ -336,6 +349,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/speed_str"
                             android:textSize="12sp" />
 
@@ -344,6 +358,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/empty_str"
                             android:textSize="12sp" />
 
@@ -367,7 +382,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/turbo_str"
+
                             android:textSize="4sp" />
 
                         <Switch
@@ -375,6 +392,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/rssi_str2"
                             android:textSize="4sp" />
 
@@ -384,6 +402,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="@string/sound_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="4sp" />
 
                         <!--<Switch
@@ -400,6 +419,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="@string/toggle_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="4sp" />
 
 
@@ -442,6 +462,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="@string/filter_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="8sp"
                             tools:visibility="visible" />
 
@@ -459,6 +480,7 @@
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:text="@string/file_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="8sp" />
 
                         <Switch
@@ -466,6 +488,7 @@
                             android:layout_width="102dp"
                             android:layout_height="match_parent"
                             android:text="@string/selection_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="8sp"
                             android:visibility="invisible" />
 
@@ -484,6 +507,7 @@
                             android:layout_weight="1.4"
                             android:gravity="center"
                             android:text="@string/session_str"
+                            android:textColor="@color/gColorBlanco"
                             android:textSize="11sp" />
 
                         <Spinner
@@ -501,6 +525,7 @@
                             android:layout_gravity="fill"
                             android:layout_weight="1.3"
                             android:gravity="center"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/sel_flag_str"
                             android:textSize="14sp" />
 
@@ -524,6 +549,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/battery_state_str"
                             android:textSize="12sp" />
 
@@ -531,6 +557,7 @@
                             android:id="@+id/battery_text"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorNaranja_n800"
                             android:text=""
                             android:textSize="12sp" />
 
@@ -546,6 +573,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/count_des_str"
                             android:textAlignment="center"
                             android:textSize="12sp" />
@@ -557,13 +585,14 @@
                             android:layout_weight="1"
                             android:text="@string/count_str"
                             android:textAlignment="inherit"
-                            android:textColor="#960012"
+                            android:textColor="@color/gColorRojoLight"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:textColor="@color/gColorBlanco"
                             android:text="@string/avr_speed_str"
                             android:textSize="12sp" />
 
@@ -572,6 +601,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textColor="@color/gColorRojoLight"
                             android:text="@string/empty_str"
                             android:textSize="12sp" />
 
@@ -616,6 +646,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
+                            android:textColor="@color/gColorBlanco"
+                            android:textSize="13dp"
                             android:text="Items con diferencias" />
 
                     </LinearLayout>
@@ -686,6 +718,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
+                            android:textColor="@color/gColorAmarillo_n100"
+                            android:textSize="15dp"
                             android:text="Etiquetas no encontradas" />
 
                     </LinearLayout>

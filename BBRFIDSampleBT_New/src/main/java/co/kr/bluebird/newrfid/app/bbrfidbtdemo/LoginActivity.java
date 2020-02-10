@@ -61,20 +61,15 @@ public class LoginActivity extends Activity {
     private boolean isAdmin;
     private RfidService rfidService;
     private String[] mWSLoginParameters;
-
     private boolean isLogeoForzoso = false;
-
-
-
     private boolean ExistParametrizacion = false;
-
+    private clsMensaje loDialogo;
+    private ViewGroup loVistaDialogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
         mcontext = this;
         rfidService = new RfidService(mcontext);
 
@@ -110,15 +105,14 @@ public class LoginActivity extends Activity {
         mtxtUser.addTextChangedListener(addTextWatcherUser);
         mtxtPass.addTextChangedListener(addTextWatcherPass);
 
-
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mcontext);
+        loVistaDialogo = findViewById(android.R.id.content);
+        //###################################################################
 
         mbtnIngresarLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Prueba para mostrar mensajes
-                //clsMensaje poMensaje = new clsMensaje(LoginActivity.this);
-                //ViewGroup poVistaContent = findViewById(android.R.id.content);
-                //poMensaje.gMostrarMensajeOk(poVistaContent);
                /* if(ValidarUsuario(mtxtUser.getText().toString(), mtxtPass.getText().toString()))
                 {
                     Intent intent = new Intent(mcontext, MainActivity.class);
@@ -152,7 +146,8 @@ public class LoginActivity extends Activity {
                        InvocarActivity(ParameterActivity.class);
                    }
                    else {
-                       Toast.makeText(mcontext, "usuario o clave de configuracion inicial incorrecta...", Toast.LENGTH_LONG).show();
+                       loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Usuario o Clave de Configuración inicial incorrecta...");
+                       //Toast.makeText(mcontext, "usuario o clave de configuracion inicial incorrecta...", Toast.LENGTH_LONG).show();
                    }
                }
                else {
@@ -161,6 +156,7 @@ public class LoginActivity extends Activity {
                }
             }
         });
+
     }
 
     private boolean ValidadPrimerInicioSeccionAdmin(){
@@ -368,11 +364,13 @@ public class LoginActivity extends Activity {
                 else {
 
                     if(loginData.getEstado().getDescripcion().equals("ERRORHOST")){
-                        Toast.makeText(mcontext, "Existe un Error de Host, vuelva a logerse con admin y corriga el end-point", Toast.LENGTH_LONG).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Existe un Error de Host, vuelva a logerse con admin y corriga el end-point");
+                        //Toast.makeText(mcontext, "Existe un Error de Host, vuelva a logerse con admin y corriga el end-point", Toast.LENGTH_LONG).show();
                         LogeoForzoso();
                     }
                     else {
-                        Toast.makeText(mcontext, loginData.getEstado().getDescripcion(), Toast.LENGTH_LONG).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, loginData.getEstado().getDescripcion());
+                        //Toast.makeText(mcontext, loginData.getEstado().getDescripcion(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
