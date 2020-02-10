@@ -174,8 +174,8 @@ public class EntryGuideCheckFragment extends Fragment {
             mlv_entriesGuide.setAdapter(null);
 
             if(first){
-                View headerview = View.inflate(mContext, R.layout.header_3column, null);
-                View footerview = View.inflate(mContext, R.layout.footer_2column, null);
+                View headerview = View.inflate(mContext, R.layout.header_entry_guide_check, null);
+                View footerview = View.inflate(mContext, R.layout.footer_entry_guide_check, null);
                 TextView tvFCol1 =(TextView) footerview.findViewById(R.id.tvCol2);
                 mlv_entriesGuide.addHeaderView(headerview,null,false);
                 mlv_entriesGuide.addFooterView(footerview, null,false);
@@ -225,20 +225,26 @@ public class EntryGuideCheckFragment extends Fragment {
                                 alertDialog.dismiss();
                                 if (mEntryGuideReadFragment == null)
                                     mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
-                                Bundle args = new Bundle();
-                                args.putString("NoGuia", NoGuia);
-                                args.putString("NoOCompra",NoOCompra);
-                                args.putString("NoGuiaCant", NoGuiaCant);
-                                args.putSerializable("objectResponse", ResposeEG);
-                                mEntryGuideReadFragment.setArguments(args);
+                                try {
+                                    Bundle args = new Bundle();
+                                    args.putString("NoGuia", NoGuia);
+                                    args.putString("NoOCompra",NoOCompra);
+                                    args.putString("NoGuiaCant", NoGuiaCant);
+                                    args.putSerializable("objectResponse", ResposeEG);
+                                    mEntryGuideReadFragment.setArguments(args);
 
-                                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                ft.replace(R.id.content, mEntryGuideReadFragment);
-                                ft.addToBackStack(null);
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.content, mEntryGuideReadFragment);
+                                    ft.addToBackStack(null);
 
-                                //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                //ft.addToBackStack(null);
-                                ft.commit();
+                                    //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                                    //ft.addToBackStack(null);
+                                    ft.commit();
+                                }
+                                catch (Exception e){
+                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
 
                             }
                         });

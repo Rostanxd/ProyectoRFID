@@ -40,6 +40,7 @@
     <string name="GECantidad">CANTIDAD</string>
     <string name="GEEstado">ESTADO</string>
     <string name="GECantidadTotal">TOTAL</string>
+    <string name="GECantidadTotal2">CANTIDAD TOTAL:</string>
     <string name="GEitemsSearch">Items Leidos</string>
     <string name="GEitems">0/0</string>
     <string name="GEiniciar">Iniciar</string>

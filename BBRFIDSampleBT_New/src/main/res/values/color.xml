@@ -33,4 +33,5 @@
     <color name="gColorCyan_n700">#0097a7</color>
     <color name="gColorCafe_n300">#a1887f</color>
     <color name="gColorGrisAzul_n500">#607d8b</color>
+    <color name="gColorNegro">#000000</color>
 </resources>

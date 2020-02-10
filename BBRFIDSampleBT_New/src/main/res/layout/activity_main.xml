@@ -941,50 +941,51 @@
                     <!-- COLUMN 1  -->
 
 
-
                     <android.support.v7.widget.CardView
                         android:id="@+id/cvConectividad"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_columnWeight="1"
-                        android:layout_marginBottom="16dp"
                         android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorAmarillo_n500"
-                        app:cardElevation="8dp"
-                        app:cardCornerRadius="8dp">
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="8dp">
 
                         <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_margin="16dp"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
 
-                            android:layout_height="wrap_content">
+                            android:orientation="vertical">
 
                             <ImageView
-                                android:src="@drawable/bluetooth"
-                                android:layout_gravity="center_horizontal"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/bluetooth" />
 
 
                         </LinearLayout>
+
                         <LinearLayout
-                            android:layout_gravity="bottom|center_horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
                             android:orientation="vertical">
+
                             <TextView
-                                android:layout_gravity="bottom|center_horizontal"
-                                android:textAlignment="center"
-                                android:text="Conectividad"
-                                android:textColor="@color/gColorBlanco"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:text="Conectividad"
+                                android:textAlignment="center"
+                                android:textColor="@color/gColorNegro"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
                     </android.support.v7.widget.CardView>
@@ -995,44 +996,46 @@
                         android:id="@+id/cvConfiguracion"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_columnWeight="1"
-                        android:layout_marginBottom="16dp"
                         android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorVerde_n600"
-                        app:cardElevation="8dp"
-                        app:cardCornerRadius="8dp">
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="8dp">
 
                         <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_margin="16dp"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:orientation="vertical">
 
                             <ImageView
-                                android:src="@drawable/configuration60"
-                                android:layout_gravity="center_horizontal"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/configuration60" />
 
 
                         </LinearLayout>
+
                         <LinearLayout
-                            android:layout_gravity="bottom|center_horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
                             android:orientation="vertical">
+
                             <TextView
-                                android:layout_gravity="bottom|center_horizontal"
-                                android:textAlignment="center"
-                                android:text="RF Configuracion"
-                                android:textColor="@color/gColorBlanco"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:text="RF Configuracion"
+                                android:textAlignment="center"
+                                android:textColor="@color/gColorNegro"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
                     </android.support.v7.widget.CardView>
@@ -1051,7 +1054,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorRojoLight"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1079,7 +1082,7 @@
                                 android:textAlignment="center"
                                 android:text="Guía de Entrada"
 
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1099,7 +1102,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorAzulClaro"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1126,7 +1129,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Guia de Despacho"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1148,7 +1151,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorIndigo_n700"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1175,7 +1178,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Envio de Mercaderia"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1195,7 +1198,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorPurpura_n400"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1222,7 +1225,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Recepción Mercaderia"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1246,7 +1249,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorRosado_n400"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1273,7 +1276,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Inventario por Tienda"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1294,7 +1297,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         app:cardElevation="8dp"
-                        app:cardBackgroundColor="@color/gColorCyan_n700"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardCornerRadius="8dp">
 
                         <LinearLayout
@@ -1320,7 +1323,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Reposición de Stock"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1342,7 +1345,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorCafe_n300"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1369,7 +1372,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Inventario Controlador"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"
@@ -1389,7 +1392,7 @@
                         android:layout_rowWeight="1"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        app:cardBackgroundColor="@color/gColorGrisAzul_n500"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
                         app:cardElevation="8dp"
                         app:cardCornerRadius="8dp">
 
@@ -1417,7 +1420,7 @@
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:textAlignment="center"
                                 android:text="Inventario Participante"
-                                android:textColor="@color/gColorBlanco"
+                                android:textColor="@color/gColorNegro"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_width="wrap_content"

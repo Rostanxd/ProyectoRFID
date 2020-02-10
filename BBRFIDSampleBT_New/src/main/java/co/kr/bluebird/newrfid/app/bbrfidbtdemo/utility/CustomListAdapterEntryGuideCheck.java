@@ -9,6 +9,7 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.item;
  */
 public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
     private List<Guide> listData;
-    private String cantidad = "";
+    private String saldo = "";
     int cant ;
     private LayoutInflater layoutInflater;
     public CustomListAdapterEntryGuideCheck(Context aContext, List<Guide> listData) {
@@ -45,13 +46,16 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+    @Override
     public View getView(int position, View v, ViewGroup vg) {
+
         ViewHolder holder ;
         if (v == null) {
-            v = layoutInflater.inflate(R.layout.listrow_3column, null);
+            v = layoutInflater.inflate(R.layout.listrow_entry_guide_check, null);
             holder = new ViewHolder();
-            holder.uNumGuia = (TextView) v.findViewById(R.id.tvCol1);
-            holder.uCantidad = (TextView) v.findViewById(R.id.tvCol2);
+            holder.uNumGuia = (TextView) v.findViewById(R.id.tv_nGuia);
+            holder.uCantidad = (TextView) v.findViewById(R.id.tv_cantidad);
+            holder.uSaldo = (TextView)v.findViewById(R.id.tv_saldo);
             //holder.uEstado = (TextView) v.findViewById(R.id.tvCol3);
             holder.uImagen = (ImageView) v.findViewById(R.id.imgListView);
 
@@ -63,17 +67,28 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
         cant = listData.get(position).getCantidad();
 
 
+
         /*holder.uCantidad.setText(String.valueOf(listData.get(position).getCantidad()));*/
-        if(listData.get(position).getSaldo() > 0 && cant != listData.get(position).getSaldo() ){
+
+        /*if(listData.get(position).getSaldo() > 0 && cant != listData.get(position).getSaldo() ){
             cantidad = cant+" [" + listData.get(position).getSaldo()+"]";
         }
         else
         {
             cantidad = cant+"";
+        }*/
+
+        if(listData.get(position).getSaldo() > 0 && cant != listData.get(position).getSaldo()){
+            //v.setBackgroundColor(Color.parseColor("#DCFCEA"));
+            saldo = "saldo: "+listData.get(position).getSaldo()+"";
+        }
+        else {
+            saldo = "";
         }
 
         holder.uNumGuia.setText(listData.get(position).getNumero());
-        holder.uCantidad.setText(cantidad);
+        holder.uCantidad.setText("cant: "+listData.get(position).getCantidad()+"");
+        holder.uSaldo.setText(saldo);
         //holder.uEstado.setText( String.valueOf(listData.get(position).getDescripcion()) );
         if(String.valueOf(listData.get(position).getDescripcion()).toLowerCase().contains("pendiente"))
         {
@@ -91,6 +106,7 @@ public class CustomListAdapterEntryGuideCheck extends BaseAdapter {
 
         TextView uNumGuia;
         TextView uCantidad;
+        TextView uSaldo;
         //TextView uEstado;
         ImageView uImagen;
     }
