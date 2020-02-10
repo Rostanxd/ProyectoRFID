@@ -381,7 +381,8 @@ public class ShippingWareGenerateFragment extends Fragment {
                 }
             }
             else {
-                Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, spinnerDto.getEstado().getDescripcion());
+                //Toast.makeText(mContext,spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -411,7 +412,8 @@ public class ShippingWareGenerateFragment extends Fragment {
             //super.onPostExecute(aVoid);
             progressDialog.cancel();
             if(egDetailResponse != null && egDetailResponse.getStatus() != null && egDetailResponse.getStatus().getCodigo().equals("9999")){
-               Toast.makeText(mContext,egDetailResponse.getStatus().getDescripcion(),Toast.LENGTH_SHORT).show();
+               //Toast.makeText(mContext,egDetailResponse.getStatus().getDescripcion(),Toast.LENGTH_SHORT).show();
+               loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, egDetailResponse.getStatus().getDescripcion());
             }
             else {
                 if(egDetailResponse.status != null && egDetailResponse.status.codigo.equals("00")){
@@ -491,7 +493,7 @@ public class ShippingWareGenerateFragment extends Fragment {
 
             }
             else {
-                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_LONG).show();
                 loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());
             }
 

@@ -744,7 +744,8 @@ public class ShippingWareReadFragment extends Fragment {
                         ft.commit();
                     }
                     else {
-                        Toast.makeText(mContext,"No hay etiquetas que procesar...", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext,"No hay etiquetas que procesar...", Toast.LENGTH_SHORT).show();
+                        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "No hay etiquetas que procesar");
                     }
 
 
@@ -1130,7 +1131,8 @@ public class ShippingWareReadFragment extends Fragment {
     public void handleWebServiceHandler(Message msg) {
 
         Bundle bundle = msg.getData();
-        Toast.makeText(mContext,"..."+bundle.getString("msgSoap"),Toast.LENGTH_LONG).show();
+        //Toast.makeText(mContext,"..."+bundle.getString("msgSoap"),Toast.LENGTH_LONG).show();
+        loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, bundle.getString("msgSoap"));
     }
 
 
