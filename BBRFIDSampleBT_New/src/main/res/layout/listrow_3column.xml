@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:textSize="14dp"
             android:text="prueba"
-            android:textColor="@color/gColorBlanco"
+            android:textColor="@color/gColorNegro"
             android:layout_weight="1" />
 
 

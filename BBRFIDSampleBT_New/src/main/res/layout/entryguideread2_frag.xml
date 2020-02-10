@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/scrollEntryGuideRead"
-    android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
 
@@ -91,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/GENoOrdenEntrada"
-                    android:textColor="@color/gColorBlanco"
+                    android:textColor="@color/gColorNegro"
                     android:textSize="14sp" />
 
                 <TextView
@@ -105,8 +104,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gColorBlanco"
                     android:text="No.Guia:"
+                    android:textColor="@color/gColorNegro"
                     android:textSize="14sp" />
 
                 <TextView
@@ -133,8 +132,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gColorBlanco"
-                        android:text="@string/GEitemsSearch" />
+                        android:text="@string/GEitemsSearch"
+                        android:textColor="@color/gColorNegro" />
 
                     <ProgressBar
                         android:id="@+id/pbLeidos"
@@ -148,9 +147,9 @@
                         android:id="@+id/tvCantItemLeidos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gColorBlanco"
-                        android:textSize="15dp"
-                        android:text="0" />
+                        android:text="0"
+                        android:textColor="@color/gColorNegro"
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tvSlash"
@@ -162,9 +161,9 @@
                         android:id="@+id/tvCantTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gColorBlanco"
-                        android:textSize="15dp"
-                        android:text="0" />
+                        android:text="0"
+                        android:textColor="@color/gColorNegro"
+                        android:textSize="15dp" />
 
                 </TableRow>
 
@@ -222,8 +221,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gColorBlanco"
-                    android:text="Potencia RFID"/>
+                    android:text="Potencia RFID"
+                    android:textColor="@color/gColorNegro" />
 
                 <ImageButton
                     android:id="@+id/ibtnPotencia"
@@ -573,9 +572,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:textColor="@color/gColorBlanco"
                             android:text="@string/count_des_str"
                             android:textAlignment="center"
+                            android:textColor="@color/gColorNegro"
                             android:textSize="12sp" />
 
                         <TextView
@@ -592,8 +591,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:textColor="@color/gColorBlanco"
                             android:text="@string/avr_speed_str"
+                            android:textColor="@color/gColorNegro"
                             android:textSize="12sp" />
 
                         <TextView
@@ -646,9 +645,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
-                            android:textColor="@color/gColorBlanco"
-                            android:textSize="13dp"
-                            android:text="Items con diferencias" />
+                            android:text="Items con diferencias"
+                            android:textColor="@color/gColorAzulDark"
+                            android:textSize="13dp" />
 
                     </LinearLayout>
 
@@ -662,7 +661,7 @@
                         android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="50dip"
+                            android:layout_height="25dip"
                             android:layout_marginTop="10dip"
                             android:orientation="horizontal"
                             android:id="@+id/layoutHeader"
@@ -672,7 +671,7 @@
                                 android:layout_width="200dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
+                                android:background="@color/gColorCyan_n700"
                                 android:text="@string/GECodItems"
                                 android:textColor="@android:color/white"
                                 android:textStyle="bold" />
@@ -681,7 +680,7 @@
                                 android:layout_width="100dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
+                                android:background="@color/gColorCyan_n700"
                                 android:text="@string/GECantidad"
                                 android:textColor="@android:color/white"
                                 android:textStyle="bold" />
@@ -692,7 +691,7 @@
                                 android:layout_weight="1"
                                 android:textSize="14dp"
                                 android:textStyle="bold"
-                                android:background="#00897B"
+                                android:background="@color/gColorCyan_n700"
                                 android:textColor="@android:color/white"
                                 android:text="@string/TIleidos"/>
 
@@ -718,7 +717,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
-                            android:textColor="@color/gColorAmarillo_n100"
+                            android:textColor="@color/gColorAzulDark"
                             android:textSize="15dp"
                             android:text="Etiquetas no encontradas" />
 
