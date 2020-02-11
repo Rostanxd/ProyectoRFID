@@ -31,7 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -496,15 +495,25 @@ public class DespatchGuideGenerateFragment extends Fragment {
         qrCodeGenerator = new QRCodeGenerator();
         Bitmap bitmap = qrCodeGenerator.QrCodePrint(cadenaQr);
 
-        final Dialog dialog = new Dialog(mContext);
+        /*final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_qrcode);
         dialog.setCancelable(false);
 
-        ImageView imageView = (ImageView) dialog.findViewById(R.id.iv_qrcode);
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
         mWb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        //Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
+        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);*/
+
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_qrcode, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+        TextView tvTittle = (TextView) dialogView.findViewById(R.id.tvTitle);
+        mWb_qrcode = (WebView) dialogView.findViewById(R.id.webview_qrcode);
+        Button mdialogBtnAceptar = (Button) dialogView.findViewById(R.id.dialogBtnAceptar);
+
+
 
 
         Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
@@ -527,58 +536,11 @@ public class DespatchGuideGenerateFragment extends Fragment {
         mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //dialog.dismiss();
-                /*doPhotoPrint(bitmap);*/
-                createWebPrintJob(mWb_qrcode, dialog) ;
+                createWebPrintJob(mWb_qrcode, alertDialog) ;
             }
         });
 
-        /*mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
-                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
-                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-                poLabelTexto.setText("¿Esta seguro que desea cancelar la impresión?");
-
-
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-
-                    }
-                });
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();
-                *//*
-                AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-                alerta.setMessage("Esta seguro de cancelar la impresion")
-                        .setCancelable(false)
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog_, int which){
-                                dialog.dismiss();
-                                dialog_.dismiss();
-                            }
-                        });
-
-                alerta.show();
-                *//*
-            }
-        });*/
-        dialog.show();
+        alertDialog.show();
     }
 
     private void createWebPrintJob(WebView webView, Dialog dialog)

@@ -1,77 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="1sp"
-    android:layout_marginLeft="1sp"
+    android:background="@color/gColorBlanco"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gColorVerde_n600">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/gColorBlanco"
+            android:background="@drawable/ic_impresora" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#D4F2E0"
-        android:layout_marginBottom="10sp"
-
-        >
+        android:padding="16dp">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
             android:id="@+id/tvTitle"
+            android:textColor="@color/gColorNegro"
+            android:textSize="15dp" />
+
+
+        <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:textSize="18sp" />
+            android:layout_height="250sp"
+            android:orientation="vertical"
+            android:layout_marginLeft="1sp"
+            android:layout_marginRight="1sp"
+            android:background="@drawable/borde"
+            android:layout_marginBottom="1sp">
+
+            <WebView
+                android:id="@+id/webview_qrcode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/dialogBtnAceptar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="1dp"
+                android:background="@color/gColorAzulClaro"
+                android:text="Imprimir"
+                android:textColor="@color/gColorBlanco" />
+
+            <!--<Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorRojoLight"
+                android:text="Cancelar"
+                android:textColor="@color/gColorBlanco" />-->
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="250sp"
-        android:orientation="vertical"
-        android:layout_marginLeft="1sp"
-        android:layout_marginRight="1sp"
-        android:background="@drawable/borde"
-        android:layout_marginBottom="10sp">
-
-        <WebView
-            android:id="@+id/webview_qrcode"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <ImageView
-
-        android:id="@+id/iv_qrcode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!--<Button
-            android:id="@+id/dialogBtnCancelar"
-            android:layout_width="120sp"
-            android:layout_height="wrap_content"
-            android:text="Cancelar" />
--->
-        <Button
-            android:id="@+id/dialogBtnAceptar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Imprimir" />
-
-    </LinearLayout>
-
-
-
 </LinearLayout>
