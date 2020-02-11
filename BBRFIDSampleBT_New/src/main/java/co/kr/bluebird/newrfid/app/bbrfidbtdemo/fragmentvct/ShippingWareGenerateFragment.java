@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -332,7 +333,6 @@ public class ShippingWareGenerateFragment extends Fragment {
                 loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, spinnerDto.getEstado().getDescripcion());
             }
 
-
         }
 
         @Override
@@ -536,7 +536,7 @@ public class ShippingWareGenerateFragment extends Fragment {
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
         wb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
+        //Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
 
         Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
 
@@ -567,10 +567,10 @@ public class ShippingWareGenerateFragment extends Fragment {
                 //dialog.dismiss();
                 //doPhotoPrint(bitmap);
 
-                createWebPrintJob(wb_qrcode);
+                createWebPrintJob(wb_qrcode, dialog);
             }
         });
-        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
+        /*mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -588,12 +588,12 @@ public class ShippingWareGenerateFragment extends Fragment {
 
                 alerta.show();
             }
-        });
+        });*/
         dialog.show();
     }
 
 
-    private void createWebPrintJob(WebView webView) {
+    private void createWebPrintJob(WebView webView, Dialog dialog) {
 
         // Get a PrintManager instance
         PrintManager printManager = (PrintManager) getActivity()
@@ -611,14 +611,9 @@ public class ShippingWareGenerateFragment extends Fragment {
         PrintJob printJob = printManager.print(jobName, printAdapter,
                 builder.build());
 
-        if(printJob.isCompleted()){
-            //Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
-            loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
-        }
-        else if(printJob.isFailed()){
-            //Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
-            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Se presento un problema en la impresión.");
-        }
+
+        cleanControls();
+        dialog.dismiss();
     }
 
 
@@ -652,6 +647,7 @@ public class ShippingWareGenerateFragment extends Fragment {
             TextView tvFCol1 =(TextView) footerview.findViewById(R.id.tvCol2);
             //mlv_detailSW.addHeaderView(headerview);
             mlv_detailSW.addFooterView(footerview);
+
             tvFCol1.setText(String.valueOf(egProcesado.totalcant));
             first = false;
         }
@@ -740,5 +736,19 @@ public class ShippingWareGenerateFragment extends Fragment {
         alerta.show();
         */
     }
+
+
+    private  void cleanControls(){
+        mSpinnerBodAlmacenamiento.setSelection(0);
+        mSpinnerMotivo.setSelection(0);
+        mtvNota.setText("");
+        mlv_detailSW.setAdapter(null);
+        mlv_detailSW.setVisibility(View.INVISIBLE);
+
+        mprocesar_imgbtn.setEnabled(false);
+        mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+    }
+
+
 
 }

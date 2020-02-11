@@ -142,6 +142,8 @@ public class MainActivity extends Activity {
     private String lsNumeroOrden;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
+
+    private boolean execFragmentTransaction = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (D) Log.d(TAG, "onCreate");
@@ -705,7 +707,7 @@ public class MainActivity extends Activity {
     private void OnBackPressedValidate(){
 
         boolean isFirstFragment = true;
-        boolean execFragmentTransaction = false;
+        execFragmentTransaction = false;
         String noOrdenComprar = null;
 
         if(mCurrentFragment.equals(mBTConnectivityFragment)){
@@ -745,26 +747,72 @@ public class MainActivity extends Activity {
             isFirstFragment = false;
             //mDrawerLayout.closeDrawer(mDrawerList);
             if (mDespatchGuideReadFragment != null) {
-                FragmentTransaction ft = mFragmentManager.beginTransaction();
-                ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
-                ft.commit();
-                mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
-
-                execFragmentTransaction = true;
+                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                poLabelTexto.setText("Esta seguro salir de la pantalla");
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentTransaction ft = mFragmentManager.beginTransaction();
+                        ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
+                        ft.commit();
+                        mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
+                        ReplaceFragment();
+                        alertDialog.dismiss();
+                    }
+                });
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
             }
+
+
         }
         if(mCurrentFragment.equals(mShippingWareReadFragment) && mShippingWareReadFragment.mShippingWareGenerateFragment != null)
         {
             isFirstFragment = false;
             //mDrawerLayout.closeDrawer(mDrawerList);
             if (mShippingWareReadFragment != null) {
-                FragmentTransaction ft = mFragmentManager.beginTransaction();
-                ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
-                ft.commit();
-                mShippingWareReadFragment.mShippingWareGenerateFragment = null;
+                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                poLabelTexto.setText("Esta seguro salir de la pantalla");
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentTransaction ft = mFragmentManager.beginTransaction();
+                        ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
+                        ft.commit();
+                        mShippingWareReadFragment.mShippingWareGenerateFragment = null;
+                        ReplaceFragment();
+                        alertDialog.dismiss();
 
-                execFragmentTransaction = true;
+
+                    }
+                });
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
             }
+
+
         }
 
         if(mCurrentFragment.equals(mReceiveWareCheckFragment))
@@ -864,6 +912,13 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void ReplaceFragment(){
+        FragmentTransaction ft1 = mFragmentManager.beginTransaction();
+        ft1.replace(R.id.content, mCurrentFragment);
+        ft1.commit();
+        setTitle(mFunctionsString[PositionFrag]);
+        mUILayout.setVisibility(View.GONE);
+    }
 
 
     private void DialogConfirmacionBack(String msj_){

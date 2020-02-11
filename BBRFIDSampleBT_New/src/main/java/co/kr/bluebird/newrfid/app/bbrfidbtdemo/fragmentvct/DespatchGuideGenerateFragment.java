@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -503,7 +504,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
         mWb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
+        //Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
 
 
         Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
@@ -529,11 +530,11 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
                 //dialog.dismiss();
                 /*doPhotoPrint(bitmap);*/
-                createWebPrintJob(mWb_qrcode) ;
+                createWebPrintJob(mWb_qrcode, dialog) ;
             }
         });
 
-        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
+        /*mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -561,7 +562,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     }
                 });
                 alertDialog.show();
-                /*
+                *//*
                 AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
                 alerta.setMessage("Esta seguro de cancelar la impresion")
                         .setCancelable(false)
@@ -574,13 +575,13 @@ public class DespatchGuideGenerateFragment extends Fragment {
                         });
 
                 alerta.show();
-                */
+                *//*
             }
-        });
+        });*/
         dialog.show();
     }
 
-    private void createWebPrintJob(WebView webView)
+    private void createWebPrintJob(WebView webView, Dialog dialog)
     {
         PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
         String jobName = getString(R.string.app_name) + " Guia de Despacho";
@@ -589,14 +590,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
         builder.setMediaSize(PrintAttributes.MediaSize.ISO_A6);
         PrintJob printJob = printManager.print(jobName, printAdapter,builder.build());
 
-        if(printJob.isCompleted()){
-            //Toast.makeText(mContext, "Impresion completada", Toast.LENGTH_LONG).show();
-            loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
-        }
-        else if(printJob.isFailed()) {
-            //Toast.makeText(mContext, "Impresion erronea", Toast.LENGTH_LONG).show();
-            loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "Se presento probleas en la Impresión.");
-        }
+        cleanControls();
+        dialog.dismiss();
 
     }
 
@@ -689,5 +684,16 @@ public class DespatchGuideGenerateFragment extends Fragment {
             }
         });
         alerta.show();
+    }
+
+    private  void cleanControls(){
+
+        mSpinnerDestino.setSelection(0);
+        met_nGuiaEntrada.setText("");
+        mlv_detailGD.setAdapter(null);
+        mlv_detailGD.setVisibility(View.INVISIBLE);
+
+        mprocesar_imgbtn.setEnabled(false);
+        mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
     }
 }
