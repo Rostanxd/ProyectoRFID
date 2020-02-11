@@ -28,8 +28,8 @@ import android.widget.Toast;
 import java.io.Serializable;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
-import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.EntryGuide;
-/*import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide;*/
+//import co.kr.bluebird.newrfid.app.bbrfidbtdemo.control.EntryGuide;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.Guide;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.models.EntryGuideModel;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
@@ -55,15 +55,17 @@ public class EntryGuideCheckFragment extends Fragment {
     private String numeroOrdenCompra;
     private int cantGuide = 0;
     private ListView mlv_entriesGuide;
+    private TextView  mtvOrdenCompra;
     private boolean first ;
 
     private String[] mWSParameters;
     private String NoOrdenCompra = null;
     private ViewGroup loVistaContent;
 
-    private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
+    private EntryGuide ResposeEG = null;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
+    private boolean OnBackPressedInvoque = false;
 
     public EntryGuideCheckFragment() {
         // Required empty public constructor
@@ -90,6 +92,7 @@ public class EntryGuideCheckFragment extends Fragment {
         mtvCantidadOCGR = (TextView)v.findViewById(R.id.tvCantidadOCGR);
         //mtvCantidadTotalval = (TextView)v.findViewById(R.id.tvCantidadTotalval);
         mlv_entriesGuide = (ListView)v.findViewById(R.id.lv_entriesGuide);
+        mtvOrdenCompra = (TextView)v.findViewById(R.id.tvOrdenCompra);
 
         NoOrdenCompra = getArguments() != null ? getArguments().getString("NoOCompra") : "0";
         loVistaContent= v.findViewById(android.R.id.content);
@@ -110,10 +113,12 @@ public class EntryGuideCheckFragment extends Fragment {
         //###################################################################
         if(getArguments() != null)
         {
-            ResposeEG = (co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide)getArguments().getSerializable("objectResponse");
-            if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
+            ResposeEG = (EntryGuide)getArguments().getSerializable("objectResponse");
+
+            /*if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
                 LlenarGrid();
-            }
+            }*/
+
         }
 
         return  v;
@@ -123,6 +128,31 @@ public class EntryGuideCheckFragment extends Fragment {
     public void onStart() {
 
         super.onStart();
+        mtvOrdenCompra.setText(NoOrdenCompra);
+        numeroOrdenCompra = NoOrdenCompra;
+        /*if (ResposeEG != null){
+            LlenarGrid();
+        }
+        else {
+            btnCargar_extracted();
+        }*/
+
+        if(OnBackPressedInvoque){
+            btnCargar_extracted();
+        }
+        else {
+            if (ResposeEG != null){
+                LlenarGrid();
+            }
+        }
+
+        /*if(ResposeEG == null){
+            btnCargar_extracted();
+        }
+        else {
+            LlenarGrid();
+        }*/
+
         /*
         if(!mOrdenCompraGR.getText().toString().trim().equals("") || (NoOrdenCompra != null && !NoOrdenCompra.equals("0") )){
 
@@ -134,11 +164,17 @@ public class EntryGuideCheckFragment extends Fragment {
         */
     }
 
-    /*
+    @Override
+    public void onPause() {
+        super.onPause();
+        OnBackPressedInvoque = false;
+
+    }
+
     private void btnCargar_extracted(){
         ResposeEG = null;
         cantGuide = 0;
-        numeroOrdenCompra = mOrdenCompraGR.getText().toString();
+        //numeroOrdenCompra = mOrdenCompraGR.getText().toString();
         if(!numeroOrdenCompra.trim().equals("")){
             mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
             executeSoapAsync tarea = new executeSoapAsync();
@@ -148,7 +184,6 @@ public class EntryGuideCheckFragment extends Fragment {
             Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
         }
     }
-    */
 
     public void CleanControls(){
         mOrdenCompraGR.setText("");
@@ -324,7 +359,6 @@ public class EntryGuideCheckFragment extends Fragment {
     }
 
 
-    /*
     private  class executeSoapAsync extends AsyncTask<Void, Void, Void> {
 
         //WSparameter_GuiaEntradaOC
@@ -336,7 +370,10 @@ public class EntryGuideCheckFragment extends Fragment {
             rfidService.METHOD_NAME_ =  mWSParameters[1];
             rfidService.NAMESPACE_ = mWSParameters[2];
             rfidService.URL_ = mWSParameters[3];
-            ResposeEG = rfidService.WSGuiaEntradaByOrdenCompra(numeroOrdenCompra);
+            if(ResposeEG ==  null){
+                ResposeEG = rfidService.WSGuiaEntradaByOrdenCompra(numeroOrdenCompra);
+            }
+
             return null;
         }
 
@@ -371,5 +408,8 @@ public class EntryGuideCheckFragment extends Fragment {
 
         }
     }
-    */
+
+    public void setValueOnBackPressedInvoque(){
+        OnBackPressedInvoque = true;
+    }
 }

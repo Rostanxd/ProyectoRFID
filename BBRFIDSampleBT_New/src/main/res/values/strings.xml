@@ -36,8 +36,10 @@
     <string name="TIPercent">%</string>
 
     <string name="GENoOrdenEntrada">No. O/C:</string>
+    <string name="GENoOrdenCompra">Orden Compra No: </string>
     <string name="GEbtnCargar">Cargar</string>
-    <string name="GECantidad">CANTIDAD</string>
+    <string name="GECantidad">Cantidad</string>
+    <string name="GECantidad_">Cantidad:</string>
     <string name="GEEstado">ESTADO</string>
     <string name="GECantidadTotal">TOTAL</string>
     <string name="GECantidadTotal2">CANTIDAD TOTAL:</string>

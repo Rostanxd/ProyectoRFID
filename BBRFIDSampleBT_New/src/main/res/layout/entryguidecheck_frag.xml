@@ -7,85 +7,144 @@
     android:orientation="vertical"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
-<!--
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragmentvct.EntryGuideCheckFragment">
-</FrameLayout>-->
-
-    <TableLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="*"
-        android:layout_marginRight="5dip">
-
-        <TableRow
-            android:layout_width="wrap_content"
+        android:layout_marginRight="10dip">
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:layout_marginTop="10dip"
-            android:layout_marginRight="5dip"
-            android:layout_marginBottom="1dip">
+            android:stretchColumns="*"
+            android:layout_marginRight="5dip">
 
-
-            <!--
-
-            <TextView
+            <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/GENoOrdenEntrada" />
-            <EditText
-                android:id="@+id/et_nGuiaEntrada"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-            <Button
-                android:id="@+id/btnCargarCE"
-                android:layout_width="wrap_content"
-                android:layout_height="30dip"
                 android:layout_marginLeft="5dip"
-                android:layout_marginRight="10dip"
-                android:backgroundTint="#00897B"
-                android:textColor="#FFFFFF"
-                android:layout_marginEnd="5dip"
-                android:background="@drawable/borderedondo"
-                android:text="@string/GEbtnCargar" />
-            -->
-        </TableRow>
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="5dip"
+                android:layout_marginBottom="1dip">
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:layout_marginTop="1dip"
-            android:layout_marginRight="5dip"
-            android:layout_marginBottom="5dip">
 
-            <TextView
-                android:id="@+id/textView3"
+                &lt;!&ndash;
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/GENoOrdenEntrada" />
+                <EditText
+                    android:id="@+id/et_nGuiaEntrada"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/btnCargarCE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="10dip"
+                    android:backgroundTint="#00897B"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="5dip"
+                    android:background="@drawable/borderedondo"
+                    android:text="@string/GEbtnCargar" />
+                &ndash;&gt;
+            </TableRow>
+
+            <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/GECantidad" />
+                android:layout_marginLeft="5dip"
+                android:layout_marginTop="1dip"
+                android:layout_marginRight="5dip"
+                android:layout_marginBottom="5dip">
 
-            <TextView
-                android:id="@+id/tvCantidadOCGR"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="0" />
+                <TextView
+                    android:id="@+id/textView33"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/GENoOrdenCompra" />
 
-            <!-- <EditText
-                android:id="@+id/etCantidadOCGR"
-                android:layout_width="140dp"
+                <TextView
+                    android:id="@+id/tvOrdenCompra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="0" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />-->
-        </TableRow>
-    </TableLayout>
+                android:layout_marginLeft="5dip"
+                android:layout_marginTop="1dip"
+                android:layout_marginRight="5dip"
+                android:layout_marginBottom="5dip">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/GECantidad" />
+
+                <TextView
+                    android:id="@+id/tvCantidadOCGR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="0" />
+
+                &lt;!&ndash; <EditText
+                    android:id="@+id/etCantidadOCGR"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName" />&ndash;&gt;
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10sp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/GENoOrdenCompra" />
+
+        <TextView
+            android:id="@+id/tvOrdenCompra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/GECantidad_" />
+
+        <TextView
+            android:id="@+id/tvCantidadOCGR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="0" />
+    </LinearLayout>
 
     <!--<LinearLayout
         android:layout_width="match_parent"

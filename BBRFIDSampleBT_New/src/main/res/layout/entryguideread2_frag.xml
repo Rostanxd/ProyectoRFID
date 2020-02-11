@@ -98,7 +98,7 @@
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textColor="@color/gColorNaranja_n800"
+                    android:textColor="@color/gColorNegro"
                     android:textSize="16sp" />
 
                 <TextView
@@ -113,7 +113,7 @@
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textColor="@color/gColorNaranja_n800"
+                    android:textColor="@color/gColorNegro"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -584,7 +584,7 @@
                             android:layout_weight="1"
                             android:text="@string/count_str"
                             android:textAlignment="inherit"
-                            android:textColor="@color/gColorRojoLight"
+                            android:textColor="#960012"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -600,8 +600,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:textColor="@color/gColorRojoLight"
                             android:text="@string/empty_str"
+                            android:textColor="@color/gColorNegro"
                             android:textSize="12sp" />
 
                     </LinearLayout>

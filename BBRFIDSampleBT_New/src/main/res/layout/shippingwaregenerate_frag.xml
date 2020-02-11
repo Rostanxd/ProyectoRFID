@@ -5,7 +5,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
-    android:background="@drawable/fondo_gradiente"
 tools:context=".fragmentvct.DespatchGuideGenerateFragment">
 
     <LinearLayout
@@ -14,14 +13,15 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gColorBlanco"
-            android:text="@string/SWBodAlmacenamiento" />
+            android:text="@string/SWBodAlmacenamiento"
+            android:textColor="@color/gColorNegro" />
 
         <Spinner
             android:id="@+id/spinnerBodAlmacenamiento"
@@ -40,14 +40,16 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5sp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gColorBlanco"
-            android:text="@string/SWMotivo" />
+            android:text="@string/SWMotivo"
+            android:textColor="@color/gColorNegro" />
 
         <Spinner
             android:id="@+id/spinnerMotivo"
@@ -85,6 +87,7 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5sp"
+        android:layout_marginBottom="5sp"
         android:orientation="horizontal">
         <!-- <TextView
              android:layout_width="wrap_content"
@@ -95,12 +98,12 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
         <Button
             android:id="@+id/btnAddNota"
             android:layout_width="wrap_content"
-            android:layout_height="35sp"
+            android:layout_height="30sp"
             android:layout_weight="1"
+            android:background="@color/gColorCyan_n700"
             android:text="Agregar Nota"
-            android:textSize="10sp"
-            android:background="@color/gColorAzulClaro"
-            android:textColor="@color/gColorBlanco" />
+            android:textColor="@color/gColorBlanco"
+            android:textSize="10sp" />
 
     </LinearLayout>
     <LinearLayout
@@ -225,9 +228,9 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="50dip"
+        android:layout_height="25dip"
         android:layout_marginTop="10dip"
-        android:background="@color/gColorAzulClaro"
+        android:background="@color/gColorCyan_n700"
         android:orientation="horizontal">
 
         <TextView
