@@ -717,21 +717,20 @@ public class MainActivity extends Activity {
             //mEntryGuideCheckFragment.CleanControls();
             if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
 
-                noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
-                ResposeEG = mEntryGuideCheckFragment.mEntryGuideReadFragment.getResposeEG();
+                //noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
+                //ResposeEG = mEntryGuideCheckFragment.mEntryGuideReadFragment.getResposeEG();
                 isFirstFragment = false;
                 //mDrawerLayout.closeDrawer(mDrawerList);
                 if (mEntryGuideCheckFragment != null) {
-                    Bundle poArgumentos = new Bundle();
-                    poArgumentos.putSerializable("objectResponse", ResposeEG);
+                    /*Bundle poArgumentos = new Bundle();
+                    poArgumentos.putSerializable("objectResponse", null);
                     mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
                     mEntryGuideCheckFragment.setArguments(poArgumentos);
                     poArgumentos.putString("NoOCompra", noOrdenComprar);
-                    mEntryGuideCheckFragment.setArguments(poArgumentos);
-
-
+                    mEntryGuideCheckFragment.setArguments(poArgumentos);*/
+                    mEntryGuideCheckFragment.setValueOnBackPressedInvoque();
                     FragmentTransaction ft = mFragmentManager.beginTransaction();
-                    //ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
+                    ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
                     ft.commit();
                     mEntryGuideCheckFragment.mEntryGuideReadFragment = null;
 
@@ -865,9 +864,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void  syh(){
 
-    }
 
     private void DialogConfirmacionBack(String msj_){
         View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);

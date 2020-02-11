@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo_gradiente"
     tools:context=".fragmentvct.DespatchGuideGenerateFragment"
     >
 
@@ -28,8 +27,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gColorBlanco"
-                    android:text="@string/GENoGuiaEntrada" />
+                    android:text="@string/GENoGuiaEntrada"
+                    android:textColor="@color/gColorNegro" />
 
                 <EditText
                     android:id="@+id/et_nGuiaEntrada"
@@ -44,14 +43,15 @@
 
             <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gColorBlanco"
-                    android:text="@string/GDDestino" />
+                    android:text="@string/GDDestino"
+                    android:textColor="@color/gColorNegro" />
 
                 <Spinner
                     android:id="@+id/spinnerDestino"
@@ -86,9 +86,9 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="50dip"
+                android:layout_height="25dip"
                 android:layout_marginTop="10dip"
-                android:background="@color/gColorAzulClaro"
+                android:background="@color/gColorCyan_n700"
                 android:orientation="horizontal">
 
                 <TextView

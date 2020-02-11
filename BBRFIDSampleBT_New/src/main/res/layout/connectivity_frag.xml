@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-	android:background="@drawable/fondo_gradiente"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
  
     <LinearLayout android:layout_width="match_parent"
@@ -15,34 +14,34 @@
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-        
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-				android:textColor="@color/gColorBlanco"
-	            android:text="@string/user_action_str"
-	            android:textSize="12sp" />
-            
-            <TextView
-                android:id="@+id/action_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_str"
-				android:textColor="@color/gColorNaranja_n800"
-                android:textSize="12sp" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/user_action_str"
+				android:textColor="@color/gColorNegro"
+				android:textSize="12sp" />
+
+			<TextView
+				android:id="@+id/action_textview"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/empty_str"
+				android:textColor="@color/gColorGris_n800"
+				android:textSize="12sp" />
 	    
 	    </LinearLayout>
 	        
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/received_msg_str"
-				android:textColor="@color/gColorBlanco"
-                android:textSize="12sp" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/received_msg_str"
+				android:textColor="@color/gColorNegro"
+				android:textSize="12sp" />
             
             <TextView
                 android:id="@+id/message_textview"
@@ -58,13 +57,13 @@
             android:layout_height="match_parent"
             android:layout_weight="0.9"
             android:orientation="vertical">
-	        
+
 			<TextView
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/connect_state_str"
-				android:textColor="@color/gColorBlanco"
-			    android:textSize="12sp" />
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/connect_state_str"
+				android:textColor="@color/gColorNegro"
+				android:textSize="12sp" />
 
 			<LinearLayout android:layout_width="match_parent"
 	            android:layout_height="match_parent"
