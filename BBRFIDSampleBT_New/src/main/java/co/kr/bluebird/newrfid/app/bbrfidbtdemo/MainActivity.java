@@ -15,6 +15,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.EntryGuideCheckFragment;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.EntryGuideRead2Fragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.InventarioFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.InventoryPerStoreFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.ParameterFragment;
@@ -712,19 +713,22 @@ public class MainActivity extends Activity {
             mDispositivoBTRfidSelect = mBTConnectivityFragment.mDeviceSelect;
         }
 
-        if (mCurrentFragment.equals(mEntryGuideCheckFragment) )
+
+        if (mCurrentFragment.equals(mEntryGuideCheckFragment) ) //(mEntryGuideCheckFragment instanceof EntryGuideCheckFragment)
         {
-            //mEntryGuideCheckFragment.CleanControls();
+            //mEntryGuideCheckFragment.mEntryGuideReadFragment = (EntryGuideRead2Fragment)mCurrentFragment;
             if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
+                //if(mEntryGuideCheckFragment.mEntryGuideReadFragment == null)
+                    //mEntryGuideCheckFragment = (EntryGuideCheckFragment) mCurrentFragment;
 
                 noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
                 ResposeEG = mEntryGuideCheckFragment.mEntryGuideReadFragment.getResposeEG();
                 isFirstFragment = false;
                 //mDrawerLayout.closeDrawer(mDrawerList);
                 if (mEntryGuideCheckFragment != null) {
+                    //mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
                     Bundle poArgumentos = new Bundle();
                     poArgumentos.putSerializable("objectResponse", ResposeEG);
-                    mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
                     mEntryGuideCheckFragment.setArguments(poArgumentos);
                     poArgumentos.putString("NoOCompra", noOrdenComprar);
                     mEntryGuideCheckFragment.setArguments(poArgumentos);

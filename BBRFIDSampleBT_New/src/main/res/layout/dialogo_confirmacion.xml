@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:id="@+id/lblTextoLabel"
-            android:textColor="@color/gColorRojoLight"
+            android:textColor="@color/gColorNegro"
             android:textSize="15dp" />
 
 

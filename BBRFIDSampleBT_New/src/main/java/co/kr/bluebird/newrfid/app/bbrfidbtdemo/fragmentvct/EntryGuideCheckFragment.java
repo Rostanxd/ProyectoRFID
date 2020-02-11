@@ -223,21 +223,35 @@ public class EntryGuideCheckFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 alertDialog.dismiss();
-                                if (mEntryGuideReadFragment == null)
-                                    mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
+
+                                //else
+                                //{
+                                    //ft.remove(mEntryGuideReadFragment).commit();
+                                    //mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
+                                //}
+
+
+
                                 try {
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
                                     Bundle args = new Bundle();
                                     args.putString("NoGuia", NoGuia);
                                     args.putString("NoOCompra",NoOCompra);
                                     args.putString("NoGuiaCant", NoGuiaCant);
                                     args.putSerializable("objectResponse", ResposeEG);
-                                    mEntryGuideReadFragment.setArguments(args);
+                                    if (mEntryGuideReadFragment == null)
+                                    {
+                                        mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
+                                        mEntryGuideReadFragment.setArguments(args);
+                                    }else{
+                                        //ft.addToBackStack(null);
+                                        //ft.remove(mEntryGuideReadFragment);
+                                        //mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
+                                        //mEntryGuideReadFragment.setArguments(args);
+                                        //mEntryGuideReadFragment.getArguments().putAll(args);
+                                    }
 
-                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
                                     ft.replace(R.id.content, mEntryGuideReadFragment);
-                                    ft.addToBackStack(null);
-
-                                    //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                                     //ft.addToBackStack(null);
                                     ft.commit();
                                 }
