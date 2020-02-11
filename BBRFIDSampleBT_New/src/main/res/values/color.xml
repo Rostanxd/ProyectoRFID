@@ -34,4 +34,10 @@
     <color name="gColorCafe_n300">#a1887f</color>
     <color name="gColorGrisAzul_n500">#607d8b</color>
     <color name="gColorNegro">#000000</color>
+
+
+    <!-- Paleta Colores Tommy H-->
+    <color name="gColorRojoTM">#E20000</color>
+    <color name="gColorAzulTM">#191152</color>
+
 </resources>

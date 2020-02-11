@@ -58,12 +58,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <!--<Button
             android:id="@+id/dialogBtnCancelar"
             android:layout_width="120sp"
             android:layout_height="wrap_content"
             android:text="Cancelar" />
-
+-->
         <Button
             android:id="@+id/dialogBtnAceptar"
             android:layout_width="match_parent"
