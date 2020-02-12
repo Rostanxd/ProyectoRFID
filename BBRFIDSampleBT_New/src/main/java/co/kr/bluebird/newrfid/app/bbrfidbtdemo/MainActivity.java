@@ -41,6 +41,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -201,7 +202,7 @@ public class MainActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
-
+        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.gColorAzulClaro)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -332,7 +333,8 @@ public class MainActivity extends Activity {
 
         if(id != 16908332){
             if (id == R.id.action_connected) {
-                Toast.makeText(this, getString(R.string.sled_connected_str), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, getString(R.string.sled_connected_str), Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeInformacion(loVistaDialogo, getString(R.string.sled_connected_str));
             }
             else if (id == R.id.action_home) {
                 switchToHome();

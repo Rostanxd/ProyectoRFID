@@ -78,6 +78,30 @@ public class clsMensaje {
         }
     }
 
+    public void gMostrarMensajeInformacion(ViewGroup toVista, String tsMensaje)
+    {
+        try{
+            //ViewGroup viewGroup = findViewById(android.R.id.content);
+            View dialogView = LayoutInflater.from(loContext).inflate(R.layout.dialogo_informacion, toVista, false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(loContext, R.style.myDialog));
+            builder.setView(dialogView);
+            final AlertDialog alertDialog = builder.create();
+            Button btnOk = dialogView.findViewById(R.id.buttonCerrar);
+            TextView poLabelTexto = dialogView.findViewById(R.id.txtMensaje);
+            poLabelTexto.setText(tsMensaje);
+            btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
+        }catch (Exception ex)
+        {
+            Toast.makeText(loContext, "No se pudo mostrar el Dialogo. Error en el metodo: gMostrarMensajeInformacion() "+ex.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void gMostrarMensajeConfirmacion(ViewGroup toVista, String... tsMensaje)
     {
 
