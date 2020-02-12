@@ -30,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -141,7 +140,7 @@ public class ShippingWareGenerateFragment extends Fragment {
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
-        mbtnAddNota.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+        mbtnAddNota.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
 
         mbtnAddNota.setOnClickListener(btnAddNotaOnClick);
 
@@ -204,25 +203,43 @@ public class ShippingWareGenerateFragment extends Fragment {
     };
 
     private void DialogNota(){
-        final Dialog dialog = new Dialog(mContext);
-        //dialog = new Dialog(mContext);
+
+        /*final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_input_text);
-        mDialogContext = dialog.getContext();
+        mDialogContext = dialog.getContext();*/
 
-        dialog.setTitle("Ingrese una nota");
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_input_text, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
 
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-        EditText medNota = (EditText) dialog.findViewById(R.id.edNota_);
+
+        Button mdialogBtnAceptar = (Button) dialogView.findViewById(R.id.btnDialogConfirmar);
+        Button mdialogBtnCancelar = (Button) dialogView.findViewById(R.id.btnDialogCancelar);
+        Button mdialogBtnLimpiar = (Button) dialogView.findViewById(R.id.btnDialogLimpiar);
+        EditText medNota = (EditText) dialogView.findViewById(R.id.edNota_);
 
         mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mtvNota.setText(medNota.getText().toString());
-                dialog.dismiss();
+                alertDialog.dismiss();
 
             }
         });
-        dialog.show();
+        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        mdialogBtnLimpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                medNota.setText("");
+            }
+        });
+        alertDialog.show();
     }
 
     private  void clickBtnProcesar()
@@ -528,16 +545,25 @@ public class ShippingWareGenerateFragment extends Fragment {
         qrCodeGenerator = new QRCodeGenerator();
         Bitmap bitmap = qrCodeGenerator.QrCodePrint(cadenaQr);
 
-        final Dialog dialog = new Dialog(mContext);
+       /* final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_qrcode);
         dialog.setCancelable(false);
 
-        ImageView imageView = (ImageView) dialog.findViewById(R.id.iv_qrcode);
+
         TextView tvTittle = (TextView) dialog.findViewById(R.id.tvTitle);
         wb_qrcode = (WebView) dialog.findViewById(R.id.webview_qrcode);
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);
-        //Button mdialogBtnCancelar = (Button) dialog.findViewById(R.id.dialogBtnCancelar);
+        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.dialogBtnAceptar);*/
 
+
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_qrcode, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+        TextView tvTittle = (TextView) dialogView.findViewById(R.id.tvTitle);
+        wb_qrcode = (WebView) dialogView.findViewById(R.id.webview_qrcode);
+        Button mdialogBtnAceptar = (Button) dialogView.findViewById(R.id.dialogBtnAceptar);
         Bitmap bitmap1 = utilityFuntions.getResizedBitmap(bitmap, 100);
 
         qrData.setContenidoQr(cadenaQr);
@@ -567,7 +593,7 @@ public class ShippingWareGenerateFragment extends Fragment {
                 //dialog.dismiss();
                 //doPhotoPrint(bitmap);
 
-                createWebPrintJob(wb_qrcode, dialog);
+                createWebPrintJob(wb_qrcode, alertDialog);
             }
         });
         /*mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
@@ -589,7 +615,7 @@ public class ShippingWareGenerateFragment extends Fragment {
                 alerta.show();
             }
         });*/
-        dialog.show();
+        alertDialog.show();
     }
 
 

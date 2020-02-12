@@ -24,6 +24,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReceiveWare;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import co.kr.bluebird.sled.SelectionCriterias;
@@ -57,6 +58,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -271,6 +273,8 @@ public class ReceiveWareCheckFragment extends Fragment {
     private ImageButton mibtnPotencia;
     private boolean lectureHasPc = false;
 
+    private ViewGroup loVistaDialogo;
+    private clsMensaje loDialogo;
 
     private EGTagsResponseItem itemEncontradoSeleccinado;
     private GenericSpinnerDto spinnerDto = null;
@@ -302,6 +306,11 @@ public class ReceiveWareCheckFragment extends Fragment {
         View v = inflater.inflate(R.layout.receivewarecheck_frag, container, false);
 
         mContext = inflater.getContext();
+
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
 
         mFragment = this;
 
@@ -546,25 +555,46 @@ public class ReceiveWareCheckFragment extends Fragment {
     };
 
     private void DialogNota(){
-        final Dialog dialog = new Dialog(mContext);
-        //dialog = new Dialog(mContext);
+        /*final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_input_text);
         mDialogContext = dialog.getContext();
 
         dialog.setTitle("Ingrese una nota");
 
         Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-        EditText medNota = (EditText) dialog.findViewById(R.id.edNota_);
+        EditText medNota = (EditText) dialog.findViewById(R.id.edNota_);*/
 
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_input_text, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        mDialogContext = alertDialog.getContext();
+
+        Button mdialogBtnAceptar = (Button) dialogView.findViewById(R.id.btnDialogConfirmar);
+        Button mdialogBtnCancelar = (Button) dialogView.findViewById(R.id.btnDialogCancelar);
+        Button mdialogBtnLimpiar = (Button) dialogView.findViewById(R.id.btnDialogLimpiar);
+        EditText medNota = (EditText) dialogView.findViewById(R.id.edNota_);
         mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 metNotaRW.setText(medNota.getText().toString());
-                dialog.dismiss();
+                alertDialog.dismiss();
 
             }
         });
-        dialog.show();
+        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        mdialogBtnLimpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                medNota.setText("");
+            }
+        });
+        alertDialog.show();
     }
 
 
