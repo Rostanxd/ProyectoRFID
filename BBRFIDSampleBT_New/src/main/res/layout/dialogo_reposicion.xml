@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gColorBlanco">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/gColorAzulClaro">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/gColorBlanco"
+            android:background="@drawable/ic_informacion" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aviso"
+            android:textAlignment="center"
+            android:textColor="@color/gColorGris"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+
+
+
+        <Spinner
+            android:id="@+id/spinnerSeccionRW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/EstiloSpinner"/>
+
+        <Button
+            android:id="@+id/buttonOk"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:background="@color/gColorAzulClaro"
+            android:text="Ok"
+            android:textColor="@color/gColorBlanco" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

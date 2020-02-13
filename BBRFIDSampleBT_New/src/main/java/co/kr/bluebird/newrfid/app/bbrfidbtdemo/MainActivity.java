@@ -10,8 +10,12 @@
 
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo;
 
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.AdapterHashMap;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.EntryGuideCheckFragment;
@@ -28,11 +32,13 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.TestFragment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ParamRfidIteration;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.PersistenceDataIteration;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -68,10 +74,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends Activity {
@@ -98,7 +106,7 @@ public class MainActivity extends Activity {
 
     private FragmentManager mFragmentManager;
 
-    private boolean mIsConnected;
+    private boolean mIsConnected, mIsModeRFID;
 
     private BTConnectivityFragment mBTConnectivityFragment;
     private SDFragment mSDFragment;
@@ -132,7 +140,6 @@ public class MainActivity extends Activity {
     private CardView mcvParametrizador,mcvConectividad,mcvConfiguracion,mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
     private GridLayout mainGrid;
 
-    public  String pato;
     private  int PositionFrag;
     private String mDispositivoBTRfidSelect ;
     private final MainHandler mMainHandler = new MainHandler(this);
@@ -143,6 +150,9 @@ public class MainActivity extends Activity {
     private String lsNumeroOrden;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
+
+    private boolean isOptionRecepcionMercaderia = false;
+    private ProgressDialog progressDialog;
 
     private boolean execFragmentTransaction = false;
     @Override
@@ -202,7 +212,7 @@ public class MainActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.gColorAzulClaro)));
+        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.gColorGris_n800)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -320,8 +330,17 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        if (mIsConnected)
+        if (mIsConnected) {
             menu.getItem(0).setVisible(true);
+            if(mIsModeRFID){
+                menu.getItem(0).setIcon(R.drawable.ic_rfid_green);
+
+            }
+            else {
+                menu.getItem(0).setIcon(R.drawable.ic_qrcode_green);
+            }
+
+        }
         else
             menu.getItem(0).setVisible(false);
         return true;
@@ -362,9 +381,36 @@ public class MainActivity extends Activity {
         switch (position) {
             case 0:
                 //################# CONECTIVIDAD ################################
+
+                /*ViewGroup viewGroup1 = findViewById(android.R.id.content);
+                View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialogo_reposicion, viewGroup1, false);
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                builder1.setView(dialogView1);
+                final AlertDialog alertDialog1 = builder1.create();
+                Button btnOk1 = dialogView1.findViewById(R.id.buttonOk);
+                //TextView poLabelTexto = dialogView.findViewById(R.id.txtMensaje);
+                Spinner mspinnerSeccionRW = (Spinner) dialogView1.findViewById(R.id.spinnerSeccionRW);
+                String[] spinnerArraySeccion=null;
+                spinnerArraySeccion = getResources().getStringArray(R.array.functions_array);
+
+                ArrayAdapter<String> adapter1 =new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item,spinnerArraySeccion);
+                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mspinnerSeccionRW.setAdapter(adapter1);
+
+
+
+                btnOk1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog1.dismiss();
+                    }
+                });
+                alertDialog1.show();*/
+
                 if (mBTConnectivityFragment == null)
                     mBTConnectivityFragment = BTConnectivityFragment.newInstance();
                 mCurrentFragment = mBTConnectivityFragment;
+
                 break;
             case 1:
 
@@ -491,9 +537,10 @@ public class MainActivity extends Activity {
                 mCurrentFragment = mShippingWareReadFragment;
                 break;
             case 15:
-                if (mReceiveWareCheckFragment == null)
+                /*if (mReceiveWareCheckFragment == null)
                     mReceiveWareCheckFragment = ReceiveWareCheckFragment.newInstance();
-                mCurrentFragment = mReceiveWareCheckFragment;
+                mCurrentFragment = mReceiveWareCheckFragment;*/
+                InvocarDialogQrScanner();
                 break;
             case 16:
                 if (mInventoryPerStoreFragment == null)
@@ -1013,6 +1060,9 @@ public class MainActivity extends Activity {
         if (D) Log.d(TAG, "command = " + m.arg1 + " result = " + m.arg2 + " obj = data");
         switch (m.what) {
             case SDConsts.Msg.SDMsg:
+                if(m.arg1 == SDConsts.SDCmdMsg.SLED_MODE_CHANGED){
+                    updateConnectState();
+                }
                 if (m.arg1 == SDConsts.SDCmdMsg.SLED_HOTSWAP_STATE_CHANGED) {
                     if (m.arg2 == SDConsts.SDHotswapState.HOTSWAP_STATE)
                         Toast.makeText(mContext, "HOTSWAP STATE CHANGED = HOTSWAP_STATE", Toast.LENGTH_SHORT).show();
@@ -1022,7 +1072,43 @@ public class MainActivity extends Activity {
                 break;
             case SDConsts.Msg.RFMsg:
                 break;
+            /*case SDConsts.Msg.BCMsg:
+                break;*/
+
             case SDConsts.Msg.BCMsg:
+
+                if(isOptionRecepcionMercaderia){
+                    if (m.arg1 == SDConsts.BCCmdMsg.BARCODE_READ) {
+
+                        if (m.obj != null  && m.obj instanceof String) {
+
+                            String qrcode = (String)m.obj;
+                            if(qrcode != null && !qrcode.trim().isEmpty())
+                            {
+                                String[] parts = qrcode.trim().split(";");
+                                qrcode = parts[0];
+                                Toast.makeText(mContext, "Codigo Scaneado: "+qrcode, Toast.LENGTH_LONG).show();
+                            /*metEstiloItemIPS.setText(qrcode);
+
+                            if(metEstiloItemIPS != null && !metEstiloItemIPS.getText().equals("")){
+                                InvoqueInventoryPerStoreInfo();
+                            }
+                            else {
+                                Toast.makeText(mContext, "Ingrese un codigo de item...", Toast.LENGTH_SHORT).show();
+                            }*/
+                            }
+
+                        }
+                    }
+                    else if (m.arg1 == SDConsts.BCCmdMsg.BARCODE_ERROR) {
+                        if (m.arg2 == SDConsts.BCResult.LOW_BATTERY)
+                            Toast.makeText(mContext, "Bateria Baja", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(mContext, "Error de lector de Barras", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+
                 break;
         }
     }
@@ -1097,9 +1183,17 @@ public class MainActivity extends Activity {
 
     private void updateConnectState() {
         if (mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED)
+        {
+            int mode = mReader.SD_GetTriggerMode();
+            if (mode == SDConsts.SDTriggerMode.RFID)
+                mIsModeRFID = true;
+            else
+                mIsModeRFID = false;
             mIsConnected = true;
-        else
+        }
+        else {
             mIsConnected = false;
+        }
         invalidateOptionsMenu();
     }
 
@@ -1201,5 +1295,227 @@ public class MainActivity extends Activity {
 
         }
     }
-    //############################################################################
+
+
+    //####################### RECEPCION MERCADERIA #############################
+    private void InvocarDialogQrScanner(){
+
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialogo_qr_scanner, viewGroup, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnBusqManual = dialogView.findViewById(R.id.btnBusqManual);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("Por favor, Apunte el lector hacia la etiqueta QR, y presionar el boton Leer Qr");
+
+        isOptionRecepcionMercaderia = true;
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(mReader != null){
+                    int mode = mReader.SD_GetTriggerMode();
+                    if (mode == SDConsts.SDTriggerMode.RFID)
+                        mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.BARCODE);
+
+                    mReader.BC_SetTriggerState(true);
+                }
+
+            }
+        });
+        btnBusqManual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isOptionRecepcionMercaderia = false;
+                //InvAlertIngMercManual();
+                try {
+                    InvAlertIngMercManual2();
+                }
+                catch (Exception ex){
+                    loDialogo.gMostrarMensajeError(loVistaDialogo, ex.getMessage());
+                }
+
+
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isOptionRecepcionMercaderia = false;
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void InvAlertIngMercManual(GenericSpinnerDto gBodega, GenericSpinnerDto gMovientos)
+    {
+
+        HashMap<Integer,String> spinnerMapBodegas = null;
+        HashMap<Integer,String> spinnerMapTipos = null;
+        AdapterHashMap adapterHashMap;
+
+        ViewGroup viewGroup1 = findViewById(android.R.id.content);
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_receiveware, viewGroup1, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+        //TextView poLabelTexto = dialogView.findViewById(R.id.txtMensaje);
+        Spinner mspinTipo = dialogView1.findViewById(R.id.spinTipo);
+        Spinner mspinOrigen = dialogView1.findViewById(R.id.spinOrigen);
+        EditText medAnio = dialogView1.findViewById(R.id.edAnio);
+        EditText medNumero = dialogView1.findViewById(R.id.edNumero);
+
+        Button btnAceptar = dialogView1.findViewById(R.id.btnDialogAceptar);
+        Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
+        Button btnLimpiar = dialogView1.findViewById(R.id.btnDialogLimpiar);
+
+
+
+        /*String[] spinnerArraySeccion=null;
+        spinnerArraySeccion = getResources().getStringArray(R.array.functions_array);
+
+        ArrayAdapter<String> adapter1 =new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item,spinnerArraySeccion);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mspinTipo.setAdapter(adapter1);
+        mspinOrigen.setAdapter(adapter1);*/
+
+        adapterHashMap =  getAdapaterSpinner(gMovientos);
+        if(adapterHashMap != null){
+            spinnerMapTipos = adapterHashMap.getHashMap();
+            mspinTipo.setAdapter(adapterHashMap.getAdapter());
+        }
+
+        adapterHashMap =  getAdapaterSpinner(gBodega);
+        if(adapterHashMap != null){
+            spinnerMapBodegas = adapterHashMap.getHashMap();
+            mspinOrigen.setAdapter(adapterHashMap.getAdapter());
+        }
+
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog1.dismiss();
+            }
+        });
+        alertDialog1.show();
+    }
+
+    private void InvAlertIngMercManual2() {
+        ProgressLoading();
+        setSpinnersDialogReceiveWare();
+
+
+    }
+
+    private void setSpinnersDialogReceiveWare()
+    {
+        exWSTipoYBodegaOrigenAsync tipoYBodegaOrigenAsync = new exWSTipoYBodegaOrigenAsync();
+        tipoYBodegaOrigenAsync.execute();
+
+    }
+
+    private AdapterHashMap getAdapaterSpinner(GenericSpinnerDto spinnerDto){
+
+        String[] spinnerArray = new String[spinnerDto.getColeccion().size()];
+        HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
+        AdapterHashMap adapterHashMap;
+
+        int i = 0;
+
+        for (DataSourceDto dto:spinnerDto.getColeccion()) {
+            spinnerMap.put(i,dto.codigo);
+            spinnerArray[i] = dto.descripcion;
+            i++;
+        }
+
+        try {
+            ArrayAdapter<String> adapter1 =new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, spinnerArray);
+            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapterHashMap = new AdapterHashMap();
+            adapterHashMap.setAdapter(adapter1);
+            adapterHashMap.setHashMap(spinnerMap);
+
+
+        }
+        catch (Exception ex)
+        {
+            adapterHashMap = null;
+        }
+        return adapterHashMap;
+
+    }
+
+
+    //####################### LOADING #############################
+    private void ProgressLoading(){
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+    }
+
+    //####################### ASYNC METODOS INVOQUE WS #############################
+
+    private  class exWSTipoYBodegaOrigenAsync extends AsyncTask<Void, Void, Void> {
+
+        String ToastMessage = "";
+        private String[] mWSParameters;
+        GenericSpinnerDto gDtoBodegas, gDtoMovimiento;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            if(gDtoBodegas == null)
+            {
+                mWSParameters = getResources().getStringArray(R.array.WSparameter_Bodegas);
+                rfidService.SOAP_ACTION_ =  mWSParameters[0];
+                rfidService.METHOD_NAME_ =  mWSParameters[1];
+                rfidService.NAMESPACE_ = mWSParameters[2];
+                rfidService.URL_ = mWSParameters[3];
+
+                gDtoBodegas = rfidService.WSBodegasOrMotivosService(true, "REC", null);
+            }
+            if(gDtoMovimiento == null)
+            {
+                mWSParameters = getResources().getStringArray(R.array.WSparameter_TiposMovimiento);
+
+                rfidService.SOAP_ACTION_ =  mWSParameters[0];
+                rfidService.METHOD_NAME_ =  mWSParameters[1];
+                rfidService.NAMESPACE_ = mWSParameters[2];
+                rfidService.URL_ = mWSParameters[3];
+                gDtoMovimiento = rfidService.WSTipoMovimientos();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.cancel();
+            Validator validator = new Validator();
+            ResponseVal responseVal =  validator.getValidateGenericDto(gDtoBodegas);
+            ResponseVal responseVal1 =  validator.getValidateGenericDto(gDtoMovimiento);
+            if(responseVal.isValidAccess() && responseVal1.isValidAccess()){
+                if(responseVal.isFullCollection() && responseVal1.isFullCollection()){
+                    InvAlertIngMercManual(gDtoBodegas, gDtoMovimiento);
+                }
+                else {
+                    String msj = !responseVal.isFullCollection() ? "Lista de Bodegas" : "" + (!responseVal1.isFullCollection() ?" y Tipos de Movimientos vacios" : "vacios");
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo, msj);
+                }
+            }
+            else {
+                loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());
+            }
+
+        }
+
+    }
+
 }

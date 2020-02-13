@@ -1302,7 +1302,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     }
 
-    private void  postCallWSTiposMovOrigen(){
+    /*private void  postCallWSTiposMovOrigen(){
         final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_receiveware);
         mDialogContext = dialog.getContext();
@@ -1387,7 +1387,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             }
         });
         dialog.show();
-    }
+    }*/
 
     private void procesoNoExistQR(String pcodorigen, String pcodigotipo, String panio, String pnumero)
     {
@@ -1449,7 +1449,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             //super.onPostExecute(aVoid);
 
             progressDialog.cancel();
-            postCallWSTiposMovOrigen();
+            //postCallWSTiposMovOrigen();
 
             if(spinnerDto != null && spinnerDto.getEstado() != null && spinnerDto.getEstado().getCodigo().equals("00")){
 

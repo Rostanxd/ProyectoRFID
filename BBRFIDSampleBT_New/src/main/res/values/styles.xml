@@ -15,6 +15,13 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="myDialogLigth" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
+    <style name="EstiloSpinner" parent="@style/Widget.AppCompat.Spinner">
+        <item name="overlapAnchor">true</item>
+        <item name="android:src">@drawable/spinner_background</item>
+    </style>
 
 </resources>
