@@ -4,11 +4,19 @@
 
     <item
         android:id="@+id/action_connected"
-        android:icon="@drawable/newconnect2"
+        android:iconTint="@color/gColorVerdeDark"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:visible="false"
-        android:title="@string/connected_str"/>
+        android:title="@string/connected_str"
+        android:visible="false" />
+    <!--<item
+        android:id="@+id/action_rfid"
+        android:icon="@drawable/ic_radio_rfid"
+        android:iconTint="@color/gColorVerdeDark"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/connected_str"
+        android:visible="false" />-->
 
 
     <item

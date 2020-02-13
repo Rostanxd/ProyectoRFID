@@ -1,86 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gColorBlanco"
+    >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gColorCyan_n700">
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_editar"
+            android:backgroundTint="@color/gColorBlanco" />
 
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
-            android:layout_marginBottom="20sp"
-            android:orientation="vertical"
-            android:textAlignment="center">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:text="@string/RWDialogTitle"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
             android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:layout_marginBottom="10sp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="Tipo:       " />
+                android:text="Tipo:"
+                android:textColor="@color/gColorGris"
+                />
 
             <Spinner
                 android:id="@+id/spinTipo"
+                style="@style/EstiloSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
             android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:layout_marginBottom="10sp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="Origen:   " />
+                android:text="Origen:"
+                android:textColor="@color/gColorGris"
+                />
 
             <Spinner
                 android:id="@+id/spinOrigen"
+                style="@style/EstiloSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
             android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:layout_marginBottom="10sp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="Año:          " />
+                android:text="Año:"
+                android:textColor="@color/gColorGris"
+                />
 
             <EditText
                 android:id="@+id/edAnio"
@@ -88,52 +91,76 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/gColorGris_n800"
+                android:background="@drawable/borde_edittext"
+                />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
             android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:layout_marginBottom="10sp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="Número:   " />
-
+                android:text="Número:"
+                android:textColor="@color/gColorGris"
+                />
             <EditText
                 android:id="@+id/edNumero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="number" />
-
-
+                android:inputType="number"
+                android:textColor="@color/gColorGris_n800"
+                android:background="@drawable/borde_edittext"
+                android:fontFamily="sans-serif"/>
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="5sp"
-            android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:layout_height="wrap_content" android:gravity="center" android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/btnDialogAceptar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorCyan_n700"
                 android:text="Aceptar"
-                android:backgroundTint="#00897B"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/borderedondo"/>
+                android:textColor="@color/gColorBlanco" />
+
+            <Button
+                android:id="@+id/btnDialogCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorRojoLight"
+                android:text="Cancelar"
+                android:textColor="@color/gColorBlanco" />
+
+            <Button
+                android:id="@+id/btnDialogLimpiar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/gColorNaranjaTM"
+                android:text="Limpiar"
+                android:textColor="@color/gColorBlanco" />
+
         </LinearLayout>
+
     </LinearLayout>
 
 
