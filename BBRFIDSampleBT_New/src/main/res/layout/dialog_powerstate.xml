@@ -1,145 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gColorBlanco"
+    >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/gColorCyan_n700">
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_reg_intensidad_white"
+            android:backgroundTint="@color/gColorBlanco"
+             />
 
+    </RelativeLayout>
 
-    <!--<LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
-            android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:gravity="center"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
+            android:orientation="vertical">
 
-
-            <SeekBar
-                android:id="@+id/sBarPower"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="30" />
+                android:text="Potencia de Rfid"
+                android:textStyle="bold"
+
+                />
+
+            <SeekBar
+                android:id="@+id/SeekBarPower"
+                style="@android:style/Widget.Material.SeekBar"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:max="25"
+                android:progressDrawable="@drawable/horizontal_progress" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="left"
+                    android:text="5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="right"
+                    android:text="30" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="5sp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvpGED"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:text=" G. Entrada/G.Despacho "
+                android:background="@drawable/borde_edittext"/>
+            <TextView
+                android:id="@+id/tvpERM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:text=" Env/Recep. Mercaderia "
+                android:background="@drawable/borde_edittext"/>
+
+            <TextView
+                android:id="@+id/tvpRepoInvPart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:text=" Reposicion/Inv. Participante "
+                android:background="@drawable/borde_edittext"/>
+
+
         </LinearLayout>
 
 
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5sp"
+            android:layout_marginTop="5sp"
             android:layout_marginRight="5sp"
-            android:layout_marginBottom="5sp"
-            android:orientation="horizontal"
-            android:layout_marginTop="20sp">
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Seleccionado: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSeleccionado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/btnDialogAceptar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@color/gColorCyan_n700"
                 android:text="Aceptar"
-                android:backgroundTint="#00897B"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/borderedondo"/>
+                android:textColor="@color/gColorBlanco" />
+
+            <Button
+                android:id="@+id/btnDialogCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/gColorRojoLight"
+                android:text="Cancelar"
+                android:textColor="@color/gColorBlanco" />
+
+
         </LinearLayout>
-    </LinearLayout>-->
-
-    <LinearLayout
-        android:id="@+id/sampleSizeLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="10sp"
-        android:orientation="vertical"
-        android:visibility="visible" >
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Potencia de Rfid" />
-
-        <SeekBar
-            android:id="@+id/SeekBarPower"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:max="25" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="visible" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:gravity="left"
-                android:text="5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:gravity="right"
-                android:text="30" />
-
-        </RelativeLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp"
-        android:layout_marginBottom="5sp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20sp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionado: "/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvSeleccionado"
-            android:text="5"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp"
-        android:layout_marginBottom="5sp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20sp">
-
-        <Button
-            android:id="@+id/btnDialogAceptar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Aceptar"
-            android:backgroundTint="#00897B"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/borderedondo"/>
-    </LinearLayout>
-
 
 
 </LinearLayout>

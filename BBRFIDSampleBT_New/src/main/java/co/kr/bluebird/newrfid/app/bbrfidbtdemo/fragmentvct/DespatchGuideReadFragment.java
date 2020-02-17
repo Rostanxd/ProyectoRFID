@@ -250,8 +250,6 @@ public class DespatchGuideReadFragment extends Fragment {
     private EGProcesado egProcesado;
     public DespatchGuideGenerateFragment mDespatchGuideGenerateFragment;
 
-
-    private ImageButton mibtnPotencia;
     private  int RFPower = 17;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
@@ -368,20 +366,17 @@ public class DespatchGuideReadFragment extends Fragment {
         mclean_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mclean_imgbtn.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialnext );
+        myIcon = getResources().getDrawable( R.drawable.ic_next );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
+
         mnext_imgbtn = (Button)v.findViewById(R.id.next_imgbtn);
-        //mnext_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mnext_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mnext_imgbtn.setOnClickListener(sledListener);
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
         mProgressBar.setVisibility(View.INVISIBLE);
-
-
-        mibtnPotencia = (ImageButton) v.findViewById(R.id.ibtnPotencia);
-        mibtnPotencia.setOnClickListener(onClickDialogPotencia);
 
         mSessionSpin = (Spinner)v.findViewById(R.id.session_spin);
         mSessionChar = ArrayAdapter.createFromResource(mContext, R.array.session_array,
@@ -403,74 +398,6 @@ public class DespatchGuideReadFragment extends Fragment {
         entryGuideDetail = null;
 
         return v;
-    }
-
-    private OnClickListener onClickDialogPotencia = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
-                DialogPowerState();
-            }
-            else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    };
-
-    private void DialogPowerState() {
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_powerstate);
-        int maxPower = 5;
-
-        //RFPower = 17;
-
-
-        SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
-        TextView mtvSelect = (TextView) dialog.findViewById(R.id.tvSeleccionado);
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-
-        final int mSeekBarPowerCorrection = 5;
-
-        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
-        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
-
-        mSeekBarPower.setProgress(RFPower - maxPower);
-        mtvSelect.setText(RFPower+"");
-        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int val = mSeekBarPower.getProgress();
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                val = i + mSeekBarPowerCorrection;
-                RFPower = val;
-                mtvSelect.setText(RFPower+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //dialog.dismiss();
-
-                mReader.RF_SetRadioPowerState(RFPower);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     private OnItemSelectedListener sessionListener = new OnItemSelectedListener() {
@@ -764,10 +691,11 @@ public class DespatchGuideReadFragment extends Fragment {
                             mInvenButton.setEnabled(false);
                             mnext_imgbtn.setEnabled(false);
                             mclean_imgbtn.setEnabled(false);
+
                             //mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
                             mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
                             mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-
+                            mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
                             mStopInvenButton.setEnabled(true);
                             mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
 
@@ -795,6 +723,7 @@ public class DespatchGuideReadFragment extends Fragment {
                         mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
                         //mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00897B")));
                         mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+                        mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
                         Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
                     break;
@@ -1366,6 +1295,7 @@ public class DespatchGuideReadFragment extends Fragment {
                                 startStopwatch();
                                 mInventory = true;
                                 enableControl(!mInventory);
+                                EnabledDisabledButtons(false);
                             } else if (ret == SDConsts.RFResult.MODE_ERROR)
                                 Toast.makeText(mContext, "Start Inventory failed, Please check RFR900 MODE", Toast.LENGTH_SHORT).show();
                             else if (ret == SDConsts.RFResult.LOW_BATTERY)
@@ -1389,6 +1319,7 @@ public class DespatchGuideReadFragment extends Fragment {
                         if (mReader.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
                             mInventory = false;
                             enableControl(!mInventory);
+                            EnabledDisabledButtons(true);
                         }
                         pauseStopwatch();
                         break;
@@ -1737,6 +1668,30 @@ public class DespatchGuideReadFragment extends Fragment {
 
     private void locateTimeout() {
         mTagLocateProgress.setProgress(0);
+    }
+
+    //
+
+    private void EnabledDisabledButtons(boolean isEnabled)
+    {
+        mInvenButton.setEnabled(isEnabled);
+        mStopInvenButton.setEnabled(false);
+        mclean_imgbtn.setEnabled(isEnabled);
+        mnext_imgbtn.setEnabled(isEnabled);
+
+        if(isEnabled){
+            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
+            //mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
+            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+            mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+        }
+        else {
+            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            mnext_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+
     }
 
 }

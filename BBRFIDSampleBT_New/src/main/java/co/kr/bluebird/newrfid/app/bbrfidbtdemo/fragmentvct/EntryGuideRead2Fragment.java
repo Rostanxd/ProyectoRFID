@@ -11,7 +11,9 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuideDetail;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LocatedInvData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SendTags;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SkuData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.TagNoRead;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.item;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fileutil.FileManager;
@@ -137,7 +139,6 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private TextView mSpeedCountText;
 
-    private TextView mAvrSpeedCountTest;
 
     private Button mClearButton;
 
@@ -279,11 +280,12 @@ public class EntryGuideRead2Fragment extends Fragment {
     private LinearLayout mlayoutHeader;
 
     private  int RFPower = 17;
-    private ImageButton mibtnPotencia;
     private boolean lectureHasPc = false;
     private boolean isWindowsInventoryLocated = false;
 
     private EntryGuideCheckFragment mEntryGuideCheckFragment;
+    private InvetoryLocatedFragment mInvetoryLocatedFragment;
+
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
@@ -339,7 +341,6 @@ public class EntryGuideRead2Fragment extends Fragment {
 
         mSpeedCountText = (TextView)v.findViewById(R.id.speed_count_text);
 
-        mAvrSpeedCountTest = (TextView)v.findViewById(R.id.speed_avr_count_text);
 
         tblItemDif = (TableLayout)v.findViewById(R.id.tablelayoutItemsDif);
         tblItemsNoEnc = (TableLayout)v.findViewById(R.id.tablelayoutItemsNoEnc);
@@ -350,7 +351,6 @@ public class EntryGuideRead2Fragment extends Fragment {
         if (activity != null) {
             String speedCountStr = activity.getString(R.string.speed_count_str) + activity.getString(R.string.speed_postfix_str);
             mSpeedCountText.setText(speedCountStr);
-            mAvrSpeedCountTest.setText(speedCountStr);
         }
 
         mBatteryText = (TextView)v.findViewById(R.id.battery_text);
@@ -378,9 +378,6 @@ public class EntryGuideRead2Fragment extends Fragment {
 
         /*mInvenButton = (Button)v.findViewById(R.id.inven_button);
         mInvenButton.setOnClickListener(sledListener);*/
-
-        mibtnPotencia = (ImageButton) v.findViewById(R.id.ibtnPotencia);
-        mibtnPotencia.setOnClickListener(onClickDialogPotencia);
 
         Drawable myIcon = null;
         ColorFilter filter = null;
@@ -606,7 +603,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
    private void btnProcesarEnabledDisabled(boolean isEnabled){
        mprocesar_imgbtn.setEnabled(isEnabled);
-       mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor( isEnabled? "#1895C0" : "#D5D7D6")));
+       mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor( isEnabled? "#0097a7" : "#D5D7D6")));
 
    }
 
@@ -814,19 +811,6 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
 
-    private OnClickListener onClickDialogPotencia = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
-                DialogPowerState();
-            }
-            else {
-                loDialogo.gMostrarMensajeAdvertencia(loVistaDialogo, "El Dispositivo esta desconectado de la pistola RFID");
-                //Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    };
 
     private OnClickListener sledListener = new OnClickListener() {
 
@@ -1584,18 +1568,125 @@ public class EntryGuideRead2Fragment extends Fragment {
     private AdapterView.OnItemClickListener listItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            item i = (item) mlv_itemsDif.getItemAtPosition(position);
+
+           /* item i = (item) mlv_itemsDif.getItemAtPosition(position);
             item item_tagNoRead = findTagNoLeido(i.itemCodigo);
-            LlenarDatosProgressBarLocalizacion(item_tagNoRead.itemCodigo);
+            LlenarDatosProgressBarLocalizacion(item_tagNoRead.itemCodigo);*/
+
+
+            //egTagsResponseItem_
+
+           /* LlenarDatosProgressBarLocalizacion(item_tagNoRead.itemCodigo);
             if(item_tagNoRead.itemCodigo.equals("OTROS")){
                 mtvTagsLocate.setText(R.string.tags_other);
             }
             else {
                 mtvTagsLocate.setText(R.string.tags_no_enc);
             }
-            ProcesarLv_tagsNoEnc(item_tagNoRead.tagsNoLeidos.getEpc());
+            ProcesarLv_tagsNoEnc(item_tagNoRead.tagsNoLeidos.getEpc());*/
+
+
+            /*SkuData skuData = new SkuData();
+            skuData.setCodigo(i.getItemCodigo());
+
+            skuData.setGrupo1(egTagsResponseItem_.getItemGrupo1().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo1());
+            skuData.setGrupo2(egTagsResponseItem_.getItemGrupo2().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo2());
+            skuData.setGrupo3(egTagsResponseItem_.getItemGrupo3().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo3());
+
+            LocatedInvData locatedInvData = new LocatedInvData();
+            locatedInvData.setOrdenCompra(medOrdenCompraGR.getText()+"");
+            locatedInvData.setNumeroGuia(metNumGuiaEntGR.getText()+"");
+            locatedInvData.setItemSku(i.getItemCodigo());
+            locatedInvData.setEpcs(item_tagNoRead.tagsNoLeidos.getEpc());
+            locatedInvData.setSkuData(skuData);
+
+            if (mInvetoryLocatedFragment == null)
+                mInvetoryLocatedFragment = mInvetoryLocatedFragment.newInstance();
+            try {
+                Bundle args = new Bundle();
+                args.putSerializable("LocatedInv", locatedInvData);
+                mInvetoryLocatedFragment.setArguments(args);
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, mInvetoryLocatedFragment);
+                ft.addToBackStack(null);
+
+                //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //ft.addToBackStack(null);
+                ft.commit();
+            }
+            catch (Exception e){
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+
+*/
+            DialogItemLocated(position);
         }
     };
+
+    private void DialogItemLocated(int position){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("Desea ir a ver los items del SKU seleccionado, para localizarlos");
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                item i = (item) mlv_itemsDif.getItemAtPosition(position);
+                item item_tagNoRead = findTagNoLeido(i.itemCodigo);
+                LlenarDatosProgressBarLocalizacion(item_tagNoRead.itemCodigo);
+
+                SkuData skuData = new SkuData();
+                skuData.setCodigo(i.getItemCodigo());
+
+                skuData.setGrupo1(egTagsResponseItem_.getItemGrupo1().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo1());
+                skuData.setGrupo2(egTagsResponseItem_.getItemGrupo2().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo2());
+                skuData.setGrupo3(egTagsResponseItem_.getItemGrupo3().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo3());
+
+                LocatedInvData locatedInvData = new LocatedInvData();
+                locatedInvData.setOrdenCompra(medOrdenCompraGR.getText()+"");
+                locatedInvData.setNumeroGuia(metNumGuiaEntGR.getText()+"");
+                locatedInvData.setItemSku(i.getItemCodigo());
+                locatedInvData.setEpcs(item_tagNoRead.tagsNoLeidos.getEpc());
+                locatedInvData.setSkuData(skuData);
+
+                if (mInvetoryLocatedFragment == null)
+                    mInvetoryLocatedFragment = mInvetoryLocatedFragment.newInstance();
+                try {
+                    Bundle args = new Bundle();
+                    args.putSerializable("LocatedInv", locatedInvData);
+                    mInvetoryLocatedFragment.setArguments(args);
+
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content, mInvetoryLocatedFragment);
+                    ft.addToBackStack(null);
+
+                    //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    //ft.addToBackStack(null);
+                    ft.commit();
+                }
+                catch (Exception e){
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                alertDialog.dismiss();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
 
     private void LlenarDatosProgressBarLocalizacion(String skuSelecionado)
     {
@@ -1982,6 +2073,8 @@ public class EntryGuideRead2Fragment extends Fragment {
             if (D) Log.d(TAG, "updateCountText");
             String text = Integer.toString(mAdapter.getCount());
             mCountText.setText(text);
+            mtvCantItemLeidos.setText(text);
+            mprogress1.setProgress( Integer.parseInt(text) );
         }
 
     }
@@ -2044,7 +2137,6 @@ public class EntryGuideRead2Fragment extends Fragment {
             Activity activity = getActivity();
             if (activity != null)
                 speedStr = Double.toString(value) + activity.getString(R.string.speed_postfix_str);
-            mAvrSpeedCountTest.setText(speedStr);
         }
     }
 
@@ -2154,9 +2246,9 @@ public class EntryGuideRead2Fragment extends Fragment {
 
             if(!isWindowsInventoryLocated){
                 updateCountText();
-                String lmCountText = mCountText.getText().toString();
+                /*String lmCountText = mCountText.getText().toString();
                 mtvCantItemLeidos.setText(lmCountText);
-                mprogress1.setProgress( Integer.parseInt(lmCountText) );
+                mprogress1.setProgress( Integer.parseInt(lmCountText) );*/
             }
 
 
@@ -2547,29 +2639,36 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     // Dialog
     private void DialogCompararProcesar(boolean isCompare){
-        String alertMsj = "Se va a "+ (isCompare ? "Comparar" : "Procesar")+" la Guia de Entrada";
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage(alertMsj)
-                .setCancelable(false)
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        if(isCompare){
-                            EntryGuideCompare();
-                        }
-                        else {
-                            EntryGuideProcesar();
-                        }
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-        alerta.show();
+        String alertMsj = "Se va a "+ (isCompare ? "Comparar" : "Procesar")+" la Guia de Entrada";
+
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(alertMsj);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isCompare){
+                    EntryGuideCompare();
+                }
+                else {
+                    EntryGuideProcesar();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
 
@@ -2620,62 +2719,6 @@ public class EntryGuideRead2Fragment extends Fragment {
             ListEpcRead.add(item.mUt);
         }
     }
-
-    private void DialogPowerState() {
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_powerstate);
-        int maxPower = 5;
-
-        //RFPower = 17;
-
-
-        SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
-        TextView mtvSelect = (TextView) dialog.findViewById(R.id.tvSeleccionado);
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-
-        final int mSeekBarPowerCorrection = 5;
-
-        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
-        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
-
-        mSeekBarPower.setProgress(RFPower - maxPower);
-        mtvSelect.setText(RFPower+"");
-        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int val = mSeekBarPower.getProgress();
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                val = i + mSeekBarPowerCorrection;
-                RFPower = val;
-                mtvSelect.setText(RFPower+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //dialog.dismiss();
-                mReader.RF_SetRadioPowerState(RFPower);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-
 
     private void InvocarAlertEGProcesar(String mensaje_, boolean isExitoso)
     {

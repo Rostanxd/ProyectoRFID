@@ -48,7 +48,7 @@
     <string name="GEiniciar">Iniciar</string>
     <string name="GEfinalizar">Finalizar</string>
     <string name="GElimpiar">Limpiar</string>
-    <string name="GENoGuiaEntrada"># GUIA ENTRADA</string>
+    <string name="GENoGuiaEntrada">No.Guia Entrada</string>
     <string name="GECodItems">Cod. Item</string>
     <string name="GDDestino">Destino</string>
     <string name="GDQrCode">Se ha generado correctamente la Guia de Despacho</string>

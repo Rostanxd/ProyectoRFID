@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="2dp"
                 android:background="@color/gColorCyan_n700"
                 android:text="Leer QR"
                 android:textColor="@color/gColorBlanco" />
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="2dp"
                 android:background="@color/gColorVerdeDark"
                 android:text="Manual"
                 android:textColor="@color/gColorBlanco" />
@@ -64,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="2dp"
                 android:background="@color/gColorRojoLight"
                 android:text="Cancelar"
                 android:textColor="@color/gColorBlanco" />

@@ -8,14 +8,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/gColorVerde_n600">
+        android:background="@color/gColorAzulClaro">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
-            android:backgroundTint="@color/gColorBlanco"
-            android:background="@drawable/ic_confirmacion" />
+            android:background="@drawable/ic_confirmacion"
+            android:backgroundTint="@color/gColorBlanco" />
 
     </RelativeLayout>
 
@@ -44,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginRight="2dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/gColorAzulClaro"
                 android:text="Aceptar"

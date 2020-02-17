@@ -74,6 +74,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,6 +151,7 @@ public class MainActivity extends Activity {
     private String lsNumeroOrden;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
+    private  int RFPower = 0;
 
     private boolean isOptionRecepcionMercaderia = false;
     private ProgressDialog progressDialog;
@@ -357,6 +359,15 @@ public class MainActivity extends Activity {
             }
             else if (id == R.id.action_home) {
                 switchToHome();
+            }
+            else if(id == R.id.action_reg_intensidad){
+                if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
+                    DialogPowerState();
+                }
+                else {
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo, "El Dispositivo esta desconectado de la pistola RFID");
+                    //Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
+                }
             }
 
             /*if(id == R.id.){}*/
@@ -720,7 +731,7 @@ public class MainActivity extends Activity {
                 }
             });
             alertDialog.show();
-            /*
+
             AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
             alerta.setMessage("Desea Cerrar Session...")
                     .setCancelable(false)
@@ -748,7 +759,7 @@ public class MainActivity extends Activity {
             AlertDialog title = alerta.create();
             title.setTitle("salida");
             title.show();
-            */
+
         }
     }
 
@@ -1516,6 +1527,128 @@ public class MainActivity extends Activity {
 
         }
 
+    }
+
+
+    //##################### INVOCAR ALERTAS (DIALOGO)######################
+
+    private void DialogPowerState()
+    {
+        int maxPower = 5;
+        RFPower = mReader.RF_GetRadioPowerState();
+        Toast.makeText(mContext,"getpowerstate: "+ RFPower+"", Toast.LENGTH_SHORT).show();
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_powerstate, loVistaDialogo, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+
+
+        SeekBar mSeekBarPower = dialogView1.findViewById(R.id.SeekBarPower);
+        TextView mtvSeleccionado = dialogView1.findViewById(R.id.tvSeleccionado);
+        TextView mtvpGED = dialogView1.findViewById(R.id.tvpGED);
+        TextView mtvpERM = dialogView1.findViewById(R.id.tvpERM);
+        TextView mtvpRepoInvPart = dialogView1.findViewById(R.id.tvpRepoInvPart);
+
+        mtvpGED.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
+                RFPower = 17;
+                ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 17);
+            }
+        });
+
+        mtvpERM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
+                RFPower = 17;
+                ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 17 );
+            }
+        });
+        mtvpRepoInvPart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
+                RFPower = 30;
+                ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 30 );
+            }
+        });
+
+
+        Button btnAceptar = dialogView1.findViewById(R.id.btnDialogAceptar);
+        Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
+
+        final int mSeekBarPowerCorrection = 5;
+
+        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
+        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
+
+        mSeekBarPower.setProgress(RFPower - maxPower);
+        mtvSeleccionado.setText(RFPower+"");
+        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPower.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + mSeekBarPowerCorrection;
+                RFPower = val;
+                mtvSeleccionado.setText(RFPower+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+
+        alertDialog1.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Toast.makeText(mContext, "Modal Open", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        alertDialog1.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                Toast.makeText(mContext, "Modal close", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //dialog.dismiss();
+                mReader.RF_SetRadioPowerState(RFPower);
+                alertDialog1.dismiss();
+            }
+        });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });
+
+        alertDialog1.show();
+    }
+
+    private void ManagedSeekBarPower(SeekBar mSeekBarPower, int maxPower, TextView mtvSeleccionado, int power){
+        final int mSeekBarPowerCorrection = 5;
+
+        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
+        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
+
+        mSeekBarPower.setProgress(power - maxPower);
+        mtvSeleccionado.setText(power+"");
     }
 
 }

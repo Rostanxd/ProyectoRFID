@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginRight="5sp"
+    android:layout_marginLeft="5sp"
+    tools:context=".fragmentvct.InvetoryLocatedFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/GENoOrdenEntrada"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_orden_compra"
+            android:layout_width="130dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No.Guia:"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_guia"
+            android:layout_width="130dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item:"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_item_sku"
+            android:layout_width="130dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textColor="@color/gColorGris_n800"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layoutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="25dip"
+            android:layout_marginTop="10dip"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gColorCyan_n700"
+                android:text=" Codigo Epc"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_epcs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </LinearLayout>
+
+
+</LinearLayout>

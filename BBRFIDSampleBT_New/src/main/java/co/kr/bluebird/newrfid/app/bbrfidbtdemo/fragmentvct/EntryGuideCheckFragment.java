@@ -232,10 +232,14 @@ public class EntryGuideCheckFragment extends Fragment {
                     int saldo = i.getSaldo();
                     boolean val_procesar = false;
 
-                    if(saldo > 0 ){
+                    /*if(saldo > 0 ){
+                        val_procesar = true;
+                    }*/
+
+
+                    if(i.getDescripcion().equalsIgnoreCase("pendiente") || (i.getDescripcion().equalsIgnoreCase("activo") && i.getSaldo() > 0)){
                         val_procesar = true;
                     }
-
 
                     /*String NoGuiaCant = String.valueOf(i.getCantidad()) ;*/
                     String NoGuiaCant = String.valueOf(i.getSaldo()) ;
@@ -290,63 +294,12 @@ public class EntryGuideCheckFragment extends Fragment {
                             }
                         });
                         alertDialog.show();
-
-
-
-
-                        /*
-                        alerta.setMessage("Desea Transaccionar con el No. Guia: "+NoGuia +", con estado "+nombre)
-                                .setCancelable(false)
-                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                                        if (mEntryGuideReadFragment == null)
-                                            mEntryGuideReadFragment = mEntryGuideReadFragment.newInstance();
-                                        Bundle args = new Bundle();
-                                        args.putString("NoGuia", NoGuia);
-                                        args.putString("NoOCompra",NoOCompra);
-                                        args.putString("NoGuiaCant", NoGuiaCant);
-
-                                        mEntryGuideReadFragment.setArguments(args);
-
-                                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                        ft.replace(R.id.content, mEntryGuideReadFragment);
-                                        ft.addToBackStack(null);
-
-                                        //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                        //ft.addToBackStack(null);
-                                        ft.commit();
-
-                                        //Toast.makeText(mContext,"Selecciono el item: "+ nombre,Toast.LENGTH_LONG).show();
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.cancel();
-                                    }
-                                });
-
-                    */
                     }
                     else {
-                        loDialogo.gMostrarMensajeAdvertencia(loVistaContent, "La Guia: "+NoGuia +", no tiene saldos pendientes");
-                        /*
-                        alerta.setMessage("La Guia: "+NoGuia +", no tiene saldos pendientes")
-                                .setCancelable(true)
-                                .setNeutralButton("Aceptar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                        */
+                        //loDialogo.gMostrarMensajeAdvertencia(loVistaContent, "La Guia: "+NoGuia +", no tiene saldos pendientes");
+                        Toast.makeText(mContext,"La Guia no cumple las condiciones para continuar el proceso",Toast.LENGTH_LONG).show();
                     }
 
-                    //AlertDialog title = alerta.create();
-                    ///title.setTitle("Información");
-                    //title.show();
                 }
             });
         }

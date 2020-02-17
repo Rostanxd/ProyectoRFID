@@ -90,80 +90,85 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/GENoOrdenEntrada"
-                    android:textColor="@color/gColorNegro"
-                    android:textSize="14sp" />
+                    android:textStyle="bold"
+                    android:textColor="@color/gColorGris_n800"
+                     />
 
                 <TextView
                     android:id="@+id/tvNOrdenCompra"
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textColor="@color/gColorNegro"
-                    android:textSize="16sp" />
+                    android:textColor="@color/gColorGris_n800"
+
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="No.Guia:"
-                    android:textColor="@color/gColorNegro"
-                    android:textSize="14sp" />
+                    android:textStyle="bold"
+                    android:textColor="@color/gColorGris_n800"
+                     />
 
                 <TextView
                     android:id="@+id/tvNGuiaEntrada"
                     android:layout_width="130dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dip"
-                    android:textColor="@color/gColorNegro"
-                    android:textSize="16sp" />
+                    android:textColor="@color/gColorGris_n800"
+                    />
 
             </LinearLayout>
 
             <TableLayout
-                android:layout_width="315dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stretchColumns="*"
                 android:layout_margin="5dp"
                 android:id="@+id/layoutItemsLeidos">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/GEitemsSearch"
-                        android:textColor="@color/gColorNegro" />
+                        android:textColor="@color/gColorGris_n800"
+                        android:textStyle="bold"/>
 
                     <ProgressBar
                         android:id="@+id/pbLeidos"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:scrollbarSize="20dp"
-                        android:layout_marginLeft="30dp" />
+                        android:layout_marginLeft="30dp"
+                        android:scrollbarSize="20dp" />
 
                     <TextView
                         android:id="@+id/tvCantItemLeidos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/gColorNegro"
-                        android:textSize="15dp" />
+                        android:textColor="@color/gColorGris_n800"
+                         />
 
                     <TextView
                         android:id="@+id/tvSlash"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="/" />
+                        android:text="/"
+                        android:textColor="@color/gColorGris_n800"/>
 
                     <TextView
                         android:id="@+id/tvCantTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/gColorNegro"
-                        android:textSize="15dp" />
+                        android:textColor="@color/gColorGris_n800"
+                        />
 
                 </TableRow>
 
@@ -201,35 +206,6 @@
                          android:text="@string/GElimpiar" />
                  </TableRow>
              </TableLayout>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="5dip"
-                android:orientation="horizontal"
-                >
-
-
-                <!--<Switch
-                    android:id="@+id/pc_switch"
-                    android:layout_width="100sp"
-                    android:layout_height="match_parent"
-                    android:text="@string/remove_pc_str"
-                    android:textSize="11sp"
-                    />-->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Potencia RFID"
-                    android:textColor="@color/gColorNegro" />
-
-                <ImageButton
-                    android:id="@+id/ibtnPotencia"
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
-                    android:src="@drawable/rfpower24" />
-            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -281,7 +257,7 @@
                         android:id="@+id/procesar_imgbtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1895C0"
+                        android:backgroundTint="@color/gColorAzulClaro"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp" />
 
@@ -567,7 +543,8 @@
                         android:layout_height="20dip"
                         android:layout_marginTop="0dip"
                         android:layout_marginLeft="5dip"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -588,21 +565,6 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/avr_speed_str"
-                            android:textColor="@color/gColorNegro"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/speed_avr_count_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/empty_str"
-                            android:textColor="@color/gColorNegro"
-                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -646,25 +608,26 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
                             android:text="Items con diferencias"
-                            android:textColor="@color/gColorAzulDark"
-                            android:textSize="13dp" />
+                            android:textColor="@color/gColorGris_n800"
+                            android:textStyle="bold"
+                            />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="400dip"
-                        android:layout_marginTop="0dip"
                         android:layout_marginLeft="5dip"
+                        android:layout_marginTop="0dip"
                         android:layout_marginRight="5dip"
-                        android:background="@drawable/borde"
                         android:orientation="vertical">
+
                         <LinearLayout
+                            android:id="@+id/layoutHeader"
                             android:layout_width="wrap_content"
                             android:layout_height="25dip"
                             android:layout_marginTop="10dip"
                             android:orientation="horizontal"
-                            android:id="@+id/layoutHeader"
                             android:visibility="gone">
 
                             <TextView
@@ -689,11 +652,11 @@
                                 android:layout_width="100dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:textSize="14dp"
-                                android:textStyle="bold"
                                 android:background="@color/gColorCyan_n700"
+                                android:text="@string/TIleidos"
                                 android:textColor="@android:color/white"
-                                android:text="@string/TIleidos"/>
+                                android:textSize="14dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -719,7 +682,8 @@
                             android:layout_marginLeft="5dip"
                             android:textColor="@color/gColorAzulDark"
                             android:textSize="15dp"
-                            android:text="Etiquetas no encontradas" />
+                            android:text="Etiquetas no encontradas"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
                     <LinearLayout
@@ -729,7 +693,8 @@
                         android:layout_marginLeft="5dip"
                         android:layout_marginRight="5dip"
                         android:background="@drawable/borde"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ListView
                             android:id="@+id/lv_tagsNoEnc"
