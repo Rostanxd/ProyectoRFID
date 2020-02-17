@@ -21,7 +21,8 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/SWBodAlmacenamiento"
-            android:textColor="@color/gColorNegro" />
+            android:textStyle="bold"
+            android:textColor="@color/gColorGris_n800" />
 
         <Spinner
             android:id="@+id/spinnerBodAlmacenamiento"
@@ -49,7 +50,8 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/SWMotivo"
-            android:textColor="@color/gColorNegro" />
+            android:textStyle="bold"
+            android:textColor="@color/gColorGris_n800" />
 
         <Spinner
             android:id="@+id/spinnerMotivo"
@@ -104,25 +106,54 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
             android:layout_weight="1"
             android:background="@color/gColorCyan_n700"
             android:text="Agregar Nota"
+            android:visibility="gone"
             android:textColor="@color/gColorBlanco"
             android:textSize="10sp" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dip"
-        android:layout_marginRight="5dip"
+        android:layout_height="100dip"
         android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
         android:background="@drawable/borde"
+        android:backgroundTint="@color/gColorGris_n100"
+        android:gravity="center"
         android:orientation="vertical">
 
+
         <TextView
+            android:id="@+id/tvNota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:textSize="12dp"
-            android:background="@drawable/borde_edittext"
-            android:id="@+id/tvNota"/>
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:src="@drawable/ic_cuaderno" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=" Nota" />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/etNota"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:textSize="12dp" />
     </LinearLayout>
 
 
@@ -189,56 +220,40 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="365dip"
+    android:layout_height="match_parent"
     android:layout_marginLeft="5dip"
     android:layout_marginRight="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginBottom="5dip"
     android:orientation="vertical">
 
-
-    <!--<LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dip">
+        android:layout_height="45sp"
+        android:orientation="horizontal">
 
-        <ScrollView
-            android:layout_width="wrap_content"
+
+        <Button
+            android:id="@+id/procesar_imgbtn"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
-
-            <TableLayout
-                android:id="@+id/tablelayoutDetalleGD"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-        </ScrollView>
+            android:backgroundTint="@color/gColorAzulClaro"
+            android:text="@string/BTN_procesar"
+            android:textColor="#FFFFFF"
+            android:textSize="9sp"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/GECantidadTotal" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="0" />
-
-    </LinearLayout>-->
-
-    <LinearLayout
-        android:layout_width="wrap_content"
         android:layout_height="25dip"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="5dip"
         android:background="@color/gColorCyan_n700"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="250dip"
             android:layout_height="45dip"
-            android:layout_weight="1"
             android:text="@string/GECodItems"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -248,11 +263,11 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
         <TextView
             android:layout_width="100dip"
             android:layout_height="45dip"
-            android:layout_weight="1"
             android:text="@string/GECantidad"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:textSize="14sp"
+            android:gravity="right"
             android:id="@+id/tvHCol2"/>
 
     </LinearLayout>
@@ -268,30 +283,6 @@ tools:context=".fragmentvct.DespatchGuideGenerateFragment">
 
 </LinearLayout>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="right">
 
-    <!--<ImageButton
-        android:id="@+id/procesar_imgbtn"
-        android:layout_width="100dip"
-        android:layout_height="match_parent"
-
-        android:src="@drawable/ejecutar" />-->
-    <Button
-        android:id="@+id/procesar_imgbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5dip"
-        android:layout_marginLeft="5dip"
-        android:layout_marginBottom="5dip"
-        android:layout_marginTop="5dip"
-        android:textColor="@color/gColorBlanco"
-        android:background="@color/gColorAzulClaro"
-        android:text="@string/BTN_procesar"
-        android:textAlignment="center" />
-
-</LinearLayout>
 
 </LinearLayout>

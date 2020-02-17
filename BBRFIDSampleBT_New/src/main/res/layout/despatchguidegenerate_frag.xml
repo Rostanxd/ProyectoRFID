@@ -28,7 +28,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/GENoGuiaEntrada"
-                    android:textColor="@color/gColorNegro" />
+                    android:textColor="@color/gColorGris_n800"
+                    android:textStyle="bold"/>
 
                 <EditText
                     android:id="@+id/et_nGuiaEntrada"
@@ -51,7 +52,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/GDDestino"
-                    android:textColor="@color/gColorNegro" />
+                    android:textColor="@color/gColorGris_n800"
+                    android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinnerDestino"
@@ -70,31 +72,49 @@
         </TableLayout>
     </LinearLayout>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45sp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/procesar_imgbtn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/gColorAzulClaro"
+                android:text="@string/BTN_procesar"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="410dip"
+            android:layout_height="match_parent"
             android:layout_marginLeft="5dip"
-            android:layout_marginTop="10dip"
             android:layout_marginRight="5dip"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
 
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="25dip"
-                android:layout_marginTop="10dip"
+                android:layout_marginTop="5dip"
                 android:background="@color/gColorCyan_n700"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="250dip"
                     android:layout_height="45dip"
-                    android:layout_weight="1"
                     android:text="@string/GECodItems"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
@@ -104,11 +124,11 @@
                 <TextView
                     android:layout_width="100dip"
                     android:layout_height="45dip"
-                    android:layout_weight="1"
                     android:text="@string/GECantidad"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:gravity="right"
                     android:id="@+id/tvHCol2"/>
 
             </LinearLayout>
@@ -123,32 +143,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dip"
-            android:gravity="right"
-            android:orientation="vertical">
-
-           <!-- <ImageButton
-                android:id="@+id/procesar_imgbtn"
-                android:layout_width="100dip"
-                android:layout_height="match_parent"
-
-                android:src="@drawable/ejecutar" />-->
-            <Button
-                android:id="@+id/procesar_imgbtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dip"
-                android:layout_marginLeft="5dip"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dip"
-                android:textColor="@color/gColorBlanco"
-                android:background="@color/gColorAzulClaro"
-                android:text="@string/BTN_procesar"
-                android:textAlignment="center" />
-
-        </LinearLayout>
     </LinearLayout>
 
 

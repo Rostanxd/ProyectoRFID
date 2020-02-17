@@ -81,6 +81,7 @@ public class ShippingWareGenerateFragment extends Fragment {
     private Button mprocesar_imgbtn, mbtnAddNota;
     private QRCodeGenerator qrCodeGenerator;
     private TextView mtvNota;
+    private EditText metNota;
     private ArrayList<String> epcs;
     private EGDetailResponse egDetailResponse;
     private RfidEpHomologacion mRfidEpHomologacion;
@@ -129,10 +130,10 @@ public class ShippingWareGenerateFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.ejecutar );
+        myIcon = getResources().getDrawable( R.drawable.materialprocesar );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
-        mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
 
         mbtnAddNota = (Button) v.findViewById(R.id.btnAddNota);
 
@@ -145,6 +146,7 @@ public class ShippingWareGenerateFragment extends Fragment {
         mbtnAddNota.setOnClickListener(btnAddNotaOnClick);
 
         mtvNota = (TextView) v.findViewById(R.id.tvNota);
+        metNota = v.findViewById(R.id.etNota);
 
         mlv_detailSW = (ListView)v.findViewById(R.id.lv_detailSW);
 
@@ -248,7 +250,8 @@ public class ShippingWareGenerateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String lMotivo = spinnerMap.get(mSpinnerMotivo.getSelectedItemPosition());
-                if(!lMotivo.equals("0") && !mtvNota.getText().toString().equals("") ){
+                //mtvNota
+                if(!lMotivo.equals("0") && !metNota.getText().toString().equals("") ){
                     DialogProcesar();
                 }
                 else {
@@ -699,7 +702,8 @@ public class ShippingWareGenerateFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                gNota = mtvNota.getText().toString();
+                //mtvNota
+                gNota = metNota.getText().toString();
 
                 if(!gNota.trim().isEmpty()){
                     try {
@@ -767,7 +771,8 @@ public class ShippingWareGenerateFragment extends Fragment {
     private  void cleanControls(){
         mSpinnerBodAlmacenamiento.setSelection(0);
         mSpinnerMotivo.setSelection(0);
-        mtvNota.setText("");
+        //mtvNota.setText("");
+        metNota.setText("");
         mlv_detailSW.setAdapter(null);
         mlv_detailSW.setVisibility(View.INVISIBLE);
 

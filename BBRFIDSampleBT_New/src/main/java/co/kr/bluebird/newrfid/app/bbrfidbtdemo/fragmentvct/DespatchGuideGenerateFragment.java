@@ -119,12 +119,12 @@ public class DespatchGuideGenerateFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.ejecutar );
+        myIcon = getResources().getDrawable( R.drawable.materialprocesar );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
 
-        mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mprocesar_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
 
         met_nGuiaEntrada = (EditText)v.findViewById(R.id.et_nGuiaEntrada);
         first = true;
