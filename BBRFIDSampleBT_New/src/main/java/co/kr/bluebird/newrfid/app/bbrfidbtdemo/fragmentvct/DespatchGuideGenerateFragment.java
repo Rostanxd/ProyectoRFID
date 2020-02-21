@@ -119,7 +119,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialprocesar );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialprocesar );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 

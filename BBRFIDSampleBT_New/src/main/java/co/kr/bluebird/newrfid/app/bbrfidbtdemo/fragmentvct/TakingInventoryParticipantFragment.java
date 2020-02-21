@@ -53,6 +53,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.service.RfidService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.stopwatch.StopwatchService;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 
@@ -88,6 +89,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,13 +112,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -269,12 +264,6 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
 
     private InventoryHandler mInventoryHandler = new InventoryHandler(this);
-
-    private Handler handlerStart ;
-
-
-    private String NoGuia;
-
     private ShippingWareGenerateFragment mShippingWareGenerateFragment;
 
     private Spinner  mspinnerConteoIP, mspinnerUbicacionIP;
@@ -284,9 +273,10 @@ public class TakingInventoryParticipantFragment extends Fragment {
     private String[] spinnerArray = null;
     private HashMap<Integer,String> spinnerMap = null;
 
-    private ImageButton mibtnPotencia;
     private  int RFPower = 30;
     private Validator validator;
+    private ViewGroup loVistaDialogo;
+    private clsMensaje loDialogo;
 
 
     //private boolean isRunningRead;
@@ -325,12 +315,12 @@ public class TakingInventoryParticipantFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialnext );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialprocesar );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
         mnext_imgbtnTIP = (Button) v.findViewById(R.id.next_imgbtnTIP);
-        mnext_imgbtnTIP.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mnext_imgbtnTIP.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mnext_imgbtnTIP.setOnClickListener(sledListener);
 
         mTimerText = (TextView)v.findViewById(R.id.timer_text);
@@ -378,7 +368,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mInvenButton.setOnClickListener(sledListener);*/
 
 
-        myIcon = getResources().getDrawable( R.drawable.materialplay );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialplay );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -386,7 +376,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mInvenButton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialstop );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialstop );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -396,7 +386,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
         mStopInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialdelete );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -408,9 +398,6 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
         mProgressBar.setVisibility(View.INVISIBLE);
-
-        mibtnPotencia = (ImageButton) v.findViewById(R.id.ibtnPotencia);
-        mibtnPotencia.setOnClickListener(onClickDialogPotencia);
 
         mSessionSpin = (Spinner)v.findViewById(R.id.session_spin);
         mSessionChar = ArrayAdapter.createFromResource(mContext, R.array.session_array,
@@ -428,18 +415,18 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mspinnerConteoIP = (Spinner) v.findViewById(R.id.spinnerConteoIP);
         mspinnerUbicacionIP = (Spinner) v.findViewById(R.id.spinnerUbicacionIP);
 
+        mspinnerConteoIP.setOnItemSelectedListener(conteoListener);
+        mspinnerUbicacionIP.setOnItemSelectedListener(ubicacionListener);
+
         bindStopwatchSvc();
-
-
-
-
-
-        NoGuia = getArguments() != null ? getArguments().getString("NoGuia") : "0";
-
-
 
         rfidService = new RfidService(mContext);
         entryGuideDetail = null;
+
+        //##################### CLASE MENSAJE (DIALOGO)######################
+        loDialogo = new clsMensaje(mContext);
+        loVistaDialogo = v.findViewById(android.R.id.content);
+        //###################################################################
 
         mWSparameterConteos = getResources().getStringArray(R.array.WSparameter_conteos);
         mWSparameterUbicacion = getResources().getStringArray(R.array.WSparameter_ubicacion);
@@ -451,6 +438,51 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
         return v;
     }
+
+    private void enabledDisablednext_imgbtnTIP(boolean isEnabled){
+        mnext_imgbtnTIP.setEnabled(isEnabled);
+        if(isEnabled){
+            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+        }
+        else {
+            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+    }
+    private OnItemSelectedListener conteoListener = new OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int posicion, long l) {
+
+            if(posicion > 0 && !spinnerMap.get(mspinnerUbicacionIP.getSelectedItemPosition()).equals("0") && !mCountText.getText().equals("0") ){
+                enabledDisablednext_imgbtnTIP(true);
+            }
+            else {
+                enabledDisablednext_imgbtnTIP(false);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    };
+    private OnItemSelectedListener ubicacionListener = new OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int posicion, long l) {
+
+            if(posicion > 0 && !mspinnerConteoIP.getSelectedItem().toString().equals("- Seleccione -") && !mCountText.getText().equals("0") ){
+                enabledDisablednext_imgbtnTIP(true);
+            }
+            else {
+                enabledDisablednext_imgbtnTIP(false);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    };
+
 
     private OnItemSelectedListener sessionListener = new OnItemSelectedListener() {
         @Override
@@ -474,109 +506,6 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
         }
     };
-
-
-    private OnClickListener onClickDialogPotencia = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
-                DialogPowerState();
-            }
-            else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    };
-
-    private void DialogPowerState() {
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_powerstate);
-        int maxPower = 5;
-
-        //getValueSBar = 17;
-
-
-        SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
-        TextView mtvSelect = (TextView) dialog.findViewById(R.id.tvSeleccionado);
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-
-        final int mSeekBarPowerCorrection = 5;
-
-        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
-        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
-
-        mSeekBarPower.setProgress(RFPower - maxPower);
-        mtvSelect.setText(RFPower+"");
-        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int val = mSeekBarPower.getProgress();
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                val = i + mSeekBarPowerCorrection;
-                RFPower = val;
-                mtvSelect.setText(RFPower+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //dialog.dismiss();
-                /*Toast.makeText(mContext,"El Valor es: "+RFPower+"", Toast.LENGTH_SHORT).show();*/
-                mReader.RF_SetRadioPowerState(RFPower);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-   /* private AdapterView.OnItemClickListener listItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ListItem i = (ListItem)mRfidList.getItemAtPosition(position);
-            mLocateTag = i.mUt;
-            mLocateStartPos = (i.mHasPc ? 0 : 4);
-            if (i.mHasPc)
-                mLocateEPC = mLocateTag.substring(4, mLocateTag.length());
-            else
-                mLocateEPC = mLocateTag;
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-            alert.setTitle(getString(R.string.locating_str));
-            alert.setMessage(getString(R.string.want_tracking_str));
-
-            alert.setPositiveButton(getString(R.string.yes_str), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    SelectionCriterias s = new SelectionCriterias();
-                    s.makeCriteria(SelectionCriterias.SCMemType.EPC, mLocateTag,
-                            mLocateStartPos, mLocateTag.length() * 4,
-                            SelectionCriterias.SCActionType.ASLINVA_DSLINVB);
-                    mReader.RF_SetSelection(s);
-                    switchLayout(false);
-                    mLocateTv.setText(mLocateTag);
-                }
-            });
-            alert.setNegativeButton(getString(R.string.no_str) ,new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                }
-            });
-            alert.show();
-        }
-    };*/
 
     private void switchLayout(boolean showList) {
         mLocate = !showList;
@@ -808,16 +737,16 @@ public class TakingInventoryParticipantFragment extends Fragment {
                             ret = mReader.RF_PerformInventoryWithLocating(mIsTurbo, mMask, mIgnorePC);
                         //ret = mReader.RF_READ(SDConsts.RFMemType.EPC, 1, 7, "00000000", false);
                         if (ret == SDConsts.RFResult.SUCCESS) {
-                            mInvenButton.setEnabled(false);
-                            mnext_imgbtnTIP.setEnabled(false);
-                            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-                            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+                            //mInvenButton.setEnabled(false);
+                            enabledDisablednext_imgbtnTIP(false);
+                            EnabledDisabledButtons(false,true);
+                            /*mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
 
                             mStopInvenButton.setEnabled(true);
                             mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
 
                             mclean_imgbtn.setEnabled(false);
-                            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+                            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));*/
                             startStopwatch();
                             mInventory = true;
                             enableControl(!mInventory);
@@ -836,13 +765,14 @@ public class TakingInventoryParticipantFragment extends Fragment {
                         mInventory = false;
                         enableControl(!mInventory);
                         pauseStopwatch();
-                        mInvenButton.setEnabled(true);
-                        mnext_imgbtnTIP.setEnabled(true);
-                        mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
-                        mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00897B")));
-
+                        /*mInvenButton.setEnabled(true);*/
+                        enabledDisablednext_imgbtnTIP(true);
+                        EnabledDisabledButtons(true, true);
+                        /*mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
                         mclean_imgbtn.setEnabled(true);
                         mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+                        mStopInvenButton.setEnabled(false);
+                        mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));*/
 
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
                         Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
@@ -862,47 +792,74 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
 
     private void DialogCleanControls(){
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
-                .setCancelable(false)
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mspinnerConteoIP.setSelection(0);
-                        mspinnerUbicacionIP.setSelection(0);
 
-                        clearAll();
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-        alerta.show();
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                mspinnerConteoIP.setSelection(0);
+                mspinnerUbicacionIP.setSelection(0);
+                clearAll();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
 
-    private void EnabledDisabledButtons(boolean isEnabled)
+    private void EnabledDisabledButtons(boolean isEnabled,boolean isPressManual)
     {
         mInvenButton.setEnabled(isEnabled);
-        mStopInvenButton.setEnabled(false);
+        /*mStopInvenButton.setEnabled(false);*/
         mclean_imgbtn.setEnabled(isEnabled);
-        mnext_imgbtnTIP.setEnabled(isEnabled);
+        if(isEnabled && !mspinnerConteoIP.getSelectedItem().toString().equals("- Seleccione -") && !spinnerMap.get(mspinnerUbicacionIP.getSelectedItemPosition()).equals("0") && !mCountText.getText().equals("0")){
+            mnext_imgbtnTIP.setEnabled(isEnabled);
+            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+        }
+        else {
+            mnext_imgbtnTIP.setEnabled(false);
+            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+
 
         if(isEnabled){
             mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
-            //mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
             mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
-            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00897B")));
+
         }
         else {
             mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            /*mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));*/
             mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-            mnext_imgbtnTIP.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+
         }
+        if(isPressManual){
+            if(!isEnabled){
+                mStopInvenButton.setEnabled(true);
+                mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
+            }
+            else {
+                mStopInvenButton.setEnabled(false);
+                mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            }
+        }
+
+
 
     }
 
@@ -912,35 +869,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         {
 
             if(! mspinnerConteoIP.getSelectedItem().toString().equals("- Seleccione -") && ! spinnerMap.get(mspinnerUbicacionIP.getSelectedItemPosition()).equals("0")){
-                AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-                alerta.setMessage("Está seguro de Finalizar su conteo")
-                        .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                //Toast.makeText(mContext,"Invocar al WS y procesar",Toast.LENGTH_LONG).show();
-
-                                mWSparameterTomaInvProcesar = getResources().getStringArray(R.array.WSparameter_tomaInvProcesar);
-
-                                rfidService.SOAP_ACTION_ =  mWSparameterTomaInvProcesar[0];
-                                rfidService.METHOD_NAME_ =  mWSparameterTomaInvProcesar[1];
-                                rfidService.NAMESPACE_ = mWSparameterTomaInvProcesar[2];
-                                rfidService.URL_ = mWSparameterTomaInvProcesar[3];
-
-                                exWSInventarioProcesarAsync procesarAsync = new exWSInventarioProcesarAsync();
-                                procesarAsync.execute();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                AlertDialog title = alerta.create();
-                title.setTitle("Confirmacion de proceso");
-                title.show();
+                DialogConfirmacion();
             }
             else {
                 Toast.makeText(mContext, "Seleccione Conteo y/o Ubicación...", Toast.LENGTH_SHORT).show();
@@ -953,6 +882,39 @@ public class TakingInventoryParticipantFragment extends Fragment {
 
     }
 
+
+    private void DialogConfirmacion(){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("Está seguro de finalizar y procesar su conteo");
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mWSparameterTomaInvProcesar = getResources().getStringArray(R.array.WSparameter_tomaInvProcesar);
+                rfidService.SOAP_ACTION_ =  mWSparameterTomaInvProcesar[0];
+                rfidService.METHOD_NAME_ =  mWSparameterTomaInvProcesar[1];
+                rfidService.NAMESPACE_ = mWSparameterTomaInvProcesar[2];
+                rfidService.URL_ = mWSparameterTomaInvProcesar[3];
+
+                exWSInventarioProcesarAsync procesarAsync = new exWSInventarioProcesarAsync();
+                procesarAsync.execute();
+                alertDialog.dismiss();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
 
     private void openFile() {
         if (mFile && !mInventory && !mLocate) {
@@ -1347,7 +1309,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
                                 startStopwatch();
                                 mInventory = true;
                                 enableControl(!mInventory);
-                                EnabledDisabledButtons(false);
+                                EnabledDisabledButtons(false, false);
                             } else if (ret == SDConsts.RFResult.MODE_ERROR)
                                 Toast.makeText(mContext, "Start Inventory failed, Please check RFR900 MODE", Toast.LENGTH_SHORT).show();
                             else if (ret == SDConsts.RFResult.LOW_BATTERY)
@@ -1371,7 +1333,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
                         if (mReader.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
                             mInventory = false;
                             enableControl(!mInventory);
-                            EnabledDisabledButtons(true);
+                            EnabledDisabledButtons(true, false);
                         }
                         pauseStopwatch();
                         break;
@@ -1519,62 +1481,6 @@ public class TakingInventoryParticipantFragment extends Fragment {
         }
 
     }
-
-    //+++NTNS
-//    private void processReadDataCustom(String data) {
-//        updateCountText();
-//        StringBuilder tagSb = new StringBuilder();
-//        tagSb.setLength(0);
-//        String rssi = "";
-//        String customData = "";
-//        if (data.contains(";")) {
-//            if (D) Log.d(TAG, "full tag = " + data);
-//            //full tag example = "3000123456783333444455556666;rssi:-54.8^custom=2348920384"
-//            int customdDataPoint = data.indexOf('^');
-//            customData = data.substring(customdDataPoint, data.length());
-//            int customPoint = customData.indexOf('=') + 1;
-//            customData = customData.substring(customPoint, customData.length());
-//            if (D) Log.d(TAG, "custom data = " + customData);
-//            data = data.substring(0, customdDataPoint);
-//
-//            int rssiTagPoint = data.indexOf(';');
-//            rssi = data.substring(rssiTagPoint, data.length());
-//            int rssiPoint = rssi.indexOf(':') + 1;
-//            rssi = rssi.substring(rssiPoint, rssi.length());
-//            if (D) Log.d(TAG, "rssi tag = " + rssi);
-//            data = data.substring(0, rssiTagPoint);
-//
-//            if (D) Log.d(TAG, "data tag = " + data);
-//            data = data + "\n" + customData;
-//        }
-//        if (rssi != "") {
-//            Activity activity = getActivity();
-//            if (activity != null)
-//                rssi = activity.getString(R.string.rssi_str) + rssi;
-//        }
-//        mAdapter.addItem(-1, data, rssi, mTagFilter);
-//        if (mSoundPlay) {
-//            if (mSoundTask == null) {
-//                mSoundTask = new SoundTask();
-//                mSoundTask.execute();
-//            }
-//            else {
-//                if (mSoundTask.getStatus() == Status.FINISHED) {
-//                    mSoundTask.cancel(true);
-//                    mSoundTask = null;
-//                    mSoundTask = new SoundTask();
-//                    mSoundTask.execute();
-//                }
-//            }
-//        }
-//        mRfidList.setSelection(mRfidList.getAdapter().getCount() - 1);
-//        if (!mInventory) {
-//            updateCountText();
-//            updateSpeedCountText();
-//            updateAvrSpeedCountText();
-//        }
-//    }
-    //---NTNS
 
     private void addCheckListener() {
         if (mTurboSwitch != null)
@@ -1768,12 +1674,12 @@ public class TakingInventoryParticipantFragment extends Fragment {
             progressDialog.cancel();
 
             if(dtoResponse != null && dtoResponse.getCodigo() != null && dtoResponse.getCodigo().equals("00")){
-                InvocarAlert("Se ha procesado el Invetario Correctamente");
+                //loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
+                InvocarAlertOk();
             }
             else {
-                Toast.makeText(mContext,  dtoResponse.getDescripcion(), Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeError(loVistaDialogo, dtoResponse.getDescripcion());
             }
-
         }
 
         @Override
@@ -1820,29 +1726,27 @@ public class TakingInventoryParticipantFragment extends Fragment {
     }
 
 
-    private void InvocarAlert(String msj)
+    private void InvocarAlertOk()
     {
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage(msj)
-                .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
 
-                        mspinnerConteoIP.setSelection(0);
-                        mspinnerUbicacionIP.setSelection(0);
-                        clearAll();
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_ok, loVistaDialogo, false);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final android.support.v7.app.AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.buttonOk);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mspinnerConteoIP.setSelection(0);
+                mspinnerUbicacionIP.setSelection(0);
+                clearAll();
 
-                        dialog.dismiss();
-                    }
-                });
-                /*.setNegativeButton("No", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        dialog.cancel();
-                    }
-                })*/
-        alerta.show();
+                alertDialog.dismiss();
+
+            }
+        });
+        alertDialog.show();
+
     }
 
 }

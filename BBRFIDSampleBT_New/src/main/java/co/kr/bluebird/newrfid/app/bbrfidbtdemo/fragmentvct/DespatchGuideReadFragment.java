@@ -348,7 +348,7 @@ public class DespatchGuideReadFragment extends Fragment {
         mInvenButton.setOnClickListener(sledListener);
 
 
-        myIcon = getResources().getDrawable( R.drawable.materialstop );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialstop );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -358,7 +358,7 @@ public class DespatchGuideReadFragment extends Fragment {
         mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
         mStopInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialdelete );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 

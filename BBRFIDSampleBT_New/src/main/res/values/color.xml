@@ -35,7 +35,11 @@
     <!--<color name="gColorNaranja_n500">#ff5722</color>-->
     <color name="gColorNaranja_n500">#FF7A22</color>
     <color name="gColorNaranja_n800">#d84315</color>
+
+    <color name="gColorVerde_n400">#4FCAA7</color>
     <color name="gColorVerde_n600">#43a047</color>
+    <color name="gColorVerde_n800">#00897B</color>
+
     <color name="gColorAmarillo_n500">#ffeb3b</color>
     <color name="gColorAmarillo_n300">#fff176</color>
     <color name="gColorAmarillo_n100">#fff9c4</color>

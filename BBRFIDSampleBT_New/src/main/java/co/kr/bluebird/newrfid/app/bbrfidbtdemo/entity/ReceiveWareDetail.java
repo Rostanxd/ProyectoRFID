@@ -1,8 +1,9 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ReceiveWareDetail {
+public class ReceiveWareDetail implements Serializable {
 
     public DataSourceDto estado;
     public String docOrigen;

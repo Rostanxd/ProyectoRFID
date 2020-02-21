@@ -1,6 +1,7 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -24,6 +25,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +68,7 @@ import co.kr.bluebird.sled.SDConsts;
  */
 public class InventoryPerStoreFragment extends Fragment {
 
-    private Button mbtnCargarIPS, mbtn_saldosIPS, nbtn_infoIPS, mbtnscanQR, mbtnClear;
+    private Button  mbtn_saldosIPS, nbtn_infoIPS, mbtnClear, mbtnRead;
     private Context mContext;
     private RfidService rfidService;
     private ImageView imGarment;
@@ -85,6 +87,7 @@ public class InventoryPerStoreFragment extends Fragment {
     private String mMessageTextView;
     private Fragment mFragment;
     private BTReader mReader;
+    private ViewGroup loVistaDialogo;
 
     private final BCBarcodeHandler mBCBarcodeHandler = new BCBarcodeHandler(this);
 
@@ -118,8 +121,8 @@ public class InventoryPerStoreFragment extends Fragment {
         InicialiarAtributos(v);
         rfidService = new RfidService(mContext);
 
-        mbtnCargarIPS.setOnClickListener(ProcesarOnclick);
-        mbtnscanQR.setOnClickListener(StartQrOnClick);
+        //mbtnCargarIPS.setOnClickListener(ProcesarOnclick);
+        mbtnRead.setOnClickListener(StartQrOnClick);
 
         mFragment = this;
 
@@ -163,6 +166,7 @@ public class InventoryPerStoreFragment extends Fragment {
                 EnableDisableBtnFooter(false, true);
             }
         });
+        loVistaDialogo = v.findViewById(android.R.id.content);
 
         return v;
     }
@@ -187,18 +191,38 @@ public class InventoryPerStoreFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            if(mReader != null){
-                int mode = mReader.SD_GetTriggerMode();
-                if (mode == SDConsts.SDTriggerMode.RFID)
-                    mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.BARCODE);
+            String btn = mbtnRead.getText().toString();
+            if(btn.equals("LEER QR")){
+                if(mReader != null){
+                    int mode = mReader.SD_GetTriggerMode();
+                    if (mode == SDConsts.SDTriggerMode.RFID)
+                        mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.BARCODE);
 
-                mReader.BC_SetTriggerState(true);
+                    mReader.BC_SetTriggerState(true);
+                }
             }
+            else {
+                if(metEstiloItemIPS != null && !metEstiloItemIPS.getText().toString().trim().equals("")){
+                    CleanImageDesc();
+                    if(mWSparameterInvTiendaInfo == null){
+                        mWSparameterInvTiendaInfo = getResources().getStringArray(R.array.WSparameter_InventarioPorTiendaInfo);
+                    }
+
+                    garmentSaleObj = null;
+
+                    exWSInventarioPorTiendaAsync inventarioPorTiendaAsync = new exWSInventarioPorTiendaAsync();
+                    inventarioPorTiendaAsync.execute();
+                }
+                else {
+                    Toast.makeText(mContext, "Ingrese un codigo de item...", Toast.LENGTH_SHORT).show();
+                }
+            }
+
 
         }
     };
 
-    private View.OnClickListener ProcesarOnclick = new View.OnClickListener() {
+    /*private View.OnClickListener ProcesarOnclick = new View.OnClickListener() {
 
         @Override
         public void onClick(View v){
@@ -226,7 +250,7 @@ public class InventoryPerStoreFragment extends Fragment {
             }
             //setGarment(garment);
         }
-    };
+    };*/
 
     private void CleanExpLV_Saldos(){
 
@@ -240,11 +264,15 @@ public class InventoryPerStoreFragment extends Fragment {
     {
         //mprocesar_imgbtn = (ImageButton)v.findViewById(R.id.procesar_imgbtn);
 
-        mbtnCargarIPS = (Button) v.findViewById(R.id.btnCargarIPS);
+        //mbtnCargarIPS = (Button) v.findViewById(R.id.btnCargarIPS);
         mbtnClear = (Button) v.findViewById(R.id.btnClear);
         mbtn_saldosIPS = (Button)v.findViewById(R.id.btn_saldosIPS);
         nbtn_infoIPS = (Button)v.findViewById(R.id.btn_infoIPS);
-        mbtnscanQR = (Button)v.findViewById(R.id.btnscanQR);
+
+        mbtnRead = v.findViewById(R.id.btnRead);
+        mbtnRead.setText("LEER QR");
+
+
         //imGarment = (ImageView)v.findViewById(R.id.ivGarment);
         mvPagerGarment = (ViewPager) v.findViewById(R.id.vPagerGarment);
         mtvLine = (TextView) v.findViewById(R.id.tvLine);
@@ -273,18 +301,23 @@ public class InventoryPerStoreFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length() > 5){
-                    mbtnCargarIPS.setVisibility(View.VISIBLE);
+                    //mbtnCargarIPS.setVisibility(View.VISIBLE);
+                    setTextIconBtnRead(false);
                 }
                 else{
-                    mbtnCargarIPS.setVisibility(View.GONE);
+                    setTextIconBtnRead(true);
+                    //mbtnCargarIPS.setVisibility(View.GONE);
                 }
                 if(charSequence.length() != 0){
-                    mbtnClear.setVisibility(View.VISIBLE);
-                    mbtnscanQR.setVisibility(View.GONE);
+                    /*mbtnClear.setVisibility(View.VISIBLE);
+                    mbtnscanQR.setVisibility(View.GONE);*/
+                    enabledDisabledBtnClear(true);
                 }
                 else {
-                    mbtnClear.setVisibility(View.GONE);
-                    mbtnscanQR.setVisibility(View.VISIBLE);
+                    enabledDisabledBtnClear(false);
+                    EnableDisableBtnFooter(false,false);
+                    /*mbtnClear.setVisibility(View.GONE);
+                    mbtnscanQR.setVisibility(View.VISIBLE);*/
                 }
             }
 
@@ -297,12 +330,15 @@ public class InventoryPerStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 metEstiloItemIPS.setText("");
+                garmentSaleObj = null;
             }
         });
 
         //style buttons
 
-        Drawable myIcon = null;
+        setIconButtons();
+
+        /*Drawable myIcon = null;
         ColorFilter filter = null;
 
         myIcon = getResources().getDrawable( R.drawable.materialsale48 );
@@ -313,9 +349,67 @@ public class InventoryPerStoreFragment extends Fragment {
         myIcon = getResources().getDrawable( R.drawable.materialinfo48 );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
-        nbtn_infoIPS.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        nbtn_infoIPS.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);*/
 
         EnableDisableBtnFooter(false, false);
+    }
+
+    private void enabledDisabledBtnClear(boolean isEnabled){
+        mbtnClear.setEnabled(isEnabled);
+        if(isEnabled){
+            mbtnClear.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+        }
+        else {
+            mbtnClear.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+    }
+    private void setTextIconBtnRead(boolean isQr){
+        Drawable myIcon = null;
+        ColorFilter filter = null;
+
+        if(isQr){
+            myIcon = getResources().getDrawable( R.drawable.qrcode18px );
+            filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+            myIcon.setColorFilter(filter);
+            mbtnRead.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+            mbtnRead.setText("LEER QR");
+        }
+        else {
+            myIcon = getResources().getDrawable( R.drawable.ic_materialprocesar );
+            filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+            myIcon.setColorFilter(filter);
+            mbtnRead.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+            mbtnRead.setText("CARGAR");
+        }
+    }
+
+    private void setIconButtons(){
+        Drawable myIcon = null;
+        ColorFilter filter = null;
+
+        myIcon = getResources().getDrawable( R.drawable.qrcode18px );
+        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+        myIcon.setColorFilter(filter);
+        mbtnRead.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+
+
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
+        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+        myIcon.setColorFilter(filter);
+        mbtnClear.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+
+
+        myIcon = getResources().getDrawable( R.drawable.ic_materialinfo );
+        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+        myIcon.setColorFilter(filter);
+        nbtn_infoIPS.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+
+        //myIcon = getResources().getDrawable( R.drawable.marerialsale );
+        myIcon = getResources().getDrawable( R.drawable.ic_vestuario );
+        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+        myIcon.setColorFilter(filter);
+        mbtn_saldosIPS.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
+
     }
 
 
@@ -324,7 +418,7 @@ public class InventoryPerStoreFragment extends Fragment {
         mbtn_saldosIPS.setEnabled(isEnabledSale);
 
         if(isEnabledInfo){
-            nbtn_infoIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+            nbtn_infoIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
         }
         else {
             nbtn_infoIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
@@ -332,7 +426,7 @@ public class InventoryPerStoreFragment extends Fragment {
         }
 
         if(isEnabledSale){
-            mbtn_saldosIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+            mbtn_saldosIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0b4096")));
         }
         else {
             mbtn_saldosIPS.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
@@ -508,7 +602,10 @@ public class InventoryPerStoreFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSparameterInvTiendaSaldo[2];
             rfidService.URL_ = mWSparameterInvTiendaSaldo[3];
 
-            garmentSaleObj = rfidService.WSInventoryPerStoreSale(mEstiloItem);
+            if(garmentSaleObj == null){
+                garmentSaleObj = rfidService.WSInventoryPerStoreSale(mEstiloItem);
+            }
+
             return null;
         }
 
@@ -627,9 +724,9 @@ public class InventoryPerStoreFragment extends Fragment {
 
             @Override
             public void onGroupExpand(int groupPosition) {
-                Toast.makeText(mContext,
+                /*Toast.makeText(mContext,
                         expandableListTitle.get(groupPosition) + " ListView Open.",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -637,9 +734,9 @@ public class InventoryPerStoreFragment extends Fragment {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(mContext,
+                /*Toast.makeText(mContext,
                         expandableListTitle.get(groupPosition) + " ListView Closed.",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
 
             }
         });
@@ -677,15 +774,14 @@ public class InventoryPerStoreFragment extends Fragment {
 
     private void InvoqueDialogSaldoOtros()
     {
-
-        final Dialog dialog = new Dialog(mContext);
+        /*final Dialog dialog = new Dialog(mContext);
         dialog.setContentView(R.layout.dialog_saldos_otros);
 
-        final ListView lv = (ListView) dialog.findViewById(R.id.lv_otherSale);
-        final TextView medItem = (TextView) dialog.findViewById(R.id.edItem);
+        final ListView lv =  dialog.findViewById(R.id.lv_otherSale);
+        final TextView mtvItem =  dialog.findViewById(R.id.tvItem);
 
-        medItem.setEnabled(false);
-        medItem.setText(mItemCodigo);
+        mtvItem.setEnabled(false);
+        mtvItem.setText(mItemCodigo);
         //ViewGroup headerview = (ViewGroup) getLayoutInflater().inflate(R.layout.header_reposicion,lv,false);
         View headerview = View.inflate(mContext, R.layout.header_2column, null);
         final TextView tvHCol1 = (TextView) headerview.findViewById(R.id.tvHCol1);
@@ -698,16 +794,30 @@ public class InventoryPerStoreFragment extends Fragment {
         lv.addHeaderView(headerview);
 
         lv.setAdapter(new CustomListAdapterInvPerStoreOtherSale(mContext, storeExistenceObj.getExistencias()));
-        /*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        *//*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 ReplenishmentWareResult replenishmentWareResult = (ReplenishmentWareResult) lv.getItemAtPosition(position);
                 Toast.makeText(mContext, "Selected :" + " " + replenishmentWareResult.getItems()+", "+ replenishmentWareResult.getReplenishmentCount(), Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });*//*
 
 
-        dialog.show();
+        dialog.show();*/
+
+
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_saldos_otros, loVistaDialogo, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+
+        final ListView lv =  dialogView1.findViewById(R.id.lv_otherSale);
+        final TextView mtvItem =  dialogView1.findViewById(R.id.tvItem);
+        mtvItem.setText(mItemCodigo);
+        lv.setAdapter(new CustomListAdapterInvPerStoreOtherSale(mContext, storeExistenceObj.getExistencias()));
+
+        alertDialog1.show();
+
     }
 
     public void CleanControl(){
@@ -820,7 +930,7 @@ public class InventoryPerStoreFragment extends Fragment {
             if(mWSparameterInvTiendaInfo == null){
                 mWSparameterInvTiendaInfo = getResources().getStringArray(R.array.WSparameter_InventarioPorTiendaInfo);
             }
-
+            garmentSaleObj = null;
             exWSInventarioPorTiendaAsync inventarioPorTiendaAsync = new exWSInventarioPorTiendaAsync();
             inventarioPorTiendaAsync.execute();
         }

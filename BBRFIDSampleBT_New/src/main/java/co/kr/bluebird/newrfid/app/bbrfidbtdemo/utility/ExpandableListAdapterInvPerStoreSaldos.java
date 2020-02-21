@@ -1,6 +1,8 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,16 +42,22 @@ public class ExpandableListAdapterInvPerStoreSaldos extends BaseExpandableListAd
         return expandedListPosition;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getChildView(int listPosition, final int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         //final String expandedListText = (String) getChild(listPosition, expandedListPosition);
         GarmentSize objGarmentSize =(GarmentSize) getChild(listPosition, expandedListPosition);
-        if (convertView == null) {
+
+        LayoutInflater layoutInflater = (LayoutInflater) this.context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = layoutInflater.inflate(R.layout.child_itemsaldos_ips, null);
+
+        /*if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.child_itemsaldos_ips, null);
-        }
+        }*/
         TextView text1 = (TextView) convertView.findViewById(R.id.item1);
         TextView text2 = (TextView) convertView.findViewById(R.id.item2);
         TextView text3 = (TextView) convertView.findViewById(R.id.item3);
@@ -59,6 +67,21 @@ public class ExpandableListAdapterInvPerStoreSaldos extends BaseExpandableListAd
         text2.setText(""+objGarmentSize.getStockLocal());
         text3.setText(""+objGarmentSize.getStockOtros());
         text4.setText(""+objGarmentSize.getItmCodigo());
+
+        if(objGarmentSize.getNombre().equalsIgnoreCase("Total")){
+            if(convertView != null && convertView.getBackground() == null){
+                convertView.setBackgroundColor(Color.parseColor("#c3e2e8"));
+            }
+        }
+        else {
+            if (convertView != null && convertView.getBackground() != null){
+                convertView.setBackgroundColor(Color.WHITE);
+            }
+        }
+
+        if(objGarmentSize.isBusca()){
+            convertView.setBackgroundColor(Color.parseColor("#61bcc7"));
+        }
         return convertView;
     }
 

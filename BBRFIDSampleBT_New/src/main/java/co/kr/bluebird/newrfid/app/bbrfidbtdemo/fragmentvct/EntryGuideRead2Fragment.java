@@ -382,7 +382,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialplay );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialplay );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -393,7 +393,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         mInvenButton.setOnClickListener(sledListener);
 
 
-        myIcon = getResources().getDrawable( R.drawable.materialstop );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialstop );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -403,7 +403,7 @@ public class EntryGuideRead2Fragment extends Fragment {
         mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
         mStopInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialdelete );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -585,11 +585,11 @@ public class EntryGuideRead2Fragment extends Fragment {
        ColorFilter filter = null;
 
        if(isProcesar ){
-           myIcon = getResources().getDrawable( R.drawable.materialprocesar );
+           myIcon = getResources().getDrawable( R.drawable.ic_materialprocesar );
            mprocesar_imgbtn.setText("Procesar");
        }
        else {
-           myIcon = getResources().getDrawable( R.drawable.materialcompare18 );
+           myIcon = getResources().getDrawable( R.drawable.ic_materialcompare );
            mprocesar_imgbtn.setText("Comparar");
        }
 

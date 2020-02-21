@@ -1104,6 +1104,7 @@ public class ResponseSoapToObject {
         SoapObject soLocal;
         StoreExistence existence ;
         List<StoreExistence> existenceList = null;
+        int saldoTot = 0;
 
 
         if(soData.hasProperty("locales")){
@@ -1117,6 +1118,13 @@ public class ResponseSoapToObject {
                     existence.setNameplace(soLocal.getPropertyAsString("nombre"));
                     existence.setStock(Integer.parseInt(soLocal.getPropertyAsString("stock")) );
 
+                    saldoTot += Integer.parseInt(soLocal.getPropertyAsString("stock"));
+                    existenceList.add(existence);
+                }
+                if(saldoTot != 0){
+                    existence = new StoreExistence();
+                    existence.setNameplace("Total");
+                    existence.setStock(saldoTot);
                     existenceList.add(existence);
                 }
 

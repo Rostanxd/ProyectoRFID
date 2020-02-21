@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No.Guia:"
+            android:text="@string/GENoGuiaEntrada"
             android:textColor="@color/gColorGris_n800"
             android:textSize="12sp"
             android:textStyle="bold" />

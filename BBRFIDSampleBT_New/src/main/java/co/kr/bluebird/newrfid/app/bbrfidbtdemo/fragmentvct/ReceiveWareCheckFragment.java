@@ -270,7 +270,6 @@ public class ReceiveWareCheckFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private  int RFPower = 17;
-    private ImageButton mibtnPotencia;
     private boolean lectureHasPc = false;
 
     private ViewGroup loVistaDialogo;
@@ -295,6 +294,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     private ImageButton mBackButtonInconsistency;
     public boolean isOpenInconsistency = false;
     private List<EGTagsResponseItem> listInc = null;
+    private ReceiveWareDetail receiveWareDetail_param;
 
     public static ReceiveWareCheckFragment newInstance() {
         return new ReceiveWareCheckFragment();
@@ -313,6 +313,8 @@ public class ReceiveWareCheckFragment extends Fragment {
         //###################################################################
 
         mFragment = this;
+
+        receiveWareDetail_param = (ReceiveWareDetail) getArguments().getSerializable("receiveWareDetail");
 
         mOptionHandler = ((MainActivity)getActivity()).mUpdateConnectHandler;
 
@@ -379,7 +381,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialplay );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialplay );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -389,7 +391,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
 
 
-        myIcon = getResources().getDrawable( R.drawable.materialstop );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialstop );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -398,7 +400,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         mStopInvenButton.setOnClickListener(sledListener);
 
 
-        myIcon = getResources().getDrawable( R.drawable.materialdelete );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -425,7 +427,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
 
         /*myIcon = getResources().getDrawable( R.drawable.materialcheck18 );*/
-        myIcon = getResources().getDrawable( R.drawable.materialcompare18 );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialcompare );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
         mbtnConfirmar = (Button)v.findViewById(R.id.btnConfirmar);
@@ -436,10 +438,6 @@ public class ReceiveWareCheckFragment extends Fragment {
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
         mProgressBar.setVisibility(View.INVISIBLE);
-
-
-        mibtnPotencia = (ImageButton) v.findViewById(R.id.ibtnPotencia);
-        mibtnPotencia.setOnClickListener(onClickDialogPotencia);
 
         mSessionSpin = (Spinner)v.findViewById(R.id.session_spin);
         mSessionChar = ArrayAdapter.createFromResource(mContext, R.array.session_array,
@@ -638,107 +636,6 @@ public class ReceiveWareCheckFragment extends Fragment {
 
         }
     };
-
-    private OnClickListener onClickDialogPotencia = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
-                DialogPowerState();
-            }
-            else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    };
-
-    private void DialogPowerState() {
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_powerstate);
-        int maxPower = 5;
-
-        //getValueSBar = 17;
-
-
-        SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
-        TextView mtvSelect = (TextView) dialog.findViewById(R.id.tvSeleccionado);
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-
-        final int mSeekBarPowerCorrection = 5;
-
-        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
-        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
-
-        mSeekBarPower.setProgress(RFPower - maxPower);
-        mtvSelect.setText(RFPower+"");
-        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int val = mSeekBarPower.getProgress();
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                val = i + mSeekBarPowerCorrection;
-                RFPower = val;
-                mtvSelect.setText(RFPower+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //dialog.dismiss();
-                mReader.RF_SetRadioPowerState(RFPower);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-   /* private AdapterView.OnItemClickListener listItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ListItem i = (ListItem)mRfidList.getItemAtPosition(position);
-            mLocateTag = i.mUt;
-            mLocateStartPos = (i.mHasPc ? 0 : 4);
-            if (i.mHasPc)
-                mLocateEPC = mLocateTag.substring(4, mLocateTag.length());
-            else
-                mLocateEPC = mLocateTag;
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-            alert.setTitle(getString(R.string.locating_str));
-            alert.setMessage(getString(R.string.want_tracking_str));
-
-            alert.setPositiveButton(getString(R.string.yes_str), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    SelectionCriterias s = new SelectionCriterias();
-                    s.makeCriteria(SelectionCriterias.SCMemType.EPC, mLocateTag,
-                            mLocateStartPos, mLocateTag.length() * 4,
-                            SelectionCriterias.SCActionType.ASLINVA_DSLINVB);
-                    mReader.RF_SetSelection(s);
-                    switchLayout(false);
-                    mLocateTv.setText(mLocateTag);
-                }
-            });
-            alert.setNegativeButton(getString(R.string.no_str) ,new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                }
-            });
-            alert.show();
-        }
-    };*/
 
     private void switchLayout(boolean showList) {
         mLocate = !showList;
@@ -2349,12 +2246,12 @@ public class ReceiveWareCheckFragment extends Fragment {
         ColorFilter filter = null;
 
         if(isComparar){
-            myIcon = getResources().getDrawable( R.drawable.materialcompare18 );
+            myIcon = getResources().getDrawable( R.drawable.ic_materialcompare );
             mbtnConfirmar.setText("Comparar");
 
         }
         else {
-            myIcon = getResources().getDrawable( R.drawable.materialcheck18);
+            myIcon = getResources().getDrawable( R.drawable.ic_materialcheck);
             mbtnConfirmar.setText("Confirmar");
         }
 

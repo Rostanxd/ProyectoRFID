@@ -1,6 +1,7 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -53,6 +54,7 @@ public class clsMensaje {
             Toast.makeText(loContext, "No se pudo mostrar el Dialogo. Error en el metodo: gMostrarMensajeOk() "+ex.toString(), Toast.LENGTH_LONG).show();
         }
     }
+
 
     public void gMostrarMensajeAdvertencia(ViewGroup toVista, String tsMensaje)
     {

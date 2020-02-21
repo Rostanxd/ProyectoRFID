@@ -38,7 +38,7 @@ public class CustomListAdapterReplenishment extends BaseAdapter {
     public View getView(int position, View v, ViewGroup vg) {
         CustomListAdapterReplenishment.ViewHolder holder ;
         if (v == null) {
-            v = layoutInflater.inflate(R.layout.list_row_reposicion2, null);
+            v = layoutInflater.inflate(R.layout.list_row_reposicion3, null);
             holder = new CustomListAdapterReplenishment.ViewHolder();
             holder.uitmCodigo = (TextView) v.findViewById(R.id.tvItemsREP);
             holder.ucantidad_anterior = (TextView) v.findViewById(R.id.tvCantAntREP);

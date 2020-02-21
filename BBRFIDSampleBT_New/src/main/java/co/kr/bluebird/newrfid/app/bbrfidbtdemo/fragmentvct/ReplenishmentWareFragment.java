@@ -58,6 +58,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import android.widget.ListView;
@@ -253,8 +255,8 @@ public class ReplenishmentWareFragment extends Fragment {
     private String[] /*spinnerArray = null,*/ spinnerArraySeccion = null;
     private HashMap<Integer,String> /*spinnerMap = null,*/ spinnerMapSeccion = null;
 
-    private ImageButton mibtnPotencia;
     private  int RFPower = 30;
+    private ViewGroup loVistaDialogo;
 
     //private boolean isRunningRead;
 
@@ -335,7 +337,7 @@ public class ReplenishmentWareFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialplay );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialplay );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -344,7 +346,7 @@ public class ReplenishmentWareFragment extends Fragment {
         mInvenButton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialstop );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialstop );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -355,7 +357,7 @@ public class ReplenishmentWareFragment extends Fragment {
         mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
         mStopInvenButton.setOnClickListener(sledListener);
 
-        myIcon = getResources().getDrawable( R.drawable.materialdelete );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialdelete );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -365,7 +367,7 @@ public class ReplenishmentWareFragment extends Fragment {
 
 
 
-        myIcon = getResources().getDrawable( R.drawable.viewresult );
+        myIcon = getResources().getDrawable( R.drawable.ic_viewresult );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
@@ -373,22 +375,19 @@ public class ReplenishmentWareFragment extends Fragment {
         mresult_imgbtn = (Button)v.findViewById(R.id.result_imgbtn);
         mresult_imgbtn.setOnClickListener(sledListener);
 
-        mresult_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mresult_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
 
-        myIcon = getResources().getDrawable( R.drawable.snapshot );
+        myIcon = getResources().getDrawable( R.drawable.ic_snapshot );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
         msnapShot_imgbtn = (Button)v.findViewById(R.id.snapShot_imgbtn);
         msnapShot_imgbtn.setOnClickListener(sledListener);
 
-        msnapShot_imgbtn.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        msnapShot_imgbtn.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
         mProgressBar.setVisibility(View.INVISIBLE);
-
-        mibtnPotencia = (ImageButton) v.findViewById(R.id.ibtnPotencia);
-        mibtnPotencia.setOnClickListener(onClickDialogPotencia);
 
         mSessionSpin = (Spinner)v.findViewById(R.id.session_spin);
         mSessionChar = ArrayAdapter.createFromResource(mContext, R.array.session_array,
@@ -412,10 +411,10 @@ public class ReplenishmentWareFragment extends Fragment {
 
                 if(i != 0 && mAdapter.listTagReadEpc().size() > 0){
                     mresult_imgbtn.setEnabled(true);
-                    mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                    mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
 
                     msnapShot_imgbtn.setEnabled(true);
-                    msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+                    msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0b4096")));
 
                 }
                 else {
@@ -447,6 +446,7 @@ public class ReplenishmentWareFragment extends Fragment {
         exWSUbicacionYSeccionAsync ubicacionYSeccionAsync = new exWSUbicacionYSeccionAsync();
         ubicacionYSeccionAsync.execute();
         entryGuideDetail = null;
+        loVistaDialogo = v.findViewById(android.R.id.content);
 
         return v;
     }
@@ -782,19 +782,19 @@ public class ReplenishmentWareFragment extends Fragment {
 
                         if(mspinnerSeccionRW.getSelectedItemPosition() !=0  && mAdapter.listTagReadEpc().size() > 0){
                             mresult_imgbtn.setEnabled(true);
-                            mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                            mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
 
                             msnapShot_imgbtn.setEnabled(true);
-                            msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+                            msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0b4096")));
 
                         }
 
 
                        /* mresult_imgbtn.setEnabled(true);
-                        mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                        mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
 
                         msnapShot_imgbtn.setEnabled(true);
-                        msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));*/
+                        msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0b4096")));*/
 
 
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
@@ -857,23 +857,39 @@ public class ReplenishmentWareFragment extends Fragment {
 
     private void setDialogSale(List<ReplenishmentSale> replenishmentSaleList)
     {
-        final Dialog dialog = new Dialog(mContext);
+        /*final Dialog dialog = new Dialog(mContext);
         dialog.setTitle("Saldos en otros locales");
-        dialog.setContentView(R.layout.dialog_reposicion);
+        dialog.setContentView(R.layout.dialog_reposicion_saldo);
 
         final ListView lv = (ListView) dialog.findViewById(R.id.lv_Replenishment);
         //ViewGroup headerview = (ViewGroup) getLayoutInflater().inflate(R.layout.header_reposicion,lv,false);
         View headerview = View.inflate(mContext, R.layout.header_reposicion_sale, null);
         lv.addHeaderView(headerview);
-
         lv.setAdapter(new CustomListAdapterReplenishmentSale(mContext, replenishmentSaleList));
-        dialog.show();
+        dialog.show();*/
+
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_reposicion_saldo, loVistaDialogo, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+
+        final ListView lv =  dialogView1.findViewById(R.id.lv_Replenishment);
+        final ImageView ivClose = dialogView1.findViewById(R.id.iv_close);
+
+        ivClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });
+        lv.setAdapter(new CustomListAdapterReplenishmentSale(mContext, replenishmentSaleList));
+        alertDialog1.show();
     }
 
     private void SetDataDialog(List<Replenishment> replenishmentList){
 
 
-        final Dialog dialog = new Dialog(mContext);
+       /* final Dialog dialog = new Dialog(mContext);
         dialog.setTitle("Resultados de Reposicion");
         dialog.setContentView(R.layout.dialog_reposicion);
 
@@ -887,27 +903,40 @@ public class ReplenishmentWareFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Replenishment replenishment = (Replenishment) lv.getItemAtPosition(position);
-                //Toast.makeText(mContext, "Selected :" + " " + replenishment.getItmCodigo()+", "+ replenishment.getCantidad_actual(), Toast.LENGTH_SHORT).show();
 
-               /* rfidService.SOAP_ACTION_ =  mWsparameterReposicionSaldos[0];
-                rfidService.METHOD_NAME_ =  mWsparameterReposicionSaldos[1];
-                rfidService.NAMESPACE_ = mWsparameterReposicionSaldos[2];
-                rfidService.URL_ = mWsparameterReposicionSaldos[3];
+                exWSReposicionSaldoAsync reposicionSaldoAsync = new exWSReposicionSaldoAsync();
+                reposicionSaldoAsync.execute(replenishment.getItmCodigo());
+            }
+        });
+        dialog.show();*/
 
-                setDialogSale(rfidService.WsReposicionSaldoDetalle(replenishment.getItmCodigo()));*/
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_reposicion, loVistaDialogo, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+
+        final ListView lv =  dialogView1.findViewById(R.id.lv_Replenishment);
+        final ImageView ivClose = dialogView1.findViewById(R.id.iv_close);
+
+        ivClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });
+        lv.setAdapter(new CustomListAdapterReplenishment(mContext, replenishmentList));
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                Replenishment replenishment = (Replenishment) lv.getItemAtPosition(position);
 
                 exWSReposicionSaldoAsync reposicionSaldoAsync = new exWSReposicionSaldoAsync();
                 reposicionSaldoAsync.execute(replenishment.getItmCodigo());
             }
         });
 
-       /* mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });*/
-        dialog.show();
+        alertDialog1.show();
 
     }
 
@@ -1350,10 +1379,10 @@ public class ReplenishmentWareFragment extends Fragment {
                             //String codSeccion = spinnerMapSeccion.get(mspinnerSeccionRW.getSelectedItemPosition());
                             if(mspinnerSeccionRW.getSelectedItemPosition() !=0  && mAdapter.listTagReadEpc().size() > 0){
                                 mresult_imgbtn.setEnabled(true);
-                                mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                                mresult_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
 
                                 msnapShot_imgbtn.setEnabled(true);
-                                msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+                                msnapShot_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0b4096")));
 
                             }
                             else {
@@ -1734,7 +1763,8 @@ public class ReplenishmentWareFragment extends Fragment {
             rfidService.NAMESPACE_ = mWsparameterReposicion[2];
             rfidService.URL_ = mWsparameterReposicion[3];
 
-            replenishmentList = rfidService.WSReposicion(mAdapter.listTagReadEpc(),codSeccion, "");
+            //replenishmentList = rfidService.WSReposicion(mAdapter.listTagReadEpc(),codSeccion, "");
+            replenishmentList = DummyDataReposicion();
 
             return null;
         }
@@ -1782,8 +1812,8 @@ public class ReplenishmentWareFragment extends Fragment {
             rfidService.NAMESPACE_ = mWsparameterReposicionSaldos[2];
             rfidService.URL_ = mWsparameterReposicionSaldos[3];
 
-            replenishmentSales = rfidService.WsReposicionSaldoDetalle(itemCodigo[0]);
-
+            //replenishmentSales = rfidService.WsReposicionSaldoDetalle(itemCodigo[0]);
+            replenishmentSales = DummyDataReposicionSale();
 
             return null;
         }
@@ -1905,72 +1935,45 @@ public class ReplenishmentWareFragment extends Fragment {
 
     }
 
-    private OnClickListener onClickDialogPotencia = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED){
-                DialogPowerState();
-            }
-            else {
-                Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
-            }
+    private Replenishments DummyDataReposicion(){
 
+        List<Replenishment> replenishmentList = new ArrayList<Replenishment>();
+
+        for (int i = 1 ; i< 1000; i++){
+            Replenishment replenishment = new Replenishment();
+            replenishment.setItmCodigo("Item00000"+i);
+            replenishment.setStock_local(100+i);
+            replenishment.setStock_otros(100+i);
+            replenishment.setCantidad_ventas(100+i);
+            replenishment.setCantidad_egresos(100+i);
+            replenishment.setDiferencia(100+i);
+            replenishment.setCantidad_anterior(100+i);
+            replenishment.setCantidad_actual(100+i);
+
+            replenishmentList.add(replenishment);
         }
-    };
 
-    private void DialogPowerState() {
-
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_powerstate);
-        int maxPower = 5;
-
-        //getValueSBar = 17;
-
-
-        SeekBar mSeekBarPower = (SeekBar) dialog.findViewById(R.id.SeekBarPower);
-        TextView mtvSelect = (TextView) dialog.findViewById(R.id.tvSeleccionado);
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-
-        final int mSeekBarPowerCorrection = 5;
-
-        int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
-        mSeekBarPower.setProgress(realValueFromPersistentStorage - mSeekBarPowerCorrection); //E.g., to convert real value of 100 to SeekBar value of 95.
-
-        mSeekBarPower.setProgress(RFPower - maxPower);
-        mtvSelect.setText(RFPower+"");
-        mSeekBarPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int val = mSeekBarPower.getProgress();
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                val = i + mSeekBarPowerCorrection;
-                RFPower = val;
-                mtvSelect.setText(RFPower+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //dialog.dismiss();
-                mReader.RF_SetRadioPowerState(RFPower);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+        Replenishments replenishments = new Replenishments();
+        replenishments.setEstado(new DataSourceDto("00", "Exitoso", null));
+        replenishments.setReplenishments(replenishmentList);
+        return replenishments;
     }
 
+    private ReplenismentSaleDetailsDto DummyDataReposicionSale(){
+
+        ReplenismentSaleDetailsDto replenismentSaleDetailsDto = new ReplenismentSaleDetailsDto();
+        List<ReplenishmentSale> replenishmentSaleList = new ArrayList<ReplenishmentSale>();
+        replenismentSaleDetailsDto.setEstado(new DataSourceDto("00", "Exitoso", null));
+
+        for(int i=0; i< 1000; i++){
+            ReplenishmentSale replenishmentSale = new ReplenishmentSale();
+            replenishmentSale.setCantidad(99999+i);
+            replenishmentSale.setLocalname("Local Comercial 00"+i);
+            replenishmentSaleList.add(replenishmentSale);
+        }
+        replenismentSaleDetailsDto.setReplenishmentSales(replenishmentSaleList);
+        return replenismentSaleDetailsDto;
+
+    }
 }
 
