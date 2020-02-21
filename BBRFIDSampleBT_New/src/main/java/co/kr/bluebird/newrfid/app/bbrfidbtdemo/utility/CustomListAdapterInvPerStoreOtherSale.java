@@ -2,6 +2,8 @@ package co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +39,30 @@ public class CustomListAdapterInvPerStoreOtherSale extends BaseAdapter {
     }
     public View getView(int position, View v, ViewGroup vg) {
         ViewHolder holder ;
-        if (v == null) {
-            v = layoutInflater.inflate(R.layout.listrow_2column, null);
+        /*if (v == null) {
+            v = layoutInflater.inflate(R.layout.listrow_2column_modal, null);
             holder = new ViewHolder();
             holder.uNamePlace = (TextView) v.findViewById(R.id.tvCol1);
             holder.uStock = (TextView) v.findViewById(R.id.tvCol2);
+
             v.setTag(holder);
         } else{
             holder = (ViewHolder) v.getTag();
-        }
+        }*/
+
+        v = layoutInflater.inflate(R.layout.listrow_2column_modal, null);
+        holder = new ViewHolder();
+        holder.uNamePlace = (TextView) v.findViewById(R.id.tvCol1);
+        holder.uStock = (TextView) v.findViewById(R.id.tvCol2);
+
+        v.setTag(holder);
 
         holder.uNamePlace.setText(listData.get(position).getNameplace());
         holder.uStock.setText(String.valueOf(listData.get(position).getStock()));
+        if(listData.get(position).getNameplace().equalsIgnoreCase("Total")){
+            v.setBackgroundColor(Color.parseColor("#c3e2e8"));
+        }
+
         return v;
     }
 

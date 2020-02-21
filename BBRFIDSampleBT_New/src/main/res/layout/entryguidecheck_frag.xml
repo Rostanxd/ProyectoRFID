@@ -117,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="@string/GENoOrdenCompra" />
+            android:text="@string/GENoOrdenEntrada" />
 
         <TextView
             android:id="@+id/tvOrdenCompra"

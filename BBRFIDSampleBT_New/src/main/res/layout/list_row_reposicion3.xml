@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/tvItemsREP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="000230597"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/gColorGrisAzul_n500" />
+
+    <LinearLayout
+        android:id="@+id/lyCant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/tvItemsREP">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cant. Anterior:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvCantAntREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lyVentas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lyCant">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ventas:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvCantVentaREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lyStopLocal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lyVentas">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stock Local:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvSaldoBodIntREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+
+    </LinearLayout>
+
+
+
+
+
+    <!--<TextView
+        android:id="@+id/tv_saldo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvItemsREP"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="150dp"
+        android:text="saldo"
+        android:textColor="@color/gColorGrisAzul_n500"/>-->
+
+    <LinearLayout
+        android:id="@+id/lyCantAct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="100dp"
+        android:layout_below="@+id/tvItemsREP">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cant. Actual:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvCantActualREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lyEgreso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_below="@+id/lyCantAct">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Egresos:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvCantEgresoREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lyStockOtros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_below="@+id/lyEgreso">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stock Otros:"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvSaldoOtrosREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lyDiferencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="195dp"
+        android:layout_below="@+id/tvItemsREP">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diferencia: "
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500"/>
+
+        <TextView
+            android:id="@+id/tvDiferenciaREP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="9sp"
+            android:textColor="@color/gColorGrisAzul_n500" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

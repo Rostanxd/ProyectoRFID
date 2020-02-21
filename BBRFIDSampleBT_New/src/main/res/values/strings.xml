@@ -3,6 +3,8 @@
 
     <!--Mensajes informativo y de errores-->
     <string name="INF_NoConteo">No hay conteos vigentes</string>
+    <string name="INF_Limpieza">Se realizara una limpieza, se perderan todos los datos recolectados. Desea continuar?</string>
+    <string name="INF_ModoIngresoRecMerc">Seleccione modo de ingreso del documento</string>
 
 
     <!--leyendas de controles -->
@@ -40,15 +42,15 @@
     <string name="GEbtnCargar">Cargar</string>
     <string name="GECantidad">Cantidad</string>
     <string name="GECantidad_">Cantidad:</string>
-    <string name="GEEstado">ESTADO</string>
-    <string name="GECantidadTotal">TOTAL</string>
-    <string name="GECantidadTotal2">CANTIDAD TOTAL:</string>
+    <string name="GEEstado">Estado</string>
+    <string name="GECantidadTotal">Total</string>
+    <string name="GECantidadTotal2">Cantidad Total:</string>
     <string name="GEitemsSearch">Items Leidos</string>
     <string name="GEitems">0/0</string>
     <string name="GEiniciar">Iniciar</string>
     <string name="GEfinalizar">Finalizar</string>
     <string name="GElimpiar">Limpiar</string>
-    <string name="GENoGuiaEntrada">No.Guia Entrada</string>
+    <string name="GENoGuiaEntrada">No. G. Entrada</string>
     <string name="GECodItems">Cod. Item</string>
     <string name="GDDestino">Destino</string>
     <string name="GDQrCode">Se ha generado correctamente la Guia de Despacho</string>

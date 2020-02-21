@@ -15,6 +15,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReceiveWareDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragment.*;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fragmentvct.DespatchGuideReadFragment;
@@ -1099,14 +1100,8 @@ public class MainActivity extends Activity {
                                 String[] parts = qrcode.trim().split(";");
                                 qrcode = parts[0];
                                 Toast.makeText(mContext, "Codigo Scaneado: "+qrcode, Toast.LENGTH_LONG).show();
-                            /*metEstiloItemIPS.setText(qrcode);
-
-                            if(metEstiloItemIPS != null && !metEstiloItemIPS.getText().equals("")){
-                                InvoqueInventoryPerStoreInfo();
-                            }
-                            else {
-                                Toast.makeText(mContext, "Ingrese un codigo de item...", Toast.LENGTH_SHORT).show();
-                            }*/
+                                //String[] sqrcode
+                                InvocateWSReceptionDetail(new String[]{qrcode});
                             }
 
                         }
@@ -1320,7 +1315,7 @@ public class MainActivity extends Activity {
         Button btnBusqManual = dialogView.findViewById(R.id.btnBusqManual);
         Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
         TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-        poLabelTexto.setText("Por favor, Apunte el lector hacia la etiqueta QR, y presionar el boton Leer Qr");
+        poLabelTexto.setText(R.string.INF_ModoIngresoRecMerc);
 
         isOptionRecepcionMercaderia = true;
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -1649,6 +1644,83 @@ public class MainActivity extends Activity {
 
         mSeekBarPower.setProgress(power - maxPower);
         mtvSeleccionado.setText(power+"");
+    }
+
+    //RECEPCION DE MERCADERIA
+
+    private void InvocateWSReceptionDetail(String[] qrcode)
+    {
+        exWSRecepcionDetailAsync recepcionDetailAsync = new exWSRecepcionDetailAsync();
+        recepcionDetailAsync.execute(qrcode);
+    }
+
+    private  class exWSRecepcionDetailAsync extends AsyncTask<String[], Void, Void> {
+
+        ReceiveWareDetail receiveWareDetail;
+        String[] mWSparameterRecepcionDet = getResources().getStringArray(R.array.WSparameter_RecepcionDetalle);
+
+        @Override
+        protected Void doInBackground(String[]... params) {
+
+            rfidService.SOAP_ACTION_ =  mWSparameterRecepcionDet[0];
+            rfidService.METHOD_NAME_ =  mWSparameterRecepcionDet[1];
+            rfidService.NAMESPACE_ = mWSparameterRecepcionDet[2];
+            rfidService.URL_ = mWSparameterRecepcionDet[3];
+
+            if(params[0].length == 4 )
+            {
+                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( null,true, params[0]);
+            }
+            else {
+                String[] doc_origen = params[0];
+                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( doc_origen[0],false,null);
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            progressDialog.cancel();
+            Validator validator = new Validator();
+
+            ResponseVal responseVal =  validator.getValidateDataSourceDto(receiveWareDetail.getEstado());
+
+            if(responseVal.isValidAccess()){
+
+                if (mReceiveWareCheckFragment == null)
+                    mReceiveWareCheckFragment = mReceiveWareCheckFragment.newInstance();
+                try {
+                    Bundle args = new Bundle();
+                    args.putSerializable("receiveWareDetail", receiveWareDetail);
+                    mReceiveWareCheckFragment.setArguments(args);
+
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content, mReceiveWareCheckFragment);
+                    ft.addToBackStack(null);
+
+                    //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    //ft.addToBackStack(null);
+                    ft.commit();
+                }
+                catch (Exception e){
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+            else {
+                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+            ProgressLoading();
+
+        }
     }
 
 }

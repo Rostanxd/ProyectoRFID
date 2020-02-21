@@ -275,34 +275,6 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="5dip"
-                android:layout_marginTop="10dip"
-                android:orientation="horizontal"
-                >
-
-
-               <!-- <Switch
-                    android:id="@+id/pc_switch"
-                    android:layout_width="100sp"
-                    android:layout_height="match_parent"
-                    android:text="@string/remove_pc_str"
-                    android:textSize="11sp" />-->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Potencia RFID"/>
-
-                <ImageButton
-                    android:id="@+id/ibtnPotencia"
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
-                    android:src="@drawable/rfpower24" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="40dip"
                 android:orientation="horizontal">
 

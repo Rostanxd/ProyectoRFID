@@ -10,35 +10,31 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35sp"
+        android:layout_height="30sp"
         android:layout_marginTop="10dip"
         android:layout_marginRight="5dip"
         android:layout_marginLeft="5dip"
         android:orientation="horizontal">
 
-        <!--<ImageButton
-            android:id="@+id/ibtnPotencia"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:src="@drawable/radio" />-->
 
         <TextView
             android:layout_width="75dip"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/gColorGris_n800"
             android:text="@string/TIconteo" />
 
         <Spinner
             android:id="@+id/spinnerConteoIP"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             />
+            android:background="@drawable/borde_spinner" />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
+        android:layout_height="30sp"
+        android:layout_marginTop="5sp"
         android:layout_marginRight="5dip"
         android:layout_marginLeft="5dip"
         android:orientation="horizontal">
@@ -46,44 +42,18 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
         <TextView
             android:layout_width="75dip"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/gColorGris_n800"
             android:text="@string/RUbicacion" />
 
         <Spinner
             android:id="@+id/spinnerUbicacionIP"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/RepUbicacion" />
+            android:background="@drawable/borde_spinner"
+            />
 
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginLeft="5dip"
-        android:layout_marginTop="20dip"
-        android:orientation="horizontal"
-        >
-
-
-        <!--<Switch
-            android:id="@+id/pc_switch"
-            android:layout_width="100sp"
-            android:layout_height="match_parent"
-            android:text="@string/remove_pc_str"
-            android:textSize="11sp" />-->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Potencia RFID"/>
-
-        <ImageButton
-            android:id="@+id/ibtnPotencia"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:src="@drawable/rfpower24" />
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +69,7 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:backgroundTint="#1F9375"
             android:text="iniciar"
             android:textColor="#FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="9sp" />
 
         <Button
             android:id="@+id/stop_inven_imgbutton"
@@ -109,7 +79,7 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:backgroundTint="#EF3C10"
             android:text="detener"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
+            android:textSize="9sp"
             />
 
         <Button
@@ -120,7 +90,18 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:backgroundTint="#F38428"
             android:text="limpiar"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
+            android:textSize="9sp"
+            />
+
+        <Button
+            android:id="@+id/next_imgbtnTIP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gColorAzulClaro"
+            android:text="Procesar"
+            android:textColor="#FFFFFF"
+            android:textSize="9sp"
             />
         <Button
             android:id="@+id/clear_button"
@@ -132,43 +113,6 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:visibility="gone" />
     </LinearLayout>
 
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dip"
-        android:layout_marginTop="10dip"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/inven_imgbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/iniciar" />
-
-        <ImageButton
-            android:id="@+id/stop_inven_imgbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/detener" />
-
-        <ImageButton
-            android:id="@+id/clean_imgbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/limpiar" />
-
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#607d8b"
-            android:text="@string/clear_str"
-            android:visibility="gone" />
-
-    </LinearLayout>-->
 
     <LinearLayout
     android:layout_width="match_parent"
@@ -256,13 +200,6 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
                 android:text="@string/sound_str"
                 android:textSize="4sp" />
 
-            <!--<Switch
-                android:id="@+id/pc_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/remove_pc_str"
-                android:textSize="4sp" />-->
 
             <Switch
                 android:id="@+id/toggle_switch"
@@ -281,30 +218,6 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
             android:layout_height="0dip"
             android:orientation="horizontal"
             tools:visibility="invisible">
-
-            <!--<Switch
-                android:id="@+id/turbo_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/turbo_str"
-                android:textSize="8sp" />
-
-            <Switch
-                android:id="@+id/rssi_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/rssi_str2"
-                android:textSize="8sp" />
-
-            <Switch
-                android:id="@+id/sound_switch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/sound_str"
-                android:textSize="8sp" />-->
 
             <Switch
                 android:id="@+id/filter_switch"
@@ -420,17 +333,6 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
-            <!-- <TextView
-                android:id="@+id/count_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/count_str"
-                android:textAlignment="inherit"
-                android:textColor="#960012"
-                android:textSize="24sp"
-                android:textStyle="bold" />-->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -447,75 +349,72 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dip"
-            android:layout_marginTop="10dip"
-            android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip"
-            android:background="@drawable/borde"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gColorCyan_n700">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_icon"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_etiqueta"
+                        android:backgroundTint="@color/gColorBlanco" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/iv_icon"
+                        android:layout_marginTop="12dp"
+                        android:text=" Etiquetas Encontradas"
+                        android:textColor="@color/gColorBlanco" />
+
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dip">
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/count_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                <LinearLayout
+                    android:layout_width="330dp"
+                    android:layout_height="330dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_circulo"
                     android:gravity="center"
-                    android:text="@string/count_str"
-                    android:textAlignment="inherit"
-                    android:textColor="#960012"
-                    android:textSize="130sp"
-                    android:textStyle="bold"
-                    tools:layout_editor_absoluteX="-59dp"
-                    tools:layout_editor_absoluteY="68dp" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/count_tags_enc"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    tools:layout_editor_absoluteX="181dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    <TextView
+                        android:id="@+id/count_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="160dp"
+                        android:gravity="center"
+                        android:text="@string/count_str"
+                        android:textAlignment="center"
+                        android:textColor="@color/end_b"
+                        android:textSize="130sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!--<ImageButton
-                android:id="@+id/next_imgbtnTIP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/next" />-->
-            <Button
-                android:id="@+id/next_imgbtnTIP"
-                android:backgroundTint="#00897B"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dip"
-                android:layout_marginLeft="5dip"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dip"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/borderedondo"
-                android:text="@string/BTN_continuar"
-                android:textAlignment="center" />
         </LinearLayout>
 
 
@@ -578,9 +477,5 @@ tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
     </LinearLayout>
 
 </LinearLayout>
-
-
-
-
 
 </LinearLayout>

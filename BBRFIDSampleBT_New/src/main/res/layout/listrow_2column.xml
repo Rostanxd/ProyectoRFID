@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
+        android:layout_marginRight="10dip"
         android:orientation="horizontal">
 
         <TextView
@@ -23,6 +24,7 @@
             android:layout_width="100dip"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:layout_marginRight="20dip"
             android:textColor="@color/gColorGris_n800" />
 
 
