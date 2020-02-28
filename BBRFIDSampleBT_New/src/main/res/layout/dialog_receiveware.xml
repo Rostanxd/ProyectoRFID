@@ -137,6 +137,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@color/gColorCyan_n700"
                 android:text="Aceptar"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/gColorBlanco" />
 
             <Button
@@ -147,6 +148,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@color/gColorRojoLight"
                 android:text="Cancelar"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/gColorBlanco" />
 
             <Button

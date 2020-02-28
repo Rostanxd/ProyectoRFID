@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/gColorVerde_n600">
+        android:background="@color/gColorVerdeDark">
 
         <ImageView
             android:layout_width="50dp"
@@ -64,8 +64,8 @@
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="1dp"
-                android:background="@color/gColorAzulClaro"
+                android:layout_marginTop="5dp"
+                android:background="@color/gColorVerdeDark"
                 android:text="Imprimir"
                 android:textColor="@color/gColorBlanco" />
 

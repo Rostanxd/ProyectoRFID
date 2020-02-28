@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/gColorAzulClaro">
+        android:background="@color/gColorVerdeDark">
 
         <ImageView
             android:layout_width="50dp"
@@ -34,12 +34,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
         <TextView
+            android:id="@+id/lblTextoLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Operación Correcta."
             android:textAlignment="center"
-            android:textColor="@color/gColorAzulClaro"
+            android:textColor="@color/gColorGris_n800"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Button
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:background="@color/gColorAzulClaro"
+            android:background="@color/gColorVerdeDark"
             android:text="Ok"
             android:textColor="@color/gColorBlanco" />
 

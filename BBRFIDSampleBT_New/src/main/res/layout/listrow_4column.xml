@@ -8,14 +8,15 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="50dip"
-        android:layout_marginTop="10dip"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tvCol1"
             android:layout_width="200dip"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorGris_n800"
             android:layout_weight="1" />
 
         <TextView
@@ -23,20 +24,23 @@
             android:layout_width="120dip"
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
+            android:textColor="@color/gColorGris_n800"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tvCol3"
             android:layout_width="90dip"
             android:layout_height="wrap_content"
+            android:textColor="@color/gColorGris_n800"
             android:layout_weight="1"
-            android:textSize="14dp" />
+            />
         <TextView
             android:id="@+id/tvCol4"
             android:layout_width="90dip"
+            android:textColor="@color/gColorGris_n800"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="14dp" />
+             />
 
     </LinearLayout>
 

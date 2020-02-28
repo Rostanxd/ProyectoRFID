@@ -558,11 +558,11 @@ public class ResponseSoapToObject {
                 for(int x=0; x<soRows.getPropertyCount();x++)
                 {
                     soItem = (SoapObject) soRows.getProperty(x);
-
                     replenishment = new Replenishment();
                     replenishment.setItmCodigo(soItem.getPropertyAsString("itmCodigo"));
                     replenishment.setCantidad_anterior( Integer.parseInt(soItem.getPropertyAsString("cantidad_anterior")));
                     replenishment.setDiferencia( Integer.parseInt(soItem.getPropertyAsString("diferencia")));
+                    replenishment.setCantidad_actual(Integer.parseInt(soItem.getPropertyAsString("cantidad_actual")));
                     replenishment.setCantidad_egresos( Integer.parseInt(soItem.getPropertyAsString("cantidad_egresos")));
                     replenishment.setCantidad_ventas( Integer.parseInt(soItem.getPropertyAsString("cantidad_ventas")));
                     replenishment.setStock_otros( Integer.parseInt(soItem.getPropertyAsString("stock_otros")));
@@ -654,6 +654,7 @@ public class ResponseSoapToObject {
 
                     icSeccionList.add(seccion);
                 }
+                inventoryControl.setSecciones(icSeccionList);
             }
 
 

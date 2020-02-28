@@ -405,7 +405,7 @@ public class InventoryPerStoreFragment extends Fragment {
         nbtn_infoIPS.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
 
         //myIcon = getResources().getDrawable( R.drawable.marerialsale );
-        myIcon = getResources().getDrawable( R.drawable.ic_vestuario );
+        myIcon = getResources().getDrawable( R.drawable.ic_style );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
         mbtn_saldosIPS.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);

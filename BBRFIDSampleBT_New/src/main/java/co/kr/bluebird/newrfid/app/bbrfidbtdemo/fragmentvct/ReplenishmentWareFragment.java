@@ -23,6 +23,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapter;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReplenishment;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.CustomListAdapterReplenishmentSale;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.Validator;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 import co.kr.bluebird.sled.BTReader;
 import co.kr.bluebird.sled.SDConsts;
 
@@ -257,6 +258,7 @@ public class ReplenishmentWareFragment extends Fragment {
 
     private  int RFPower = 30;
     private ViewGroup loVistaDialogo;
+    private clsMensaje loDialogo;
 
     //private boolean isRunningRead;
 
@@ -446,6 +448,8 @@ public class ReplenishmentWareFragment extends Fragment {
         exWSUbicacionYSeccionAsync ubicacionYSeccionAsync = new exWSUbicacionYSeccionAsync();
         ubicacionYSeccionAsync.execute();
         entryGuideDetail = null;
+
+        loDialogo = new clsMensaje(mContext);
         loVistaDialogo = v.findViewById(android.R.id.content);
 
         return v;
@@ -1763,8 +1767,8 @@ public class ReplenishmentWareFragment extends Fragment {
             rfidService.NAMESPACE_ = mWsparameterReposicion[2];
             rfidService.URL_ = mWsparameterReposicion[3];
 
-            //replenishmentList = rfidService.WSReposicion(mAdapter.listTagReadEpc(),codSeccion, "");
-            replenishmentList = DummyDataReposicion();
+            replenishmentList = rfidService.WSReposicion(mAdapter.listTagReadEpc(),codSeccion, "");
+            //replenishmentList = DummyDataReposicion();
 
             return null;
         }
@@ -1812,8 +1816,8 @@ public class ReplenishmentWareFragment extends Fragment {
             rfidService.NAMESPACE_ = mWsparameterReposicionSaldos[2];
             rfidService.URL_ = mWsparameterReposicionSaldos[3];
 
-            //replenishmentSales = rfidService.WsReposicionSaldoDetalle(itemCodigo[0]);
-            replenishmentSales = DummyDataReposicionSale();
+            replenishmentSales = rfidService.WsReposicionSaldoDetalle(itemCodigo[0]);
+            //replenishmentSales = DummyDataReposicionSale();
 
             return null;
         }
@@ -1876,10 +1880,13 @@ public class ReplenishmentWareFragment extends Fragment {
             ResponseVal responseVal = validator.getValidateDataSourceDto(dtoSnapShot);
 
             if(responseVal.isValidAccess()){
-                Toast.makeText(mContext, "El SnapShot fue Exitoso",Toast.LENGTH_LONG).show();
+                /*Toast.makeText(mContext, "El SnapShot fue Exitoso",Toast.LENGTH_LONG).show();*/
+                loDialogo.gMostrarMensajeOk(loVistaDialogo, null);
+
             }
             else {
-                Toast.makeText(mContext, responseVal.getErrorMsg(),Toast.LENGTH_LONG).show();
+                /*Toast.makeText(mContext, responseVal.getErrorMsg(),Toast.LENGTH_LONG).show();*/
+                loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());
             }
 
             progressDialog.cancel();

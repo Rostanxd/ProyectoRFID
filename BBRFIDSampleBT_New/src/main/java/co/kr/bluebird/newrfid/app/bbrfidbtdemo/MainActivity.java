@@ -46,6 +46,7 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -81,6 +82,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 import java.util.HashMap;
 
 @SuppressWarnings("deprecation")
@@ -146,6 +148,8 @@ public class MainActivity extends Activity {
     private String mDispositivoBTRfidSelect ;
     private final MainHandler mMainHandler = new MainHandler(this);
     public final UpdateConnectHandler mUpdateConnectHandler = new UpdateConnectHandler(this);
+    public final  BackHandler mBackHandler = new BackHandler(this);
+    private boolean isBackForce = false;
     private RfidService rfidService;
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
     private String[] mWSParameters;
@@ -168,6 +172,22 @@ public class MainActivity extends Activity {
         rfidService = new RfidService(mContext);
         mlayouttvParam = (LinearLayout) findViewById(R.id.layouttvParam);
         mtvParam1 = (TextView) findViewById(R.id.tvParam1);
+
+        try {
+            SharedPreferences prefs = mContext.getSharedPreferences("shared_recepcion_mercaderia",   Context.MODE_PRIVATE);
+            if(prefs != null){
+                prefs.edit().clear().commit();
+            }
+
+            SharedPreferences prefsGE = mContext.getSharedPreferences("shared_guia_entrada",   Context.MODE_PRIVATE);
+            if(prefsGE != null){
+                prefsGE.edit().clear().commit();
+            }
+
+        }
+        catch (Exception ex ){
+            if (D) Log.d(TAG, ex.getMessage());
+        }
 
         mcvParametrizador  = (CardView)findViewById(R.id.cvParametrizador);
         mcvConectividad = (CardView)findViewById(R.id.cvConectividad);
@@ -637,6 +657,7 @@ public class MainActivity extends Activity {
             if (D) Log.e(TAG, "Reader open failed");
 
         updateConnectState();
+
         super.onStart();
     }
 
@@ -767,6 +788,7 @@ public class MainActivity extends Activity {
 
     private void OnBackPressedValidate(){
 
+        boolean is3thFrag= false;
         boolean isFirstFragment = true;
         execFragmentTransaction = false;
         String noOrdenComprar = null;
@@ -779,25 +801,30 @@ public class MainActivity extends Activity {
         {
             //mEntryGuideCheckFragment.CleanControls();
             if(mEntryGuideCheckFragment.mEntryGuideReadFragment != null){
-
-                //noOrdenComprar = mEntryGuideCheckFragment.mEntryGuideReadFragment.getOrdenCompra();
-                //ResposeEG = mEntryGuideCheckFragment.mEntryGuideReadFragment.getResposeEG();
                 isFirstFragment = false;
-                //mDrawerLayout.closeDrawer(mDrawerList);
-                if (mEntryGuideCheckFragment != null) {
-                    /*Bundle poArgumentos = new Bundle();
-                    poArgumentos.putSerializable("objectResponse", null);
-                    mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
-                    mEntryGuideCheckFragment.setArguments(poArgumentos);
-                    poArgumentos.putString("NoOCompra", noOrdenComprar);
-                    mEntryGuideCheckFragment.setArguments(poArgumentos);*/
-                    mEntryGuideCheckFragment.setValueOnBackPressedInvoque();
-                    FragmentTransaction ft = mFragmentManager.beginTransaction();
-                    ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
-                    ft.commit();
-                    mEntryGuideCheckFragment.mEntryGuideReadFragment = null;
 
-                    execFragmentTransaction = true;
+                if(mEntryGuideCheckFragment.mEntryGuideReadFragment.mInvetoryLocatedFragment != null){
+
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment.mInvetoryLocatedFragment);
+                    ft.commit();
+                    mEntryGuideCheckFragment.mEntryGuideReadFragment.mInvetoryLocatedFragment = null;
+                    execFragmentTransaction = false;
+                    is3thFrag = true;
+
+                }
+                else {
+                    //isFirstFragment = false;
+                    if (mEntryGuideCheckFragment != null) {
+
+                        mEntryGuideCheckFragment.setValueOnBackPressedInvoque();
+                        FragmentTransaction ft = mFragmentManager.beginTransaction();
+                        ft.remove(mEntryGuideCheckFragment.mEntryGuideReadFragment);
+                        ft.commit();
+                        mEntryGuideCheckFragment.mEntryGuideReadFragment = null;
+
+                        execFragmentTransaction = true;
+                    }
                 }
                 //mDespatchGuideGenerateFragment
             }
@@ -842,52 +869,80 @@ public class MainActivity extends Activity {
         {
             isFirstFragment = false;
             //mDrawerLayout.closeDrawer(mDrawerList);
+
             if (mShippingWareReadFragment != null) {
-                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
-                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
-                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-                poLabelTexto.setText("Esta seguro salir de la pantalla");
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = mFragmentManager.beginTransaction();
-                        ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
-                        ft.commit();
-                        mShippingWareReadFragment.mShippingWareGenerateFragment = null;
-                        ReplaceFragment();
-                        alertDialog.dismiss();
+                execFragmentTransaction = true;
+                if(isBackForce){
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
+                    ft.commit();
+                    mShippingWareReadFragment.mShippingWareGenerateFragment = null;
+                    //ReplaceFragment();
+
+                }
+                else {
+                    View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                    Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                    TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                    poLabelTexto.setText("Esta seguro salir de la pantalla");
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentTransaction ft = mFragmentManager.beginTransaction();
+                            ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
+                            ft.commit();
+                            mShippingWareReadFragment.mShippingWareGenerateFragment = null;
+                            //ReplaceFragment();
+                            alertDialog.dismiss();
 
 
-                    }
-                });
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();
+                        }
+                    });
+                    btnCancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
 
 
         }
 
-        if(mCurrentFragment.equals(mReceiveWareCheckFragment))
+        /*if(mCurrentFragment.equals(mReceiveWareCheckFragment))
         {
-            //mReceiveWareCheckFragment.CleanControls();
             if(mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment != null){
                 isFirstFragment = false;
-                //mDrawerLayout.closeDrawer(mDrawerList);
                 if (mReceiveWareCheckFragment != null) {
 
                     FragmentTransaction ft = mFragmentManager.beginTransaction();
                     ft.remove(mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment);
                     ft.commit();
                     mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment = null;
+
+                    execFragmentTransaction = true;
+                }
+            }
+
+        }*/
+
+
+        if(mCurrentFragment.equals(mReceiveWareCheckFragment))
+        {
+            if(mReceiveWareCheckFragment.mInvetoryLocatedFragment != null){
+                isFirstFragment = false;
+                if (mReceiveWareCheckFragment != null) {
+
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.remove(mReceiveWareCheckFragment.mInvetoryLocatedFragment);
+                    ft.commit();
+                    mReceiveWareCheckFragment.mInvetoryLocatedFragment = null;
 
                     execFragmentTransaction = true;
                 }
@@ -961,8 +1016,6 @@ public class MainActivity extends Activity {
                 mCurrentFragment = mDespatchGuideReadFragment;
             }*/
 
-
-
             ft1.replace(R.id.content, mCurrentFragment);
             ft1.commit();
             //mDrawerList.setItemChecked(PositionFrag, true);
@@ -970,6 +1023,15 @@ public class MainActivity extends Activity {
             //mDrawerLayout.closeDrawer(mDrawerList);
             mUILayout.setVisibility(View.GONE);
 
+        }
+
+        if(is3thFrag){
+
+            FragmentTransaction ft1 = mFragmentManager.beginTransaction();
+            ft1.replace(R.id.content, mEntryGuideCheckFragment.mEntryGuideReadFragment);
+            ft1.commit();
+            setTitle(mFunctionsString[PositionFrag]);
+            mUILayout.setVisibility(View.GONE);
         }
     }
 
@@ -1226,6 +1288,31 @@ public class MainActivity extends Activity {
             switchToHome();
     }
 
+    //################### Handler Personalizado #################################
+    private static class BackHandler extends Handler {
+        private final WeakReference<MainActivity> mExecutor;
+        public BackHandler(MainActivity ac) {
+            mExecutor = new WeakReference<>(ac);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity executor = mExecutor.get();
+            if (executor != null) {
+                executor.handleBackHandler(msg);
+            }
+        }
+    }
+
+    public void handleBackHandler(Message m) {
+        if (m.what == 1) {
+            isBackForce = true;
+            OnBackPressedValidate();
+            isBackForce = false;
+        }
+        /*else if (m.what == MSG_BACK_PRESSED)
+            switchToHome();*/
+    }
 
 
     //#################### PROCESO DE CONSUMIR WEB SERVICES #####################
@@ -1325,11 +1412,14 @@ public class MainActivity extends Activity {
 
                 if(mReader != null){
                     int mode = mReader.SD_GetTriggerMode();
-                    if (mode == SDConsts.SDTriggerMode.RFID)
+                    if (mode == SDConsts.SDTriggerMode.RFID) {
                         mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.BARCODE);
+                        mUpdateConnectHandler.obtainMessage(MSG_OPTION_CONNECT_STATE_CHANGED).sendToTarget();
+                    }
 
                     mReader.BC_SetTriggerState(true);
                 }
+                alertDialog.dismiss();
 
             }
         });
@@ -1339,6 +1429,7 @@ public class MainActivity extends Activity {
                 isOptionRecepcionMercaderia = false;
                 //InvAlertIngMercManual();
                 try {
+                    alertDialog.dismiss();
                     InvAlertIngMercManual2();
                 }
                 catch (Exception ex){
@@ -1380,15 +1471,8 @@ public class MainActivity extends Activity {
         Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
         Button btnLimpiar = dialogView1.findViewById(R.id.btnDialogLimpiar);
 
+        int year= Calendar.getInstance().get(Calendar.YEAR);
 
-
-        /*String[] spinnerArraySeccion=null;
-        spinnerArraySeccion = getResources().getStringArray(R.array.functions_array);
-
-        ArrayAdapter<String> adapter1 =new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item,spinnerArraySeccion);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mspinTipo.setAdapter(adapter1);
-        mspinOrigen.setAdapter(adapter1);*/
 
         adapterHashMap =  getAdapaterSpinner(gMovientos);
         if(adapterHashMap != null){
@@ -1402,10 +1486,68 @@ public class MainActivity extends Activity {
             mspinOrigen.setAdapter(adapterHashMap.getAdapter());
         }
 
+        HashMap<Integer, String> finalSpinnerMapBodegas = spinnerMapBodegas;
+        HashMap<Integer, String> finalSpinnerMapTipos = spinnerMapTipos;
+
+        mspinTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String tipoMov =  finalSpinnerMapTipos.get(i);
+                if(tipoMov.equals("GDE")){
+                    mspinOrigen.setEnabled(false);
+                    mspinOrigen.setSelection(0);
+                    medAnio.setText("");
+                    medAnio.setEnabled(false);
+
+                }else {
+                    mspinOrigen.setEnabled(true);
+                    medAnio.setText(year+"");
+                    medAnio.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 alertDialog1.dismiss();
+                //Capturar los DATOS Y LLAMAR AL WS
+                String lCodOrigen = finalSpinnerMapBodegas.get(mspinOrigen.getSelectedItemPosition());
+                String lCodTipo = finalSpinnerMapTipos.get(mspinTipo.getSelectedItemPosition());
+                String lAnio = medAnio.getText().toString();
+                String lNumero = medNumero.getText().toString();
+                if(!lCodTipo.equals("0")){
+                    if(lCodTipo.equals("GDE") ){
+                        if(!lNumero.trim().equals("")){
+                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
+                            alertDialog1.dismiss();
+                        }
+                        else {
+                            Toast.makeText(mContext, "Ingrese un numero de documento", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        if(!lCodOrigen.equals("0") && !lAnio.trim().equals("") && !lNumero.trim().equals("")){
+                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
+                            alertDialog1.dismiss();
+                        }
+                        else {
+                            Toast.makeText(mContext, "Seleccione y/o complete todos los campos", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                else {
+                    Toast.makeText(mContext, "Seleccione un tipo de Movimiento", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         alertDialog1.show();
@@ -1531,7 +1673,7 @@ public class MainActivity extends Activity {
     {
         int maxPower = 5;
         RFPower = mReader.RF_GetRadioPowerState();
-        Toast.makeText(mContext,"getpowerstate: "+ RFPower+"", Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(mContext,"getpowerstate: "+ RFPower+"", Toast.LENGTH_SHORT).show();*/
         View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_powerstate, loVistaDialogo, false);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
         builder1.setView(dialogView1);
@@ -1603,7 +1745,7 @@ public class MainActivity extends Activity {
         });
 
 
-        alertDialog1.setOnShowListener(new DialogInterface.OnShowListener() {
+        /*alertDialog1.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 Toast.makeText(mContext, "Modal Open", Toast.LENGTH_SHORT).show();
@@ -1615,7 +1757,7 @@ public class MainActivity extends Activity {
             public void onCancel(DialogInterface dialogInterface) {
                 Toast.makeText(mContext, "Modal close", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1653,6 +1795,12 @@ public class MainActivity extends Activity {
         exWSRecepcionDetailAsync recepcionDetailAsync = new exWSRecepcionDetailAsync();
         recepcionDetailAsync.execute(qrcode);
     }
+    private void procesoNoExistQR(String pcodorigen, String pcodigotipo, String panio, String pnumero)
+    {
+        //Toast.makeText(mContext, pcodorigen+";"+pcodigotipo+";"+panio+";"+pnumero, Toast.LENGTH_LONG).show();
+        InvocateWSReceptionDetail(new String[]{pcodorigen,pcodigotipo,panio,pnumero} );
+    }
+
 
     private  class exWSRecepcionDetailAsync extends AsyncTask<String[], Void, Void> {
 
@@ -1690,7 +1838,7 @@ public class MainActivity extends Activity {
 
             if(responseVal.isValidAccess()){
 
-                if (mReceiveWareCheckFragment == null)
+               /* if (mReceiveWareCheckFragment == null)
                     mReceiveWareCheckFragment = mReceiveWareCheckFragment.newInstance();
                 try {
                     Bundle args = new Bundle();
@@ -1700,13 +1848,31 @@ public class MainActivity extends Activity {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content, mReceiveWareCheckFragment);
                     ft.addToBackStack(null);
-
-                    //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    //ft.addToBackStack(null);
                     ft.commit();
                 }
                 catch (Exception e){
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                }*/
+
+
+                if (mReceiveWareCheckFragment == null)
+                {
+                    Bundle poArgumentos = new Bundle();
+                    poArgumentos.putSerializable("receiveWareDetail", receiveWareDetail);
+                    mReceiveWareCheckFragment = ReceiveWareCheckFragment.newInstance();
+                    mReceiveWareCheckFragment.setArguments(poArgumentos);
+                }
+                mCurrentFragment = mReceiveWareCheckFragment;
+                if(mCurrentFragment !=null)
+                {
+                    PositionFrag = 15;
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.replace(R.id.content, mCurrentFragment);
+                    ft.commit();
+                    //mDrawerList.setItemChecked(position, true);
+                    setTitle(mFunctionsString[12]);
+                    //mDrawerLayout.closeDrawer(mDrawerList);
+                    mUILayout.setVisibility(View.GONE);
                 }
 
             }

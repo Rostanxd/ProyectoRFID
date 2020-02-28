@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class InvetoryLocatedFragment extends Fragment {
     private Context mContext;
     private Fragment mFragment;
     private LocatedInvData locatedInvData;
-    private TextView mtvOrdenCompra, mtvGuia, mtvItemSku;
+    private TextView mtvOrdenCompra, mtvGuia, mtvItemSku, mtv_doc_origen, mtv_doc_destino, mtv_motivo;
     private ListView mlvEpcs;
     private BTReader mReader;
     private ViewGroup viewGroup1;
@@ -49,6 +50,7 @@ public class InvetoryLocatedFragment extends Fragment {
     private SoundTask mSoundTask;
     private String epc_;
     private boolean isOpenAlertDialog ;
+    private LinearLayout mlayoutGuiaEntrada, mlayoutRecepcion;
 
     /*private TimerTask mLocateTimerTask;
     private Timer mClearLocateTimer;*/
@@ -82,8 +84,18 @@ public class InvetoryLocatedFragment extends Fragment {
     }
 
     private void InicializateControls(View view){
+        mlayoutGuiaEntrada = view.findViewById(R.id.layoutGuiaEntrada);
+        mlayoutRecepcion = view.findViewById(R.id.layoutRecepcion);
+
         mtvOrdenCompra = view.findViewById(R.id.tv_orden_compra);
         mtvGuia = view.findViewById(R.id.tv_guia);
+
+        mtv_doc_origen = view.findViewById(R.id.tv_doc_origen);
+        mtv_doc_destino = view.findViewById(R.id.tv_doc_destino);
+        mtv_motivo = view.findViewById(R.id.tv_motivo);
+
+
+
         mtvItemSku = view.findViewById(R.id.tv_item_sku);
         mlvEpcs = view.findViewById(R.id.lv_epcs);
 
@@ -92,8 +104,21 @@ public class InvetoryLocatedFragment extends Fragment {
 
     private void setValuesControl(){
         if(locatedInvData != null){
-            mtvOrdenCompra.setText(locatedInvData.getOrdenCompra() != null ? locatedInvData.getOrdenCompra() : "" );
-            mtvGuia.setText(locatedInvData.getNumeroGuia() != null ? locatedInvData.getNumeroGuia() : "" );
+            if(locatedInvData.getOrdenCompra() != null && locatedInvData.getNumeroGuia() != null ){
+                mlayoutGuiaEntrada.setVisibility(View.VISIBLE);
+                mlayoutRecepcion.setVisibility(View.GONE);
+                mtvOrdenCompra.setText(locatedInvData.getOrdenCompra() != null ? locatedInvData.getOrdenCompra() : "" );
+                mtvGuia.setText(locatedInvData.getNumeroGuia() != null ? locatedInvData.getNumeroGuia() : "" );
+            }
+            else {
+                mtv_doc_origen.setText(locatedInvData.getDocOrigen() != null ? locatedInvData.getDocOrigen() : "" );
+                mtv_doc_destino.setText(locatedInvData.getDocDestino() != null ? locatedInvData.getDocDestino() : "" );
+                mtv_motivo.setText(locatedInvData.getMotivo() != null ? locatedInvData.getMotivo() : "" );
+
+                mlayoutGuiaEntrada.setVisibility(View.GONE);
+                mlayoutRecepcion.setVisibility(View.VISIBLE);
+            }
+
             mtvItemSku.setText(locatedInvData.getItemSku() != null ? locatedInvData.getItemSku() : "" );
         }
     }

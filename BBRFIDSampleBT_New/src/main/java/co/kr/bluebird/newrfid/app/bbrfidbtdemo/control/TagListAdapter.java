@@ -59,6 +59,15 @@ public class TagListAdapter extends BaseAdapter {
         mItemList = new CopyOnWriteArrayList<>();
         mTagList = new CopyOnWriteArrayList<>();
     }
+
+    public TagListAdapter(Context ctx, CopyOnWriteArrayList<ListItem> itemList, CopyOnWriteArrayList<String> tagList, int ListCycleCount ) {
+        super();
+        if (D) Log.d(TAG, "TagListAdapter");
+        mContext = ctx;
+        mItemList = itemList;
+        mTagList = tagList;
+        mListCycleCount = ListCycleCount;
+    }
     
     @Override
     public int getCount() {
@@ -185,7 +194,12 @@ public class TagListAdapter extends BaseAdapter {
     {
         return  mItemList;
     }
-
+    public CopyOnWriteArrayList<String> tagList(){
+        return  mTagList;
+    }
+    public int ListCycleCount(){
+        return mListCycleCount;
+    }
     public ArrayList<String> listTagReadEpc()
     {
         ArrayList<String> epcs = new ArrayList<>();
