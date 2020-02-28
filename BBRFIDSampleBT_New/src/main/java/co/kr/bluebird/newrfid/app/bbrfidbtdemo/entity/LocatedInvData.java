@@ -6,6 +6,9 @@ import java.util.List;
 public class LocatedInvData implements Serializable {
     private String ordenCompra;
     private String numeroGuia;
+    private String docOrigen;
+    private String docDestino;
+    private String motivo;
     private String itemSku;
     private List<String> epcs;
     private SkuData skuData;
@@ -24,6 +27,30 @@ public class LocatedInvData implements Serializable {
 
     public void setNumeroGuia(String numeroGuia) {
         this.numeroGuia = numeroGuia;
+    }
+
+    public String getDocOrigen() {
+        return docOrigen;
+    }
+
+    public void setDocOrigen(String docOrigen) {
+        this.docOrigen = docOrigen;
+    }
+
+    public String getDocDestino() {
+        return docDestino;
+    }
+
+    public void setDocDestino(String docDestino) {
+        this.docDestino = docDestino;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 
     public String getItemSku() {

@@ -92,7 +92,7 @@
             <ListView
                 android:id="@+id/lv_Replenishment"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200sp"
                 android:dividerHeight="1dp" >
 
             </ListView>

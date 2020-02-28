@@ -49,7 +49,8 @@ public class CustomListAdapterTakInventoryControl extends BaseAdapter {
             holder = new ViewHolder();
             holder.uSeccion = (TextView) v.findViewById(R.id.tvCol1);
             holder.uLeidos = (TextView) v.findViewById(R.id.tvCol2);
-            holder.uPorcentaje = (TextView) v.findViewById(R.id.tvCol3);
+            holder.uStock = (TextView) v.findViewById(R.id.tvCol3);
+            holder.uPorcentaje = (TextView) v.findViewById(R.id.tvCol4);
 
 
             v.setTag(holder);
@@ -59,6 +60,7 @@ public class CustomListAdapterTakInventoryControl extends BaseAdapter {
 
         holder.uSeccion.setText(listData.get(position).getNombre());
         holder.uLeidos.setText(String.valueOf(listData.get(position).getLeido()));
+        holder.uStock.setText(String.valueOf(listData.get(position).getEsperado()));
         holder.uPorcentaje.setText( String.valueOf(listData.get(position).getPorcentaje()) );
 
         return v;
@@ -74,6 +76,7 @@ public class CustomListAdapterTakInventoryControl extends BaseAdapter {
 
         TextView uSeccion;
         TextView uLeidos;
+        TextView uStock;
         TextView uPorcentaje;
 
     }

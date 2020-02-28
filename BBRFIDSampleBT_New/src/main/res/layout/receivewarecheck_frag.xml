@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollReceiveWare"
+    android:orientation="vertical"
     tools:context="co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity">
 
     <LinearLayout
@@ -17,77 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible"
-            >
-
-            <!--     <TableLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_margin="5dp"
-                     android:stretchColumns="*">
-
-                     <TableRow
-                         android:layout_width="0dp"
-                         android:layout_height="match_parent">
-
-
-                         <TextView
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:text="@string/RWDocOrigen" />
-
-                         <EditText
-                             android:id="@+id/etDocOrigenRW"
-                             android:layout_width="140dp"
-                             android:layout_height="wrap_content"
-                             android:ems="10"
-                             android:enabled="false"
-                             android:inputType="text"
-                             android:textSize="12sp" />
-
-
-                     </TableRow>
-
-                     <TableRow
-                         android:layout_width="wrap_content"
-                         android:layout_height="match_parent">
-
-                         <TextView
-                             android:id="@+id/textView3"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:text="@string/RWDocDestino" />
-
-                         <EditText
-                             android:id="@+id/etDocDestinoRW"
-                             android:layout_width="140dp"
-                             android:layout_height="wrap_content"
-                             android:ems="10"
-                             android:enabled="false"
-                             android:inputType="textPersonName"
-                             android:textSize="12sp" />
-                     </TableRow>
-
-                     <TableRow
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content">
-
-                         <TextView
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:text="@string/SWMotivo" />
-
-                         <EditText
-                             android:id="@+id/etMotivoRW"
-                             android:layout_width="140dp"
-                             android:layout_height="wrap_content"
-                             android:ems="10"
-                             android:enabled="false"
-                             android:inputType="textPersonName"
-                             android:textSize="12sp" />
-                     </TableRow>
-
-                 </TableLayout>-->
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,122 +30,80 @@
                     android:orientation="vertical">
 
 
-                    <!--<LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="35sp"
-                        android:layout_marginLeft="5sp"
-                        android:layout_marginRight="5sp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Doc. Origen:  " />
-
-                        <TextView
-                            android:id="@+id/tvDocOrigenRW"
-                            android:layout_width="200dip"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/scanQR_imgbutton"
-                            android:layout_width="40sp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#1F9375"
-                            android:textColor="#FFFFFF"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5sp"
+                        android:layout_marginTop="5sp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="65sp"
                             android:layout_height="wrap_content"
                             android:text="Doc. Origen:  "
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvDocOrigenRW"
-                            android:layout_width="230dip"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp" />
-
-
-                        <Button
-                            android:id="@+id/scanQR_imgbutton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#1F9375"
-                            android:textColor="#FFFFFF"
-                            android:textSize="10sp" />
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5sp"
                         android:layout_marginLeft="5sp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
+                            android:layout_width="65sp"
                             android:layout_height="wrap_content"
                             android:text="Doc.Destino: "
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp"
                             android:textStyle="bold"
                             />
 
                         <TextView
                             android:id="@+id/tvDocDestinoRW"
-                            android:layout_width="230dip"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp" />
-
-
-                        <Button
-                            android:id="@+id/search_imgbutton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#1F9375"
-                            android:textColor="#FFFFFF"
-                            android:textSize="10sp" />
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5sp"
                         android:layout_marginLeft="5sp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="65sp"
                             android:layout_height="wrap_content"
-                            android:text="Motivo:          "
+                            android:text="Motivo:"
+                            android:textSize="11sp"
+                            android:textColor="@color/gColorGris_n800"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvMotivoRW"
-                            android:layout_width="230dip"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
-                            android:textSize="12sp" />
-
-
-                        <!--<EditText
-                            android:id="@+id/etMotivoRW"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:enabled="false"
-                            android:inputType="textMultiLine"
-                            android:textSize="12sp" />-->
+                            android:textSize="11sp"
+                            android:textColor="@color/gColorGris_n800"
+                            />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -235,6 +123,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="11sp"
+                        android:textColor="@color/gColorGris_n800"
+                        android:textStyle="bold"
                         android:text="@string/GEitemsSearch" />
 
                     <ProgressBar
@@ -254,18 +145,24 @@
                         android:id="@+id/tvCantItemLeidos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorGris_n800"
+                        android:textSize="11sp"
                         android:text="0" />
 
                     <TextView
                         android:id="@+id/tvSlash"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorGris_n800"
+                        android:textSize="11sp"
                         android:text="/" />
 
                     <TextView
                         android:id="@+id/tvCantTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gColorGris_n800"
+                        android:textSize="11sp"
                         android:text="0" />
 
                 </TableRow>
@@ -313,7 +210,7 @@
                     android:id="@+id/btnConfirmar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#1895C0"
+                    android:backgroundTint="#0097a7"
                     android:text="@string/BTN_confirmar"
                     android:textColor="#FFFFFF"
                     android:textSize="10sp" />
@@ -634,10 +531,10 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0dip"
+                        android:layout_height="match_parent"
                         android:layout_marginTop="5dip"
                         android:orientation="horizontal"
-                        android:visibility="invisible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -675,29 +572,32 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dip"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="30sp"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="5dip"
-                            android:text="Items encontrados" />
+                            android:text="Items Encontrados"
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="400dip"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="5dip"
                         android:layout_marginRight="5dip"
-                        android:background="@drawable/borde"
                         android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="50dip"
-                            android:layout_marginTop="10dip"
+                            android:layout_height="30dip"
+                            android:layout_marginTop="5dip"
                             android:orientation="horizontal"
+                            android:background="@color/gColorAzulClaro"
                             android:id="@+id/layoutHeaderRWC"
                             android:visibility="gone">
 
@@ -705,7 +605,6 @@
                                 android:layout_width="200dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/GECodItems"
@@ -715,7 +614,6 @@
                                 android:layout_width="120dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/GECantidad"
@@ -724,7 +622,6 @@
                                 android:layout_width="90dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/TIleidos"
@@ -734,7 +631,6 @@
                                 android:layout_width="90dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="Dif."
@@ -744,67 +640,14 @@
 
                         <ListView
                             android:id="@+id/lv_itemsEnc"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:dividerHeight="1dp" >
-
-                        </ListView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="30dip"
-                        android:orientation="vertical">
-
-                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dip"
-                            android:text="Etiquetas inconsistentes" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="400dip"
-                        android:layout_marginTop="10dip"
-                        android:layout_marginLeft="5dip"
-                        android:layout_marginRight="5dip"
-                        android:layout_marginBottom="5dip"
-                        android:background="@drawable/borde"
-                        android:orientation="vertical">
-                        <ListView
-                            android:id="@+id/lv_tagsInconsistentes"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:dividerHeight="1dp" >
+                            >
 
                         </ListView>
                     </LinearLayout>
-
-                    <!--<Button
-
-                        android:text="Confirmar"
-                        android:id="@+id/btnConfirmar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dip"
-                        android:layout_marginRight="5dip"
-                        android:background="#00897B"/>-->
-
-
                 </LinearLayout>
-                <!--<Button
-                    android:id="@+id/btnConfirmar"
-                    android:backgroundTint="#00897B"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dip"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginBottom="5dip"
-                    android:layout_marginTop="5dip"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/borderedondo"
-                    android:text="@string/BTN_confirmar"
-                    android:textAlignment="center" />-->
+
                 <LinearLayout
                     android:id="@+id/tag_locate_container"
                     android:layout_width="match_parent"
@@ -917,7 +760,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/layaoutInconsistency"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -932,8 +775,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
-                        android:layout_marginLeft="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginTop="5sp"
                         android:orientation="horizontal">
 
                         <ImageButton
@@ -945,81 +789,147 @@
                             android:visibility="gone"/>
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="68sp"
                             android:layout_height="wrap_content"
-                            android:text="Doc. Origen:  " />
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/gColorGris_n800"
+                            android:text="Doc. Origen:" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/etDocOrigenRW"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:enabled="false"
-                            android:inputType="text"
-                            android:textSize="12sp" />
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5sp"
+                        android:layout_marginTop="5sp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/tvDocDestinoRWI"
-                            android:layout_width="wrap_content"
+                            android:layout_width="68sp"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/gColorGris_n800"
+                            android:textStyle="bold"
+                            android:textSize="11sp"
                             android:text="@string/RWDocDestino" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/etDocDestinoRW"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:enabled="false"
-                            android:inputType="textPersonName"
-                            android:textSize="12sp" />
+                            android:textColor="@color/gColorGris_n800"
+                            android:textSize="11sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="35sp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5sp"
+                        android:layout_marginTop="5sp"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="68sp"
+                            android:text="Motivo:"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/gColorGris_n800"/>
+
+                        <TextView
+                            android:id="@+id/etMotivoRW"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/gColorGris_n800"
+                            android:inputType="textMultiLine"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:background="@drawable/borde"
+                        android:backgroundTint="@color/gColorGris_n100"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:id="@+id/tvNota"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Motivo:          " />
+                            android:inputType="textMultiLine"
+                            android:textSize="12dp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20sp"
+                                android:layout_height="20sp"
+                                android:src="@drawable/ic_cuaderno" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/gColorGris_n800"
+                                android:textSize="11sp"
+                                android:text=" Nota" />
+                        </LinearLayout>
+
 
                         <EditText
-                            android:id="@+id/etMotivoRW"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:enabled="false"
-                            android:inputType="textPersonName"
-                            android:textSize="12sp" />
+                            android:id="@+id/etNota"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textMultiLine"
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dip"
                         android:layout_marginLeft="5sp"
-                        android:orientation="vertical">
+                        android:layout_marginTop="5sp"
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#F5870A"
-                            android:text="Items Inconsistentes" />
+                            android:text="Items Inconsistentes"
+                            android:textStyle="bold"
+                            android:textColor="@color/gColorGris_n800" />
+
+                        <Button
+                            android:id="@+id/btnConfirmarRW"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="130sp"
+                            android:backgroundTint="@color/gColorAzulClaro"
+                            android:text="@string/BTN_procesar"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9sp" />
+
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="240dip"
+                        android:layout_height="match_parent"
                         android:layout_marginRight="5dip"
                         android:layout_marginLeft="5dip"
                         android:orientation="vertical">
@@ -1028,8 +938,10 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="50dip"
+                            android:layout_height="30dip"
                             android:layout_marginTop="5dip"
+                            android:layout_marginBottom="5sp"
+                            android:background="@color/gColorAzulClaro"
                             android:orientation="horizontal"
                             android:id="@+id/layoutHeaderRWI"
                             android:visibility="gone">
@@ -1038,7 +950,6 @@
                                 android:layout_width="200dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/GECodItems"
@@ -1048,7 +959,6 @@
                                 android:layout_width="120dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/GECantidad"
@@ -1057,7 +967,6 @@
                                 android:layout_width="90dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="@string/TIleidos"
@@ -1067,77 +976,23 @@
                                 android:layout_width="90dip"
                                 android:layout_height="45dip"
                                 android:layout_weight="1"
-                                android:background="#00897B"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
                                 android:text="Dif."
                                 android:textStyle="bold" />
 
                         </LinearLayout>
+
                         <ListView
                             android:id="@+id/lv_itemsInconsistentes"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:dividerHeight="1dp" >
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:dividerHeight="1dp">
 
                         </ListView>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5sp"
-                        android:orientation="horizontal">
-
-
-                        <Button
-                            android:id="@+id/btnAddNota"
-                            android:layout_width="wrap_content"
-                            android:layout_height="35sp"
-                            android:layout_weight="1"
-                            android:text="agregar nota"
-                            android:textSize="10sp"
-                            android:backgroundTint="#1F9375"
-                            android:textColor="#FFFFFF" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="100dip"
-                        android:layout_marginTop="5dip"
-                        android:layout_marginBottom="5dip"
-                        android:layout_marginRight="5dip"
-                        android:layout_marginLeft="5dip"
-                        android:background="@drawable/borde"
-                        android:orientation="vertical">
-
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:inputType="textMultiLine"
-                            android:textSize="12dp"
-                            android:id="@+id/tvNotaRW"/>
-                    </LinearLayout>
-
                 </LinearLayout>
-
-
-                <Button
-                    android:id="@+id/btnConfirmarRW"
-                    android:backgroundTint="#00897B"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dip"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginBottom="5dip"
-                    android:layout_marginTop="2dip"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/borderedondo"
-                    android:text="@string/BTN_procesar"
-                    android:textAlignment="center" />
 
             </LinearLayout>
         </LinearLayout>
@@ -1145,4 +1000,4 @@
     </LinearLayout>
 
 
-</ScrollView>
+</LinearLayout>

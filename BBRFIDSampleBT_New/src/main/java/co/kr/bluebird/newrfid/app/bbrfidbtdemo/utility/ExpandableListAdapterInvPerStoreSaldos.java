@@ -80,7 +80,8 @@ public class ExpandableListAdapterInvPerStoreSaldos extends BaseExpandableListAd
         }
 
         if(objGarmentSize.isBusca()){
-            convertView.setBackgroundColor(Color.parseColor("#61bcc7"));
+            /*convertView.setBackgroundColor(Color.parseColor("#61bcc7"));*/
+            convertView.setBackgroundColor(Color.parseColor("#F38428"));
         }
         return convertView;
     }

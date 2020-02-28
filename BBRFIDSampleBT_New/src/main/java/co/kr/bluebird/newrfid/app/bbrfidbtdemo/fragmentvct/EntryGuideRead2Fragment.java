@@ -12,6 +12,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuideDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LocatedInvData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.PersistenceReceiveWare;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SendTags;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SkuData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.TagNoRead;
@@ -41,6 +42,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -283,8 +285,7 @@ public class EntryGuideRead2Fragment extends Fragment {
     private boolean lectureHasPc = false;
     private boolean isWindowsInventoryLocated = false;
 
-    private EntryGuideCheckFragment mEntryGuideCheckFragment;
-    private InvetoryLocatedFragment mInvetoryLocatedFragment;
+    public InvetoryLocatedFragment mInvetoryLocatedFragment;
 
     private co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EntryGuide ResposeEG;
     private clsMensaje loDialogo;
@@ -722,6 +723,16 @@ public class EntryGuideRead2Fragment extends Fragment {
     public void onStart() {
         if (D) Log.d(TAG, "onStart");
         mSoundFileLoadState = false;
+
+        SharedPreferences prefs = mContext.getSharedPreferences("shared_guia_entrada",   Context.MODE_PRIVATE);
+        String objJsonPersistence = prefs.getString("object",null);
+        prefs.edit().clear().commit();
+
+        if(objJsonPersistence != null){
+            Gson gson = new Gson();
+            PersistenceReceiveWare persistenceReceiveWare = gson.fromJson(objJsonPersistence, PersistenceReceiveWare.class);
+            PersistirDatosBackInvLocated(persistenceReceiveWare);
+        }
 
         createSoundPool();
 
@@ -1240,11 +1251,6 @@ public class EntryGuideRead2Fragment extends Fragment {
             List<String> ListaEpcLeidos = params[0];
 
             dtoGuiaProcesar = rfidService.WSGuiaEntradaProcesar(NoGuia, ListaEpcLeidos );
-
-
-            //egDetailResponse = rfidService.GuiaEntradaDetalleService2(NoGuia,listaEpcReal());
-
-            //entryGuideDetail = rfidService.GuiaEntradaDetalleService(NoGuia);
             return null;
         }
 
@@ -1255,15 +1261,10 @@ public class EntryGuideRead2Fragment extends Fragment {
             progressDialog.cancel();
 
             if(dtoGuiaProcesar != null && dtoGuiaProcesar.getCodigo().equals("00") ){
-                //Toast.makeText(mContext, "Se ha procesado correctamente la Guia de Entrada: #"+NoGuia , Toast.LENGTH_SHORT).show();
-
-
-                // limpiar y volver a la pantalla EntryGuideCheck
-                //VolverEntryGuideCheck();
-                InvocarAlertEGProcesar(dtoGuiaProcesar.getDescripcion(), true);
+                DialogOk("Operación Correcta \n"+ dtoGuiaProcesar.getDescripcion());
             }
             else {
-                Toast.makeText(mContext, dtoGuiaProcesar.getDescripcion() , Toast.LENGTH_SHORT).show();
+                loDialogo.gMostrarMensajeError(loVistaDialogo,dtoGuiaProcesar.getDescripcion());
             }
         }
 
@@ -1279,29 +1280,6 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
 
-    private void VolverEntryGuideCheck(){
-
-        if (mEntryGuideCheckFragment == null)
-            mEntryGuideCheckFragment = mEntryGuideCheckFragment.newInstance();
-
-        Bundle args = new Bundle();
-        args.putString("NoOCompra", medOrdenCompraGR.getText().toString().trim());
-        mEntryGuideCheckFragment.setArguments(args);
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.content, mEntryGuideCheckFragment);
-
-        ft.addToBackStack(null);
-        ft.commit();
-
-
-
-        /*
-        getSupportFragmentManager().beginTransaction().
-        remove(getSupportFragmentManager().findFragmentById(R.id.frame)).commit();*/
-        //getFragmentManager().beginTransaction().remove(mFragment).commit();
-
-    }
 
     public String getOrdenCompra(){
         return medOrdenCompraGR.getText().toString().trim();
@@ -1633,7 +1611,8 @@ public class EntryGuideRead2Fragment extends Fragment {
         Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
         Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
         TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-        poLabelTexto.setText("Desea ir a ver los items del SKU seleccionado, para localizarlos");
+        String itCodigo = ((item) mlv_itemsDif.getItemAtPosition(position)).getItemCodigo();
+        poLabelTexto.setText("Desea localizar los epcs del item: "+itCodigo);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1670,6 +1649,7 @@ public class EntryGuideRead2Fragment extends Fragment {
                     //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     //ft.addToBackStack(null);
                     ft.commit();
+                    PersistirDatosViews();
                 }
                 catch (Exception e){
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -2704,8 +2684,7 @@ public class EntryGuideRead2Fragment extends Fragment {
             entradaProcesarAsync.execute(ListaEpcLeidos);
         }
         else {
-            //Toast.makeText(mContext,"Ninguna de las etiquetas leidas pertenecen a esta Guia de entrada, o ya fueron activadas", Toast.LENGTH_LONG).show();
-            InvocarAlertEGProcesar("Ninguna de las etiquetas leidas pertenecen a esta Guia de entrada, o ya fueron activadas", false);
+            loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"Ninguna de las etiquetas leidas pertenecen a esta Guia de entrada, o ya fueron activadas");
         }
 
 
@@ -2720,32 +2699,78 @@ public class EntryGuideRead2Fragment extends Fragment {
         }
     }
 
-    private void InvocarAlertEGProcesar(String mensaje_, boolean isExitoso)
-    {
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage(mensaje_)
-                .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        if(isExitoso){
-                            dialog.dismiss();
-                            //VolverEntryGuideCheck();
-                            CleanControls();
+    private void DialogOk(String msj){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_ok, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.buttonOk);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(msj);
+        alertDialog.setCancelable(false);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CleanControls();
+                alertDialog.dismiss();
+            }
+        });
 
-                        }
-                        else {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-
-        alerta.show();
+        alertDialog.show();
     }
 
+    //************PERSISTIR INFORMACION PARA BACKEO
 
-    /*
+    private void PersistirDatosViews(){
 
-    * */
+        SharedPreferences prefs = mContext.getSharedPreferences ("shared_guia_entrada",   Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        String json = ObjectJson();
+        editor.putString("object", json);
+        editor.commit();
 
+    }
+    private String ObjectJson(){
+
+        PersistenceReceiveWare persistenceReceiveWare = new PersistenceReceiveWare();
+
+        persistenceReceiveWare.setOrdenCompra(medOrdenCompraGR.getText()+"");
+        persistenceReceiveWare.setGuiaEntrada(metNumGuiaEntGR.getText()+"");
+        persistenceReceiveWare.setItemsLeidos(mtvCantItemLeidos.getText()+"");
+        persistenceReceiveWare.setItemsEsperados(mtvCantTotal.getText()+"");
+        persistenceReceiveWare.setEstadoBtnConfirmar(true);
+        persistenceReceiveWare.setEstadoBtnDetener(true);
+        persistenceReceiveWare.setEstadoBtnLimpiar(true);
+        persistenceReceiveWare.setEstadoBtnConfirmar(mprocesar_imgbtn.getText().toString().equalsIgnoreCase("procesar") ? true : false);
+        persistenceReceiveWare.setEgDetailResponse(egDetailResponseLocating);
+        persistenceReceiveWare.setListEpcsLeidos(ArrLis);
+        persistenceReceiveWare.setTagList(mAdapter.tagList());
+        persistenceReceiveWare.setListCycleCount(mAdapter.ListCycleCount());
+
+        Gson gson = new Gson();
+
+        String json = gson.toJson(persistenceReceiveWare);
+        return json;
+
+    }
+
+    private void PersistirDatosBackInvLocated(PersistenceReceiveWare persistenceReceiveWare){
+        medOrdenCompraGR.setText(persistenceReceiveWare.getOrdenCompra());
+        metNumGuiaEntGR.setText(persistenceReceiveWare.getGuiaEntrada());
+        mtvCantItemLeidos.setText(persistenceReceiveWare.getItemsLeidos());
+        mtvCantTotal.setText(persistenceReceiveWare.getItemsEsperados());
+        egDetailResponseLocating = persistenceReceiveWare.getEgDetailResponse();
+
+        //btnConfirmarManagement(false);
+        LlenarGrid(egDetailResponseLocating);
+        mAdapter = new TagListAdapter(mContext, persistenceReceiveWare.getListEpcsLeidos(), persistenceReceiveWare.getTagList(), persistenceReceiveWare.getListCycleCount());
+        mprogress1.setMax(Integer.parseInt(persistenceReceiveWare.getItemsEsperados()));
+        int cant = mAdapter.getCount();
+        mprogress1.setProgress(cant);
+
+        btnProcesarManagement(persistenceReceiveWare.isEstadoBtnConfirmar());
+        btnProcesarEnabledDisabled(true);
+
+    }
 }

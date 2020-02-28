@@ -622,36 +622,33 @@
 
                         <LinearLayout
                             android:id="@+id/layoutHeader"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="25dip"
                             android:layout_marginTop="10dip"
                             android:orientation="horizontal"
+                            android:background="@color/gColorAzulClaro"
                             android:visibility="gone">
 
                             <TextView
-                                android:layout_width="200dip"
-                                android:layout_height="45dip"
-                                android:layout_weight="1"
-                                android:background="@color/gColorCyan_n700"
+                                android:layout_width="190dip"
+                                android:layout_height="wrap_content"
                                 android:text="@string/GECodItems"
                                 android:textColor="@android:color/white"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="100dip"
-                                android:layout_height="45dip"
-                                android:layout_weight="1"
-                                android:background="@color/gColorCyan_n700"
+                                android:layout_width="80dip"
+                                android:layout_height="wrap_content"
                                 android:text="@string/GECantidad"
+                                android:gravity="right"
                                 android:textColor="@android:color/white"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="100dip"
-                                android:layout_height="45dip"
-                                android:layout_weight="1"
-                                android:background="@color/gColorCyan_n700"
+                                android:layout_width="70dip"
+                                android:layout_height="wrap_content"
                                 android:text="@string/TIleidos"
+                                android:gravity="right"
                                 android:textColor="@android:color/white"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />

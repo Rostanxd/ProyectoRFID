@@ -10,8 +10,11 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGDetailResponse;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGProcesado;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.EGTagsResponseItem;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LocatedInvData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.PersistenceReceiveWare;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReceiveWareDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.SkuData;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.TagNoRead;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.item;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.fileutil.FileManager;
@@ -40,6 +43,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -82,11 +86,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.google.gson.Gson;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -120,8 +127,6 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     //private ListView mRfidList;
 
-    private ScrollView mscrollReceiveWare;
-
     private TextView mBatteryText;
 
     private TextView mTimerText;
@@ -136,7 +141,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     private Button mClearButton,mbtnConfirmar;
 
-    private Button msearch_imgbutton, mscanQR_imgbutton, mclean_imgbtn, mStopInvenButton, mInvenButton;
+    private Button /* msearch_imgbutton, mscanQR_imgbutton,*/ mclean_imgbtn, mStopInvenButton, mInvenButton;
 
     private Switch mTurboSwitch;
 
@@ -252,7 +257,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     //private TableLayout tblItemDif;
     private EGProcesado egProcesado;
 
-    private  ListView mlv_itemsEnc, mlv_tagsInconsistentes;
+    private  ListView mlv_itemsEnc;
     //private boolean first ;
     private List<String> ListEpcRead;
     private EGDetailResponse egDetailResponse = null;
@@ -286,15 +291,16 @@ public class ReceiveWareCheckFragment extends Fragment {
     public ReceiveWareInconsistencyFragment mReceiveWareInconsistencyFragment;
 
     // Controles Recepcion Inconsistency
-    private EditText EtDocOrigenRWI, EtDocDestinoRWI, EtDocMotivoRWI;
+    private TextView EtDocOrigenRWI, EtDocDestinoRWI, EtDocMotivoRWI;
     private ListView mlv_itemsInconsistentes;
-    private Button mbtnConfirmarRW, mbtnAddNota;
-    private TextView metNotaRW;
+    private Button mbtnConfirmarRW;
+    private EditText metNota;
     private LinearLayout mlayoutHeaderRWI, mlayaoutWareCheck, mlayaoutInconsistency;
     private ImageButton mBackButtonInconsistency;
     public boolean isOpenInconsistency = false;
     private List<EGTagsResponseItem> listInc = null;
     private ReceiveWareDetail receiveWareDetail_param;
+    public InvetoryLocatedFragment mInvetoryLocatedFragment;
 
     public static ReceiveWareCheckFragment newInstance() {
         return new ReceiveWareCheckFragment();
@@ -412,21 +418,6 @@ public class ReceiveWareCheckFragment extends Fragment {
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
-        msearch_imgbutton = (Button)v.findViewById(R.id.search_imgbutton);
-        msearch_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
-        msearch_imgbutton.setOnClickListener(sledListener);
-
-        /*myIcon = getResources().getDrawable( R.drawable.qrcode18px );
-        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
-        myIcon.setColorFilter(filter);*/
-        mscanQR_imgbutton = (Button)v.findViewById(R.id.scanQR_imgbutton);
-        /* mscanQR_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);*/
-        //mscanQR_imgbutton.setOnClickListener(sledListener);
-
-
-
-
-        /*myIcon = getResources().getDrawable( R.drawable.materialcheck18 );*/
         myIcon = getResources().getDrawable( R.drawable.ic_materialcompare );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
@@ -452,12 +443,12 @@ public class ReceiveWareCheckFragment extends Fragment {
         mAdapter = new TagListAdapter(mContext);
         //mRfidList.setAdapter(mAdapter);
         mlv_itemsEnc = (ListView)v.findViewById(R.id.lv_itemsEnc);
-        mlv_tagsInconsistentes = (ListView)v.findViewById(R.id.lv_tagsInconsistentes);
-        mscrollReceiveWare = (ScrollView) v.findViewById(R.id.scrollReceiveWare);
+
+        mlv_itemsEnc.setOnItemClickListener(listItemClickListener);
+
 
         InicializarControlRInconsistency(v);
 
-        ScrollManager();
 
         //first = true;
 
@@ -484,13 +475,12 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     private void InicializarControlRInconsistency(View v){
 
-        EtDocOrigenRWI = (EditText)v.findViewById(R.id.etDocOrigenRW);
-        EtDocDestinoRWI = (EditText)v.findViewById(R.id.etDocDestinoRW);
-        EtDocMotivoRWI = (EditText)v.findViewById(R.id.etMotivoRW);
+        EtDocOrigenRWI = (TextView) v.findViewById(R.id.etDocOrigenRW);
+        EtDocDestinoRWI = (TextView)v.findViewById(R.id.etDocDestinoRW);
+        EtDocMotivoRWI = (TextView)v.findViewById(R.id.etMotivoRW);
         mlv_itemsInconsistentes = (ListView) v.findViewById(R.id.lv_itemsInconsistentes);
         mbtnConfirmarRW = (Button) v.findViewById(R.id.btnConfirmarRW);
-        mbtnAddNota = (Button) v.findViewById(R.id.btnAddNota);
-        metNotaRW = (TextView) v.findViewById(R.id.tvNotaRW);
+        metNota =  v.findViewById(R.id.etNota);
 
         mlayoutHeaderRWI = (LinearLayout) v.findViewById(R.id.layoutHeaderRWI);
         mlayoutHeaderRWI.setVisibility(View.GONE);
@@ -508,22 +498,16 @@ public class ReceiveWareCheckFragment extends Fragment {
         Drawable myIcon = null;
         ColorFilter filter = null;
 
-        myIcon = getResources().getDrawable( R.drawable.materialcheck );
+        myIcon = getResources().getDrawable( R.drawable.ic_materialprocesar );
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
-        mbtnConfirmarRW.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
+        mbtnConfirmarRW.setCompoundDrawablesWithIntrinsicBounds( myIcon, null,null , null);
 
-        myIcon = getResources().getDrawable( R.drawable.materialadd18 );
-        filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
-        myIcon.setColorFilter(filter);
+
 
         mBackButtonInconsistency = (ImageButton)v.findViewById(R.id.back_button_inconsistency);
         mBackButtonInconsistency.setOnClickListener(btnBackInconsistency);
-
-        mbtnAddNota.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
-
-        mbtnAddNota.setOnClickListener(btnAddNotaOnClick);
 
         mbtnConfirmarRW.setOnClickListener(btnConfirmarRWIOnClick);
     }
@@ -544,58 +528,6 @@ public class ReceiveWareCheckFragment extends Fragment {
         mlayaoutWareCheck.setVisibility(View.VISIBLE);
     }
 
-    private View.OnClickListener btnAddNotaOnClick = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            DialogNota();
-        }
-    };
-
-    private void DialogNota(){
-        /*final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_input_text);
-        mDialogContext = dialog.getContext();
-
-        dialog.setTitle("Ingrese una nota");
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-        EditText medNota = (EditText) dialog.findViewById(R.id.edNota_);*/
-
-        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_input_text, loVistaDialogo, false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
-        builder.setView(dialogView);
-        final AlertDialog alertDialog = builder.create();
-        mDialogContext = alertDialog.getContext();
-
-        Button mdialogBtnAceptar = (Button) dialogView.findViewById(R.id.btnDialogConfirmar);
-        Button mdialogBtnCancelar = (Button) dialogView.findViewById(R.id.btnDialogCancelar);
-        Button mdialogBtnLimpiar = (Button) dialogView.findViewById(R.id.btnDialogLimpiar);
-        EditText medNota = (EditText) dialogView.findViewById(R.id.edNota_);
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                metNotaRW.setText(medNota.getText().toString());
-                alertDialog.dismiss();
-
-            }
-        });
-        mdialogBtnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        mdialogBtnLimpiar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                medNota.setText("");
-            }
-        });
-        alertDialog.show();
-    }
-
-
     private void DrawButtonMode(){
 
         Drawable myIcon = null;
@@ -610,8 +542,6 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
-        mscanQR_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
-        mscanQR_imgbutton.setOnClickListener(sledListener);
     }
 
     private OnItemSelectedListener sessionListener = new OnItemSelectedListener() {
@@ -654,53 +584,6 @@ public class ReceiveWareCheckFragment extends Fragment {
             //mInvenButton.setText(R.string.track_str);
             //mStopInvenButton.setText(R.string.stop_track_str);
         }
-    }
-
-    private void ScrollManager()
-    {
-        //mlv_itemsEnc mlv_tagsInconsistentes mscrollReceiveWare
-        mlv_itemsEnc.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mscrollReceiveWare.requestDisallowInterceptTouchEvent(true);
-                int action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_UP:
-                        mscrollReceiveWare.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
-
-        mlv_tagsInconsistentes.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mscrollReceiveWare.requestDisallowInterceptTouchEvent(true);
-                int action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_UP:
-                        mscrollReceiveWare.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
-        //mlv_itemsInconsistentes
-
-        mlv_itemsInconsistentes.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mscrollReceiveWare.requestDisallowInterceptTouchEvent(true);
-                int action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_UP:
-                        mscrollReceiveWare.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
     }
 
     private void createSoundPool() {
@@ -789,6 +672,36 @@ public class ReceiveWareCheckFragment extends Fragment {
     @Override
     public void onStart() {
         if (D) Log.d(TAG, "onStart");
+        //shared_recepcion_mercaderia
+
+        SharedPreferences prefs = mContext.getSharedPreferences("shared_recepcion_mercaderia",   Context.MODE_PRIVATE);
+        String objJsonPersistence = prefs.getString("object",null);
+        prefs.edit().clear().commit();
+
+        if(objJsonPersistence != null){
+            Gson gson = new Gson();
+            PersistenceReceiveWare persistenceReceiveWare = gson.fromJson(objJsonPersistence, PersistenceReceiveWare.class);
+            PersistirDatosBackInvLocated(persistenceReceiveWare);
+            btnConfirmarManagement(false);
+
+        }
+        else if(receiveWareDetail_param != null){
+            receiveWareDetail = receiveWareDetail_param;
+            if(doc_origen.isEmpty() && receiveWareDetail.getDocOrigen() != null)
+            {
+                doc_origen = receiveWareDetail.getDocOrigen().trim();
+            }
+            metDocOrigenRW.setText(doc_origen);
+            metDocDestinoRW.setText(receiveWareDetail.getDocDestino());
+            metMotivoRW.setText(receiveWareDetail.getMotDescription());
+            mprogress1.setMax(receiveWareDetail.getCantidadTotal());
+            mtvCantTotal.setText(receiveWareDetail.getCantidadTotal()+"");
+            ProcesarLvItemsDif(false);
+
+            String msj = "Se ha cargado el Doc. Origen: "+doc_origen+". Cambie a modo Rfid, lea las prendas y compare";
+            DialogIndicadorComparacion(msj);
+        }
+        ActivateButtons(true);
         mSoundFileLoadState = false;
 
         createSoundPool();
@@ -889,8 +802,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         mtvCantTotal.setText("0");
         mprogress1.setProgress(0);
         mlv_itemsEnc.setAdapter(null);
-        mlv_tagsInconsistentes.setAdapter(null);
-
+        metNota.setText("");
         mlayoutHeaderRWC.setVisibility(View.GONE);
         ArrLis = null;
 
@@ -933,30 +845,7 @@ public class ReceiveWareCheckFragment extends Fragment {
                             ret = mReader.RF_PerformInventoryWithLocating(mIsTurbo, mMask, mIgnorePC);
                         //ret = mReader.RF_READ(SDConsts.RFMemType.EPC, 1, 7, "00000000", false);
                         if (ret == SDConsts.RFResult.SUCCESS) {
-                            //isRunningRead = true;
-                            /*handlerStart = new Handler();
-                            mprogress1.setMax(5);
-                            Thread hilo = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
 
-                                    while (isRunningRead == false){
-                                        handlerStart.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                //txtCount.setText(i+" %");
-                                                mprogress1.setProgress( Integer.parseInt(mCountText.getText().toString()) );
-                                            }
-                                        });
-                                        try {
-                                            Thread.sleep(100);
-                                        }catch (InterruptedException e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            });
-                            hilo.start();*/
 
                             btnConfirmarManagement(true);
 
@@ -988,7 +877,7 @@ public class ReceiveWareCheckFragment extends Fragment {
                         enableControl(!mInventory);
                         pauseStopwatch();
                         mbtnConfirmar.setEnabled(true);
-                        mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                        mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
                         mInvenButton.setEnabled(true);
                         mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
                         lectureHasPc = !mIgnorePC;
@@ -997,17 +886,10 @@ public class ReceiveWareCheckFragment extends Fragment {
                     break;
 
                 case R.id.clean_imgbtn:
-                    DialogCleanControls();
+                    //DialogCleanControls();
+                    DialogConfirmar("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados",3,0);
                     break;
 
-
-                case  R.id.search_imgbutton:
-                    callDialogInsertParameterManual();
-                    break;
-                case  R.id.scanQR_imgbutton:
-                    scanQR_imgbutton_Extrated();
-
-                    break;
                 case R.id.btnConfirmar:
                     btnConfirmar_extrated();
                     break;
@@ -1016,89 +898,15 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
     };
 
-    private void scanQR_imgbutton_Extrated(){
-        DialogProcesar();
-    }
-
-    private void DialogProcesar()
-    {
-
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        int mode = mReader.SD_GetTriggerMode();
-
-        if(mode == SDConsts.SDTriggerMode.BARCODE)
-        {
-            alerta.setMessage("El Modo Barcode, ya esta establecido, apunte el Handheld hacia el QR, luego presionar el gatillo de la pistola o el botón -Iniciar- hasta obtener la lectura QR...")
-                    .setCancelable(false)
-                    .setPositiveButton("Establecer modo RFID", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.RFID);
-                            Drawable myIcon  = getResources().getDrawable( R.drawable.moderfid18px );
-                            ColorFilter filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
-                            myIcon.setColorFilter(filter);
-                            mscanQR_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
-                            Toast.makeText(mContext,"Se establecio modo RFID",Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("Continuar Modo Barcode", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                        }
-                    });
-            alerta.show();
-        }
-        else {
-            alerta.setMessage("El Handheld cambiara a modo de lectura Barcode, luego usted debera apuntar el dispositivo hacia el Codigo QR y presionar el gatillo hasta obtener la lectura QR...")
-                    .setCancelable(false)
-                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            int ret;
-                            int mode = mReader.SD_GetTriggerMode();
-                            if (mode == SDConsts.SDTriggerMode.RFID){
-                                ret = mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.BARCODE);
-
-                                Drawable myIcon  = getResources().getDrawable( R.drawable.qrcode18px );
-                                ColorFilter filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
-                                myIcon.setColorFilter(filter);
-                                mscanQR_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
-
-                                Toast.makeText(mContext,"Se establecio modo lectura Barcode", Toast.LENGTH_SHORT).show();
-                            }
-                            if (D) Log.d(TAG, "set barcode cur mode = " + mode + " ret = " + ret);
-                        }
-                    });
-
-            alerta.show();
-        }
 
 
-    }
 
     private void btnConfirmar_extrated()
     {
-        /*if(egDetailResponse == null){
-            getListEpcsRead();
-            if(ListEpcRead.size() > 0){
-                DialogConfirmar();
-            }
-            else {
-                Toast.makeText(mContext,"No hay Etiquetas con que comparar...",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            // llamar a la otra pantalla...
-            //InvocateReceiveWareInconsistence();
-
-            InvocateReceiveWareInconsistence1();
-        }*/
-
         if(mbtnConfirmar.getText().equals("Comparar")){
             getListEpcsRead();
             if(ListEpcRead.size() > 0){
-                DialogConfirmar();
+                DialogConfirmar("¿Está seguro de realizar la comparación entre el documento de origen y la mercadería recibida?", 1,0);
             }
             else {
                 Toast.makeText(mContext,"No hay Etiquetas con que comparar...",Toast.LENGTH_SHORT).show();
@@ -1108,31 +916,6 @@ public class ReceiveWareCheckFragment extends Fragment {
             InvocateReceiveWareInconsistence1();
         }
 
-    }
-    private void InvocateReceiveWareInconsistence()
-    {
-
-        if (mReceiveWareInconsistencyFragment == null)
-            mReceiveWareInconsistencyFragment = mReceiveWareInconsistencyFragment.newInstance();
-
-        ArrayList<String> epcsLeidos = mAdapter.listTagReadEpc();
-
-        if (epcsLeidos.size() > 0) {
-            Bundle args = new Bundle();
-            List<EGTagsResponseItem> listInc = ListItemsIncosistentes();
-            args.putSerializable("items", (Serializable) listInc);
-            args.putString("DocOrigen", metDocOrigenRW.getText().toString());
-            args.putString("DocDestino",metDocDestinoRW.getText().toString());
-            args.putString("Motivo",metMotivoRW.getText().toString());
-
-            mReceiveWareInconsistencyFragment.setArguments(args);
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content, mReceiveWareInconsistencyFragment);
-            ft.addToBackStack(null);
-            ft.commit();
-
-        }
     }
 
     private void InvocateReceiveWareInconsistence1()
@@ -1190,211 +973,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             ListEpcRead.add(item.mUt);
         }
     }
-    private void callDialogInsertParameterManual() {
 
-
-        ProgressLoading();
-        SetSpinners();
-
-
-    }
-
-    /*private void  postCallWSTiposMovOrigen(){
-        final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_receiveware);
-        mDialogContext = dialog.getContext();
-
-        dialog.setTitle("Ingrese datos del Documento");
-
-        Button mdialogBtnAceptar = (Button) dialog.findViewById(R.id.btnDialogAceptar);
-        mspinTipo = (Spinner) dialog.findViewById(R.id.spinTipo);
-        mspinOrigen = (Spinner) dialog.findViewById(R.id.spinOrigen);
-        EditText medAnio = (EditText) dialog.findViewById(R.id.edAnio);
-        EditText medNumero = (EditText) dialog.findViewById(R.id.edNumero);
-
-        //Date currentTime = Calendar.getInstance().get
-
-        int year= Calendar.getInstance().get(Calendar.YEAR);
-
-        medAnio.setText(year+"");
-
-        mspinTipo.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String tipoMov =  spinnerMapTipos.get(i);
-                if(tipoMov.equals("GDE")){
-                    mspinOrigen.setEnabled(false);
-                    mspinOrigen.setSelection(0);
-                    medAnio.setText("");
-                    medAnio.setEnabled(false);
-
-                }else {
-                    mspinOrigen.setEnabled(true);
-                    medAnio.setText(year+"");
-                    medAnio.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-
-        mdialogBtnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //dialog.findViewById(R.id.)
-                //dialog.dismiss();
-
-                //Capturar los DATOS Y LLAMAR AL WS
-                String lCodOrigen = spinnerMapBodegas.get(mspinOrigen.getSelectedItemPosition());
-                String lCodTipo = spinnerMapTipos.get(mspinTipo.getSelectedItemPosition());
-                String lAnio = medAnio.getText().toString();
-                String lNumero = medNumero.getText().toString();
-                if(!lCodTipo.equals("0")){
-                    if(lCodTipo.equals("GDE") ){
-                        if(!lNumero.trim().equals("")){
-                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
-                            dialog.dismiss();
-                        }
-                        else {
-                            Toast.makeText(mContext, "Ingrese un numero de documento", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else {
-                        if(!lCodOrigen.equals("0") && !lAnio.trim().equals("") && !lNumero.trim().equals("")){
-                            procesoNoExistQR(lCodOrigen,lCodTipo,lAnio,lNumero);
-                            dialog.dismiss();
-                        }
-                        else {
-                            Toast.makeText(mContext, "Seleccione y/o complete todos los campos", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                }
-                else {
-                    Toast.makeText(mContext, "Seleccione un tipo de Movimiento", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
-        dialog.show();
-    }*/
-
-    private void procesoNoExistQR(String pcodorigen, String pcodigotipo, String panio, String pnumero)
-    {
-        //Toast.makeText(mContext, pcodorigen+";"+pcodigotipo+";"+panio+";"+pnumero, Toast.LENGTH_LONG).show();
-        InvocateWSReceptionDetail(pcodorigen,pcodigotipo,panio,pnumero);
-    }
-    private void SetSpinners()
-    {
-        String exMsj = "";
-        try {
-            mWSParametersBodega = getResources().getStringArray(R.array.WSparameter_Bodegas);
-            mWSParametersTipoMov = getResources().getStringArray(R.array.WSparameter_TiposMovimiento);
-
-            exWSTipoYBodegaOrigenAsync tipoYBodegaOrigenAsync = new exWSTipoYBodegaOrigenAsync();
-            tipoYBodegaOrigenAsync.execute();
-        }
-        catch (Exception ex){
-            exMsj = ex.getMessage();
-        }
-
-    }
-
-    private  class exWSTipoYBodegaOrigenAsync extends AsyncTask<Void, Void, Void> {
-
-        //DespatchGuide despatchGuideBodega = null;
-        //GenericSpinnerDto genericSpinnerDto = null;
-        String ToastMessage = "";
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //despatchGuide = rfidService.GuiaDespachoBodegasService();
-
-            if(spinnerDto == null)
-            {
-                rfidService.SOAP_ACTION_ =  mWSParametersBodega[0];
-                rfidService.METHOD_NAME_ =  mWSParametersBodega[1];
-                rfidService.NAMESPACE_ = mWSParametersBodega[2];
-                rfidService.URL_ = mWSParametersBodega[3];
-
-                spinnerDto = rfidService.WSBodegasOrMotivosService(true, "REC", null);
-            }
-            if(genericSpinnerDto == null)
-            {
-                //WSparameter_TiposMovimiento
-
-                rfidService.SOAP_ACTION_ =  mWSParametersTipoMov[0];
-                rfidService.METHOD_NAME_ =  mWSParametersTipoMov[1];
-                rfidService.NAMESPACE_ = mWSParametersTipoMov[2];
-                rfidService.URL_ = mWSParametersTipoMov[3];
-                genericSpinnerDto = rfidService.WSTipoMovimientos();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //super.onPostExecute(aVoid);
-
-            progressDialog.cancel();
-            //postCallWSTiposMovOrigen();
-
-            if(spinnerDto != null && spinnerDto.getEstado() != null && spinnerDto.getEstado().getCodigo().equals("00")){
-
-                if(spinnerDto.getColeccion() != null && spinnerDto.getColeccion().size() > 0){
-                    SpinnerBodegaComplete();
-                }
-                else {
-                    ToastMessage = "Bodegas de Origen vacias";
-                }
-            }
-            else {
-                Toast.makeText(mContext, spinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-            }
-
-
-            if(genericSpinnerDto != null && genericSpinnerDto.getEstado() != null && genericSpinnerDto.getEstado().getCodigo().equals("00")){
-                if(genericSpinnerDto.getColeccion() != null && genericSpinnerDto.getColeccion().size() > 0){
-                    SpinnerTipoComplete();
-                }
-                else {
-                    if (ToastMessage.isEmpty()) {
-                        ToastMessage = "Tipos";
-                    } else {
-                        ToastMessage = ToastMessage + " y Tipos";
-                    }
-                }
-            }
-            else {
-                Toast.makeText(mContext, genericSpinnerDto.getEstado().getDescripcion(), Toast.LENGTH_SHORT).show();
-            }
-
-
-            if(!ToastMessage.isEmpty()){
-                Toast.makeText(mContext, "Llamada a Servicio Erroneo "+ToastMessage , Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        /*@Override
-        protected void onPreExecute() {
-            //super.onPreExecute();
-            progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Cargando...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.show();
-
-        }*/
-    }
 
     private void ProgressLoading(){
         progressDialog = new ProgressDialog(mContext);
@@ -1966,7 +1545,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
                             if(Integer.parseInt(mtvCantItemLeidos.getText().toString()) != 0 && !metDocOrigenRW.getText().equals("")){
                                 mbtnConfirmar.setEnabled(true);
-                                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+                                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
                             }
                         }
                         lectureHasPc = !mIgnorePC;
@@ -2057,17 +1636,6 @@ public class ReceiveWareCheckFragment extends Fragment {
                         readData.append(" " + "BC_MSG_BARCODE_ACCESS_TIMEOUT");
                     if (m.obj != null  && m.obj instanceof String) {
                         readData.append("\n" + (String)m.obj);
-                        //metDocDestinoRW.setText(" " + (String)m.obj);
-
-                        // call Method WS http://info.thgye.com.ec/awsrfidrecepciondetalle.aspx
-
-                        try {
-                            InvocateWSReceptionDetail(" " + (String)m.obj);
-                        }
-                        catch (Exception ex){
-                            String msd = ex.getMessage();
-                        }
-
 
                     }
                     //mMessageTextView.setText(" " + readData.toString());
@@ -2086,87 +1654,8 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
     }
 
-    private void InvocateWSReceptionDetail(String qrcode)
-    {
-        doc_origen = "";
-        if(qrcode != null && !qrcode.trim().isEmpty())
-        {
-            String[] parts = qrcode.trim().split(";");
-            doc_origen = parts[0];
-        }
-        exWSRecepcionDetailAsync recepcionDetailAsync = new exWSRecepcionDetailAsync();
-        recepcionDetailAsync.execute(new String[0]);
-    }
-
-    private void InvocateWSReceptionDetail(String pBodOrigen, String pTipoOrigen, String pAnioOrigen, String pNumOrigen )
-    {
-        exWSRecepcionDetailAsync recepcionDetailAsync = new exWSRecepcionDetailAsync();
-        recepcionDetailAsync.execute(new String[]{pTipoOrigen,pBodOrigen,pAnioOrigen,pNumOrigen});
-    }
 
     // METODOS ASYNC
-    private  class exWSRecepcionDetailAsync extends AsyncTask<String[], Void, Void> {
-
-        boolean error = false;
-
-        @Override
-        protected Void doInBackground(String[]... params) {
-
-            String[] dataNoQr = new String[4];
-
-            rfidService.SOAP_ACTION_ =  mWSparameterRecepcionDet[0];
-            rfidService.METHOD_NAME_ =  mWSparameterRecepcionDet[1];
-            rfidService.NAMESPACE_ = mWSparameterRecepcionDet[2];
-            rfidService.URL_ = mWSparameterRecepcionDet[3];
-
-            if(params[0].length > 0)
-            {
-                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( null,true, params[0]);
-            }
-            else {
-                receiveWareDetail = rfidService.WSRecepcionMercaderiaDetail( doc_origen,false,null);
-            }
-
-
-            return null;
-        }
-
-        @Override
-        //protected void onPostExecute(Void aVoid) {
-        protected void onPostExecute(Void aVoid) {
-            //super.onPostExecute(aVoid);
-
-            progressDialog.cancel();
-            Validator validator = new Validator();
-
-            ResponseVal responseVal =  validator.getValidateDataSourceDto(receiveWareDetail.getEstado());
-
-            if(responseVal.isValidAccess()){
-                if(doc_origen.isEmpty() && receiveWareDetail.getDocOrigen() != null)
-                {
-                    doc_origen = receiveWareDetail.getDocOrigen().trim();
-                }
-                metDocOrigenRW.setText(doc_origen);
-                metDocDestinoRW.setText(receiveWareDetail.getDocDestino());
-                metMotivoRW.setText(receiveWareDetail.getMotDescription());
-                mprogress1.setMax(receiveWareDetail.getCantidadTotal());
-                mtvCantTotal.setText(receiveWareDetail.getCantidadTotal()+"");
-                ProcesarLvItemsDif(false);
-                ActivateButtons(true);
-                DialogIndicadorComparacion(doc_origen);
-            }
-            else {
-                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //super.onPreExecute();
-            ProgressLoading();
-
-        }
-    }
 
     private void ActivateButtons(boolean isActivate){
 
@@ -2176,7 +1665,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             mbtnConfirmar.setEnabled(isActivate);
             mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
             mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
-            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1895C0")));
+            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
         }
         else {
             mInvenButton.setEnabled(isActivate);
@@ -2292,16 +1781,10 @@ public class ReceiveWareCheckFragment extends Fragment {
     private AdapterView.OnItemClickListener listItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            EGTagsResponseItem i = (EGTagsResponseItem) mlv_itemsEnc.getItemAtPosition(position);
+
+            /*EGTagsResponseItem i = (EGTagsResponseItem) mlv_itemsEnc.getItemAtPosition(position);
             EGTagsResponseItem item_tagNoRead = findTagNoLeido(i.getItemCodigo());
             itemEncontradoSeleccinado = item_tagNoRead;
-
-            /*if(!item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS") && item_tagNoRead.getDataNoLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
-                ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataNoLeido());
-            }
-            else {
-                Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
-            }*/
 
             if(item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS")){
                 if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataLeido().size() > 0){
@@ -2319,65 +1802,13 @@ public class ReceiveWareCheckFragment extends Fragment {
                     Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
                 }
 
+            }*/
+            if(egDetailResponse != null && egDetailResponse.getItems() != null && egDetailResponse.getItems().size() > 0){
+                //DialogItemLocated(position);
+                DialogConfirmar("Desea ir a ver los items del SKU seleccionado, para localizarlos", 2,position);
             }
         }
     };
-
-
-    private void ProcesarLv_tagsInconsistentes(List<String> listEpc)
-    {
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, listEpc);
-        mlv_tagsInconsistentes.setAdapter(adapter);
-        mlv_tagsInconsistentes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String epc = (String) mlv_tagsInconsistentes.getItemAtPosition(position);
-
-                mLocateTag = epc;
-                mLocateStartPos = (lectureHasPc ? 0 : 4);
-                                                 /*if (i.mHasPc)
-                                                     mLocateEPC = mLocateTag.substring(4, mLocateTag.length());
-                                                 else
-                                                     mLocateEPC = mLocateTag;*/
-
-                if (lectureHasPc)
-                    mLocateEPC = mLocateTag.substring(4, mLocateTag.length());
-                else
-                    mLocateEPC = mLocateTag;
-                //mLocateEPC = mLocateTag.substring(4, mLocateTag.length());
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                alert.setTitle(getString(R.string.locating_str));
-                alert.setMessage(getString(R.string.want_tracking_str));
-
-                alert.setPositiveButton(getString(R.string.yes_str), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        SelectionCriterias s = new SelectionCriterias();
-                        s.makeCriteria(SelectionCriterias.SCMemType.EPC, mLocateTag,
-                                mLocateStartPos, (mLocateEPC.length()+4) * 4,
-                                SelectionCriterias.SCActionType.ASLINVA_DSLINVB);
-                        mReader.RF_SetSelection(s);
-                        switchLayout(false);
-                        mLocateTv.setText(mLocateTag);
-
-                        if(itemEncontradoSeleccinado != null){
-                            mtag_locate_grupo1.setText(itemEncontradoSeleccinado.getItemGrupo1());
-                            mtag_locate_grupo2.setText(itemEncontradoSeleccinado.getItemGrupo2());
-                            mtag_locate_grupo3.setText(itemEncontradoSeleccinado.getItemGrupo3());
-                            /*mtag_locate_grupo4.setText(egTagsResponseItem_.getItemGrupo4());
-                            mtag_locate_grupo5.setText(egTagsResponseItem_.getItemGrupo5());*/
-                        }
-                    }
-                });
-                alert.setNegativeButton(getString(R.string.no_str) ,new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                });
-                alert.show();
-            }
-        });
-    }
 
     private void processLocateData(int data) {
         startLocateTimer();
@@ -2564,7 +1995,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     // Dialog
 
     private void DialogCleanControls(){
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
+       /* AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
                 .setCancelable(false)
                 .setPositiveButton("SI", new DialogInterface.OnClickListener() {
@@ -2580,10 +2011,37 @@ public class ReceiveWareCheckFragment extends Fragment {
                         dialogInterface.cancel();
                     }
                 });
-        alerta.show();
+        alerta.show();*/
+
+
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                clearAll();
+                CleanControls();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
-    private void DialogConfirmar(){
+   /* private void DialogConfirmar1(){
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Esta seguro de realizar la comparación entre las prendas descritas en el doc.Origen y las recibidas(Leidas por el HandHeld)...")
                 .setCancelable(false)
@@ -2603,9 +2061,109 @@ public class ReceiveWareCheckFragment extends Fragment {
                     }
                 });
         alerta.show();
+    }*/
+
+    private void DialogConfirmar(String msj, int option, int position){
+
+        if(option == 2){
+            String item =((EGTagsResponseItem) mlv_itemsEnc.getItemAtPosition(position)).getItemCodigo();
+            msj = "Desea localizar los epcs del item: "+item;
+        }
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(msj);
+        alertDialog.setCancelable(false);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+                switch (option){
+                    case 1:
+                        mWSParameterRecepcionCompara = getResources().getStringArray(R.array.WSparameter_RecepcionCompara);
+                        exWSRecepcionComparaAsync recepcionComparaAsync = new exWSRecepcionComparaAsync();
+                        recepcionComparaAsync.execute();
+                        break;
+                    case 2:
+
+                        EGTagsResponseItem i = (EGTagsResponseItem) mlv_itemsEnc.getItemAtPosition(position);
+                        EGTagsResponseItem item_tagNoRead = findTagNoLeido(i.getItemCodigo());
+                        itemEncontradoSeleccinado = item_tagNoRead;
+
+                        if(item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS")){
+                            if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataLeido().size() > 0){
+                                //ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataLeido());
+                                InvoqueInvLocatedFrag(item_tagNoRead.getDataLeido(), i.getItemCodigo());
+                            }
+                            else {
+                                Toast.makeText(mContext, "No existen otras etiquetas", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else {
+                            if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
+                                //ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataNoLeido());
+                                InvoqueInvLocatedFrag(item_tagNoRead.getDataNoLeido(), i.getItemCodigo());
+                            }
+                            else {
+                                Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        break;
+                    case 3:
+                        clearAll();
+                        CleanControls();
+                        break;
+                    case 4:
+                        mWSParameter_RecepcionProcesar = getResources().getStringArray(R.array.WSparameter_RecepcionProcesar);
+                        exWSRecepcionProcesarAsync recepcionProcesarAsync = new exWSRecepcionProcesarAsync();
+                        recepcionProcesarAsync.execute();
+                        break;
+
+                }
+
+
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+
     }
 
-    private void DialogIndicadorComparacion(String DocOrigen){
+    private void DialogOk(String msj){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_ok, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.buttonOk);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(msj);
+        alertDialog.setCancelable(false);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll();
+                CleanControls();
+                SetVisibleWareCheck();
+                btnConfirmarManagement(true);
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+   /* private void DialogIndicadorComparacion1(String DocOrigen){
         AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
         alerta.setMessage("Se ha cargado la información del Doc de Origen: "+DocOrigen+". Cambie el modo de lectura a RFID, luego presione el Gatillo o el botón -Iniciar-, posterior a eso presione el botón -confirmar- para comparar la orden vs lo Leido")
                 .setCancelable(false)
@@ -2622,11 +2180,35 @@ public class ReceiveWareCheckFragment extends Fragment {
                         Drawable myIcon  = getResources().getDrawable( R.drawable.moderfid18px );
                         ColorFilter filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
                         myIcon.setColorFilter(filter);
-                        mscanQR_imgbutton.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
                         Toast.makeText(mContext,"Se establecio modo RFID",Toast.LENGTH_SHORT).show();
                     }
                 });
         alerta.show();
+    }*/
+
+    private void DialogIndicadorComparacion(String msj){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_interrogacion_rfid, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText(msj);
+        alertDialog.setCancelable(false);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReader.SD_SetTriggerMode(SDConsts.SDTriggerMode.RFID);
+                mOptionHandler.obtainMessage(MainActivity.MSG_OPTION_CONNECT_STATE_CHANGED).sendToTarget();
+                Drawable myIcon  = getResources().getDrawable( R.drawable.moderfid18px );
+                ColorFilter filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
+                myIcon.setColorFilter(filter);
+                Toast.makeText(mContext,"Se establecio modo RFID",Toast.LENGTH_SHORT).show();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+
     }
 
 
@@ -2634,7 +2216,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     private  class exWSRecepcionProcesarAsync extends AsyncTask<Void, Void, Void> {
 
         String doc_origen = EtDocOrigenRWI.getText().toString();
-        String nota = metNotaRW.getText().toString();
+        String nota = metNota.getText().toString();
         DataSourceDto dtoResponse = null;
         //ProgressDialog progressDialog;
 
@@ -2658,10 +2240,11 @@ public class ReceiveWareCheckFragment extends Fragment {
             ResponseVal responseVal = validator.getValidateDataSourceDto(dtoResponse);
 
             if(responseVal.isValidAccess()){
-                InvocarAlertIngresoMercaderia("Se ha generado correctamente el ingreso de la mercaderia", true);
+                DialogOk("Operación correcta, se ha ingresado la mercaderia");
             }
             else {
-                InvocarAlertIngresoMercaderia(responseVal.getErrorMsg(), false);
+                loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());
+
             }
 
         }
@@ -2679,41 +2262,12 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     }
 
-    private void InvocarAlertIngresoMercaderia(String mensaje_, boolean isExitoso)
-    {
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage(mensaje_)
-                .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        if(isExitoso){
-
-                            clearAll();
-                            CleanControls();
-                            SetVisibleWareCheck();
-                            btnConfirmarManagement(true);
-                            dialog.dismiss();
-                        }
-                        else {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                /*.setNegativeButton("No", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        dialog.cancel();
-                    }
-                })*/
-        alerta.show();
-    }
-
     private View.OnClickListener btnConfirmarRWIOnClick = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            DialogBtnConfirmarRWI();
+            //DialogBtnConfirmarRWI();
+            DialogConfirmar("¿Esta seguro realizar el ingreso de mercaderia?",4,0);
         }
     };
 
@@ -2739,5 +2293,148 @@ public class ReceiveWareCheckFragment extends Fragment {
         alerta.show();
     }
 
+
+    private void PersistirDatosViews(){
+
+        SharedPreferences prefs = mContext.getSharedPreferences ("shared_recepcion_mercaderia",   Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        String json = ObjectJson();
+        editor.putString("object", json);
+        editor.commit();
+
+    }
+    private String ObjectJson(){
+
+        PersistenceReceiveWare persistenceReceiveWare = new PersistenceReceiveWare();
+        persistenceReceiveWare.setDocOrigen(metDocOrigenRW.getText()+"");
+        persistenceReceiveWare.setDocDestino(metDocDestinoRW.getText()+"");
+        persistenceReceiveWare.setMotivo(metMotivoRW.getText()+"");
+        persistenceReceiveWare.setItemsLeidos(mtvCantItemLeidos.getText()+"");
+        persistenceReceiveWare.setItemsEsperados(mtvCantTotal.getText()+"");
+        persistenceReceiveWare.setEstadoBtnConfirmar(true);
+        persistenceReceiveWare.setEstadoBtnDetener(true);
+        persistenceReceiveWare.setEstadoBtnLimpiar(true);
+        persistenceReceiveWare.setEstadoBtnConfirmar(true);
+        persistenceReceiveWare.setEgDetailResponse(egDetailResponse);
+        persistenceReceiveWare.setListEpcsLeidos(ArrLis);
+        persistenceReceiveWare.setTagList(mAdapter.tagList());
+        persistenceReceiveWare.setListCycleCount(mAdapter.ListCycleCount());
+
+        Gson gson = new Gson(); // Or use new GsonBuilder().create();
+
+        String json = gson.toJson(persistenceReceiveWare); // serializes target to Json
+        return json;
+
+    }
+
+    //---------------------------------------------------------
+
+    private void DialogItemLocated(int position){
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("Desea ir a ver los items del SKU seleccionado, para localizarlos");
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EGTagsResponseItem i = (EGTagsResponseItem) mlv_itemsEnc.getItemAtPosition(position);
+                EGTagsResponseItem item_tagNoRead = findTagNoLeido(i.getItemCodigo());
+                itemEncontradoSeleccinado = item_tagNoRead;
+
+                if(item_tagNoRead.getItemCodigo().equalsIgnoreCase("OTROS")){
+                    if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataLeido().size() > 0){
+                        //ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataLeido());
+                        InvoqueInvLocatedFrag(item_tagNoRead.getDataLeido(), i.getItemCodigo());
+                    }
+                    else {
+                        Toast.makeText(mContext, "No existen otras etiquetas", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    if(item_tagNoRead.getDataLeido() != null && item_tagNoRead.getDataNoLeido().size() > 0){
+                        //ProcesarLv_tagsInconsistentes(item_tagNoRead.getDataNoLeido());
+                        InvoqueInvLocatedFrag(item_tagNoRead.getDataNoLeido(), i.getItemCodigo());
+                    }
+                    else {
+                        Toast.makeText(mContext, "No existen etiquetas no leidas", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                alertDialog.dismiss();
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+    private void InvoqueInvLocatedFrag(List<String> epcs, String codigo){
+
+        SkuData skuData = new SkuData();
+        skuData.setCodigo(codigo);
+
+        skuData.setGrupo1(itemEncontradoSeleccinado.getItemGrupo1().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo1());
+        skuData.setGrupo2(itemEncontradoSeleccinado.getItemGrupo2().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo2());
+        skuData.setGrupo3(itemEncontradoSeleccinado.getItemGrupo3().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo3());
+
+        LocatedInvData locatedInvData = new LocatedInvData();
+        locatedInvData.setOrdenCompra(null);
+        locatedInvData.setNumeroGuia(null);
+
+        locatedInvData.setDocOrigen(metDocOrigenRW.getText()+"");
+        locatedInvData.setDocDestino(metDocDestinoRW.getText()+"");
+        locatedInvData.setMotivo(metMotivoRW.getText()+"");
+
+        locatedInvData.setItemSku(codigo);
+        locatedInvData.setEpcs(epcs );
+        locatedInvData.setSkuData(skuData);
+
+        if (mInvetoryLocatedFragment == null)
+            mInvetoryLocatedFragment = mInvetoryLocatedFragment.newInstance();
+        try {
+            Bundle args = new Bundle();
+            args.putSerializable("LocatedInv", locatedInvData);
+            mInvetoryLocatedFragment.setArguments(args);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content, mInvetoryLocatedFragment);
+            ft.addToBackStack(null);
+
+            //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            //ft.addToBackStack(null);
+            ft.commit();
+        }
+        catch (Exception e){
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        finally {
+            PersistirDatosViews();
+        }
+    }
+    private void PersistirDatosBackInvLocated(PersistenceReceiveWare persistenceReceiveWare){
+        metDocOrigenRW.setText(persistenceReceiveWare.getDocOrigen());
+        metDocDestinoRW.setText(persistenceReceiveWare.getDocOrigen());
+        metMotivoRW.setText(persistenceReceiveWare.getMotivo());
+        mtvCantItemLeidos.setText(persistenceReceiveWare.getItemsLeidos());
+        mtvCantTotal.setText(persistenceReceiveWare.getItemsEsperados());
+        egDetailResponse = persistenceReceiveWare.getEgDetailResponse();
+
+        btnConfirmarManagement(false);
+        ProcesarLvItemsDif(true);
+        mAdapter = new TagListAdapter(mContext, persistenceReceiveWare.getListEpcsLeidos(), persistenceReceiveWare.getTagList(), persistenceReceiveWare.getListCycleCount());
+
+        mprogress1.setMax(Integer.parseInt(persistenceReceiveWare.getItemsEsperados()));
+        int cant = mAdapter.getCount();
+        mprogress1.setProgress(cant);
+
+    }
 
 }

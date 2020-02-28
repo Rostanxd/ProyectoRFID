@@ -669,8 +669,8 @@ public class RfidService {
         soRequest.addProperty("Bodcodigo", paramLectorRfid_.getCodbodega());
         if(isNotExistQr && dataNoQr != null )
         {
-            soRequest.addProperty("Tiporigen", dataNoQr[0]);
-            soRequest.addProperty("Bodorigen", dataNoQr[1]);
+            soRequest.addProperty("Bodorigen", dataNoQr[0]);
+            soRequest.addProperty("Tiporigen", dataNoQr[1]);
             soRequest.addProperty("Aniorigen", dataNoQr[2]);
             soRequest.addProperty("Numorigen", dataNoQr[3]);
         }

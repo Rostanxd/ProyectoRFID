@@ -578,7 +578,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
         Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
         Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
         TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-        poLabelTexto.setText("¿Esta seguro que desea Generar la Guia de Salida?");
+        poLabelTexto.setText("¿Esta seguro que desea Generar la Guia de Despacho?");
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -606,33 +606,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
             }
         });
         alertDialog.show();
-        /*
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage("Esta seguro de Generar la Guia de Salida...")
-                .setCancelable(false)
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        gGuiaEntrada = met_nGuiaEntrada.getText().toString();
 
-                        if(!gGuiaEntrada.trim().isEmpty()){
-                            mWSParametersGuiaDespachoProc = getResources().getStringArray(R.array.WSparameter_GuiaDespachoProcesar);
-                            ExecSoapGuiaDespachoProcesarAsync tarea = new ExecSoapGuiaDespachoProcesarAsync();
-                            tarea.execute();
-                        }else {
-
-                            Toast.makeText(mContext,"Ingrese un Numero de Guia",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-        alerta.show();
-        */
     }
 
     private void DialogMessage(String msj){
