@@ -992,7 +992,7 @@
 
                     <!-- COLUMN 2  -->
 
-                    <android.support.v7.widget.CardView
+                    <!--<android.support.v7.widget.CardView
                         android:id="@+id/cvConfiguracion"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
@@ -1002,6 +1002,7 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="16dp"
                         app:cardBackgroundColor="@color/gColorIndigo_n100"
+                        android:visibility="visible"
                         app:cardCornerRadius="8dp"
                         app:cardElevation="8dp">
 
@@ -1038,7 +1039,7 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </android.support.v7.widget.CardView>-->
 
 
 
@@ -1491,6 +1492,55 @@
                     </android.support.v7.widget.CardView>
 
                     <!-- COLUMN 2  -->
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cvConfiguracion"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="@color/gColorIndigo_n100"
+                        android:visibility="invisible"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="8dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_margin="16dp"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/configuration60" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:text="RF Configuracion"
+                                android:textAlignment="center"
+                                android:textColor="@color/gColorNegro"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
 
 
                 </GridLayout>

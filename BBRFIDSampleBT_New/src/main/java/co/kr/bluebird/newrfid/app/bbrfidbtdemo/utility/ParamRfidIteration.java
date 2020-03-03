@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.versionedparcelable.VersionedParcel;
 
+import com.google.gson.Gson;
+
 import java.text.ParseException;
 import java.util.Date;
 
@@ -14,6 +16,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.PowerStateRfid;
 
 import java.text.SimpleDateFormat;
 
@@ -22,6 +25,7 @@ public class ParamRfidIteration {
     private Context mContext;
     private clsDatabase loDatabase;
     private SQLiteDatabase loExecute;
+
     public ParamRfidIteration(Context context){
         mContext = context;
         loDatabase = new clsDatabase(mContext);
@@ -89,7 +93,7 @@ public class ParamRfidIteration {
 
 
 
-        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid, poderlecturarfid from parameterservice where codigo ="+codigo, null);
         if(fila.moveToFirst()){
             paramLectorRfid = new ParamLectorRfid();
             int indexLE;
@@ -149,6 +153,10 @@ public class ParamRfidIteration {
             paramLectorRfid.setDateini(fila.getString(6));
             paramLectorRfid.setDateend(fila.getString(7));
             paramLectorRfid.setDispositivoid(fila.getString(8));
+
+
+
+            paramLectorRfid.setPowerStateRfid(DeserializeJsonPowerStateRfid(fila.getString(9)));
 
         }
 
@@ -234,5 +242,10 @@ public class ParamRfidIteration {
         return isIngModExitosa;
     }
 
+    private PowerStateRfid DeserializeJsonPowerStateRfid(String Json){
+        Gson gson = new Gson();
+        PowerStateRfid powerStateRfid = gson.fromJson(Json, PowerStateRfid.class);
+        return powerStateRfid;
+    }
 
 }

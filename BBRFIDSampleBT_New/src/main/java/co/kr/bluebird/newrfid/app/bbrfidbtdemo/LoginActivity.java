@@ -216,7 +216,7 @@ public class LoginActivity extends Activity {
 
     private void EnabledDisabledBtnLogin(boolean isEnabled){
         mbtnIngresarLogin.setEnabled(isEnabled);
-        mbtnIngresarLogin.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor((isEnabled ? "#3bbdfa":"#D5D7D6"))));
+        mbtnIngresarLogin.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor((isEnabled ? "#0097a7":"#D5D7D6"))));
     }
 
     private boolean ExistLoggeo(){

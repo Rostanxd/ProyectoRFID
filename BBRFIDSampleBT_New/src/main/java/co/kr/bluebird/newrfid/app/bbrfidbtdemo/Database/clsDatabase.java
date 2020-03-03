@@ -18,7 +18,7 @@ public class clsDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase toDatabase){
         String psQuery="";
-        psQuery="CREATE TABLE "+ TABLE_PARAMETROS +" (codigo int primary key, localendpoint text, extendpoint text, codbodega text, descbodega text, holding text, conexiontype text,  dateini text, dateend text, dispositivoid text )";
+        psQuery="CREATE TABLE "+ TABLE_PARAMETROS +" (codigo int primary key, localendpoint text, extendpoint text, codbodega text, descbodega text, holding text, conexiontype text,  dateini text, dateend text, dispositivoid text, poderlecturarfid )";
         toDatabase.execSQL(psQuery);
         psQuery="";
         psQuery="CREATE TABLE "+ TABLE_LOGIN +" (codigo int primary key, startdate text, user text, estado int  )";

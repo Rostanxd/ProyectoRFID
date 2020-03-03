@@ -237,7 +237,7 @@ public class ShippingWareReadFragment extends Fragment {
 
     public ShippingWareGenerateFragment mShippingWareGenerateFragment;
 
-    private int RFPower = 17;
+    private int RFPower = 0;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
     //private boolean isRunningRead;
@@ -566,6 +566,7 @@ public class ShippingWareReadFragment extends Fragment {
             mReader.RF_SetRadioPowerState(17);
             enableControl(true);
             updateButtonState();
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getEnvioMercaderia();
             mReader.RF_SetRadioPowerState(RFPower);
         }
         else

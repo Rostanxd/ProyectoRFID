@@ -10,6 +10,7 @@ public class ParamLectorRfid {
     public String dateini;
     public String dateend;
     public String dispositivoid;
+    public PowerStateRfid powerStateRfid;
 
     public String getEndpoint() {
         return endpoint;
@@ -81,5 +82,13 @@ public class ParamLectorRfid {
 
     public void setDispositivoid(String dispositivoid) {
         this.dispositivoid = dispositivoid;
+    }
+
+    public PowerStateRfid getPowerStateRfid() {
+        return powerStateRfid;
+    }
+
+    public void setPowerStateRfid(PowerStateRfid powerStateRfid) {
+        this.powerStateRfid = powerStateRfid;
     }
 }
