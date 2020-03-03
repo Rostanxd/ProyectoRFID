@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -229,20 +230,59 @@ public class InvetoryLocatedFragment extends Fragment {
         TextView mtvGrupo1 = dialogView1.findViewById(R.id.tvGrupo1);
         TextView mtvGrupo2 = dialogView1.findViewById(R.id.tvGrupo2);
         TextView mtvGrupo3 = dialogView1.findViewById(R.id.tvGrupo3);
+        TextView mtvGrupo4 = dialogView1.findViewById(R.id.tvGrupo4);
+        TextView mtvGrupo5 = dialogView1.findViewById(R.id.tvGrupo5);
         TextView mtvEpc = dialogView1.findViewById(R.id.tvEpc);
 
-        /*Button btnAceptar = dialogView1.findViewById(R.id.btnDialogAceptar);
-        Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
-        Button btnLimpiar = dialogView1.findViewById(R.id.btnDialogLimpiar);*/
-        Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
+
+        /*Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);*/
+        ImageView miv_close = dialogView1.findViewById(R.id.iv_close);
 
         mtvCodigoItem.setText(locatedInvData.getItemSku());
+
         mtvGrupo1.setText(locatedInvData.getSkuData().getGrupo1());
+
+        if (locatedInvData.getSkuData().getGrupo2() != null) {
+            mtvGrupo2.setText(locatedInvData.getSkuData().getGrupo2());
+            mtvGrupo2.setVisibility(View.VISIBLE);
+        } else {
+            mtvGrupo2.setVisibility(View.GONE);
+        }
+        if (locatedInvData.getSkuData().getGrupo3() != null) {
+            mtvGrupo3.setText(locatedInvData.getSkuData().getGrupo3());
+            mtvGrupo3.setVisibility(View.VISIBLE);
+        } else {
+            mtvGrupo3.setVisibility(View.GONE);
+        }
+        if (locatedInvData.getSkuData().getGrupo4() != null) {
+            mtvGrupo4.setText(locatedInvData.getSkuData().getGrupo4());
+            mtvGrupo4.setVisibility(View.VISIBLE);
+        } else {
+            mtvGrupo4.setVisibility(View.GONE);
+        }
+        if (locatedInvData.getSkuData().getGrupo5() != null) {
+            mtvGrupo5.setText(locatedInvData.getSkuData().getGrupo5());
+            mtvGrupo5.setVisibility(View.VISIBLE);
+        } else {
+            mtvGrupo5.setVisibility(View.GONE);
+        }
+
+        /*mtvGrupo1.setText(locatedInvData.getSkuData().getGrupo1());
         mtvGrupo2.setText(locatedInvData.getSkuData().getGrupo2());
         mtvGrupo3.setText(locatedInvData.getSkuData().getGrupo3());
+        mtvGrupo4.setText(locatedInvData.getSkuData().getGrupo4());
+        mtvGrupo5.setText(locatedInvData.getSkuData().getGrupo5());*/
+
         mtvEpc.setText(epc_);
 
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
+        /*btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });*/
+
+        miv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog1.dismiss();
@@ -266,24 +306,6 @@ public class InvetoryLocatedFragment extends Fragment {
         });
 
 
-        /*adapterHashMap =  getAdapaterSpinner(gMovientos);
-        if(adapterHashMap != null){
-            spinnerMapTipos = adapterHashMap.getHashMap();
-            mspinTipo.setAdapter(adapterHashMap.getAdapter());
-        }
-
-        adapterHashMap =  getAdapaterSpinner(gBodega);
-        if(adapterHashMap != null){
-            spinnerMapBodegas = adapterHashMap.getHashMap();
-            mspinOrigen.setAdapter(adapterHashMap.getAdapter());
-        }
-
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog1.dismiss();
-            }
-        });*/
         alertDialog1.show();
     }
 

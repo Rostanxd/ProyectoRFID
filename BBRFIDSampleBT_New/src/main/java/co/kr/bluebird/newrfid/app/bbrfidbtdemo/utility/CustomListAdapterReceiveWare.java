@@ -65,7 +65,13 @@ public class CustomListAdapterReceiveWare extends BaseAdapter {
         {
             holder.uLeidos.setText( String.valueOf( listData.get(position).getCantidadLeidos()));
             if(!listData.get(position).getItemCodigo().equals("OTROS")){
-                holder.uDif.setText(String.valueOf(cantidadtotal - cantidadLeidos) );
+                int diferencia = cantidadtotal - cantidadLeidos;
+                if(diferencia != 0){
+                    holder.uDif.setText(String.valueOf(diferencia) );
+                }
+                else {
+                    holder.uDif.setText(null);
+                }
             }
             else {
                 holder.uDif.setText(null);

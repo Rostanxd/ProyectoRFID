@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dip"
         android:orientation="horizontal">
 
@@ -17,32 +17,27 @@
             android:layout_width="190dip"
             android:layout_height="wrap_content"
             android:textColor="@color/gColorGris_n800"
+            android:textSize="14dp"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tvCol2"
-            android:layout_width="110dip"
+            android:layout_width="80dip"
             android:layout_height="wrap_content"
             android:textColor="@color/gColorGris_n800"
+            android:textSize="14dp"
             android:gravity="right"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tvCol3"
-            android:layout_width="95dip"
+            android:layout_width="80dip"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="right"
             android:textColor="@color/gColorGris_n800"
-            android:layout_weight="1"
-            />
-        <TextView
-            android:id="@+id/tvCol4"
-            android:layout_width="95dip"
-            android:textColor="@color/gColorGris_n800"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_weight="1"
-             />
+            android:textSize="14dp" />
+
 
     </LinearLayout>
 

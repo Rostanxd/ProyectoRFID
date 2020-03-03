@@ -754,7 +754,7 @@ public class MainActivity extends Activity {
             });
             alertDialog.show();
 
-            AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
+            /*AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
             alerta.setMessage("Desea Cerrar Session...")
                     .setCancelable(false)
                     .setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -780,7 +780,7 @@ public class MainActivity extends Activity {
                     });
             AlertDialog title = alerta.create();
             title.setTitle("salida");
-            title.show();
+            title.show();*/
 
         }
     }
@@ -835,32 +835,43 @@ public class MainActivity extends Activity {
             isFirstFragment = false;
             //mDrawerLayout.closeDrawer(mDrawerList);
             if (mDespatchGuideReadFragment != null) {
-                View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
-                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
-                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-                poLabelTexto.setText("Esta seguro salir de la pantalla");
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentTransaction ft = mFragmentManager.beginTransaction();
-                        ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
-                        ft.commit();
-                        mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
-                        ReplaceFragment();
-                        alertDialog.dismiss();
-                    }
-                });
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();
+                execFragmentTransaction = true;
+                if(isBackForce){
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
+                    ft.commit();
+                    mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
+                }
+                else {
+                    View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                    Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                    TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                    poLabelTexto.setText("Esta seguro salir de la pantalla");
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentTransaction ft = mFragmentManager.beginTransaction();
+                            ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
+                            ft.commit();
+                            mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
+                            //ReplaceFragment();
+                            alertDialog.dismiss();
+                        }
+                    });
+                    btnCancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            execFragmentTransaction = false;
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
+
             }
 
 
@@ -905,6 +916,7 @@ public class MainActivity extends Activity {
                     btnCancelar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            execFragmentTransaction = false;
                             alertDialog.dismiss();
                         }
                     });
@@ -1855,13 +1867,19 @@ public class MainActivity extends Activity {
                 }*/
 
 
-                if (mReceiveWareCheckFragment == null)
+                /*if (mReceiveWareCheckFragment == null)
                 {
                     Bundle poArgumentos = new Bundle();
                     poArgumentos.putSerializable("receiveWareDetail", receiveWareDetail);
                     mReceiveWareCheckFragment = ReceiveWareCheckFragment.newInstance();
                     mReceiveWareCheckFragment.setArguments(poArgumentos);
-                }
+                }*/
+
+                Bundle poArgumentos = new Bundle();
+                poArgumentos.putSerializable("receiveWareDetail", receiveWareDetail);
+                mReceiveWareCheckFragment = ReceiveWareCheckFragment.newInstance();
+                mReceiveWareCheckFragment.setArguments(poArgumentos);
+
                 mCurrentFragment = mReceiveWareCheckFragment;
                 if(mCurrentFragment !=null)
                 {
@@ -1870,14 +1888,15 @@ public class MainActivity extends Activity {
                     ft.replace(R.id.content, mCurrentFragment);
                     ft.commit();
                     //mDrawerList.setItemChecked(position, true);
-                    setTitle(mFunctionsString[12]);
+                    setTitle(mFunctionsString[15]);
                     //mDrawerLayout.closeDrawer(mDrawerList);
                     mUILayout.setVisibility(View.GONE);
                 }
 
             }
             else {
-                Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
+                //Toast.makeText(mContext, responseVal.getErrorMsg() , Toast.LENGTH_LONG).show();
+                loDialogo.gMostrarMensajeError(loVistaDialogo,responseVal.getErrorMsg());
             }
         }
 

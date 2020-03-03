@@ -107,6 +107,9 @@ public class ShippingWareGenerateFragment extends Fragment {
     private LinearLayout mLayoutBodAlmacenamiento;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
+
+    private boolean loImprimir = false;
+
     public ShippingWareGenerateFragment() {
         // Required empty public constructor
     }
@@ -646,9 +649,10 @@ public class ShippingWareGenerateFragment extends Fragment {
                 builder.build());
 
 
+        //loImprimir = true;
         cleanControls();
         dialog.dismiss();
-        BackForce();
+        //BackForce();
 
     }
 
@@ -787,11 +791,65 @@ public class ShippingWareGenerateFragment extends Fragment {
         mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
     }
 
-    // ################### Handler Bacl ##################
+    // ################### Handler Back ##################
 
     private void BackForce() {
         if (mOptionHandler != null)
             mOptionHandler.obtainMessage(1).sendToTarget();
     }
 
+   /* @Override
+    public void onStart() {
+        Toast.makeText(mContext,"onStart", Toast.LENGTH_SHORT).show();
+        super.onStart();
+
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        Toast.makeText(mContext,"onViewStateRestored", Toast.LENGTH_SHORT).show();
+        super.onViewStateRestored(savedInstanceState);
+    }*/
+
+    @Override
+    public void onResume() {
+        //Toast.makeText(mContext,"onResume", Toast.LENGTH_SHORT).show();
+        if(loImprimir){
+            loImprimir = false;
+            BackForce();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        //Toast.makeText(mContext,"onPause", Toast.LENGTH_SHORT).show();
+        loImprimir = true;
+        super.onPause();
+    }
+
+    /*@Override
+    public void onStop() {
+        Toast.makeText(mContext,"onStop", Toast.LENGTH_SHORT).show();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Toast.makeText(mContext,"onDestroy", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Toast.makeText(mContext,"onDestroyView", Toast.LENGTH_SHORT).show();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDetach() {
+        Toast.makeText(mContext,"onDetach", Toast.LENGTH_SHORT).show();
+        super.onDetach();
+    }*/
 }

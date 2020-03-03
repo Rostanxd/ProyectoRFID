@@ -25,6 +25,7 @@
             android:id="@+id/item2"
             android:layout_width="90dip"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
              />
 
@@ -32,6 +33,7 @@
             android:id="@+id/item3"
             android:layout_width="90dip"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
              />
 

@@ -55,7 +55,7 @@ public class CustomListAdapterEntryGuide extends BaseAdapter {
     public View getView(int position, View v, ViewGroup vg) {
         ViewHolder holder ;
         if (v == null) {
-            v = layoutInflater.inflate(R.layout.listrow_inventory_control, null);
+            v = layoutInflater.inflate(R.layout.listrow_inventory_control_eg, null);
             holder = new ViewHolder();
             holder.uCodItem = (TextView) v.findViewById(R.id.tvCol1);
             holder.uCantidad = (TextView) v.findViewById(R.id.tvCol2);

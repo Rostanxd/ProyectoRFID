@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.R;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DGDetalle;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
@@ -66,6 +68,8 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 public class DespatchGuideGenerateFragment extends Fragment {
 
 
+    private Handler mOptionHandler;
+
     private Spinner mSpinnerDestino;
     //private TableLayout tblGDDestino;
     private Context mContext;
@@ -90,6 +94,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
 
+    private boolean loImprimir = false;
+
 
 
     public DespatchGuideGenerateFragment() {
@@ -107,6 +113,8 @@ public class DespatchGuideGenerateFragment extends Fragment {
         //return inflater.inflate(R.layout.despatchguidegenerate_frag, container, false);
         View v = inflater.inflate(R.layout.despatchguidegenerate_frag, container, false);
         mContext = inflater.getContext();
+
+        mOptionHandler = ((MainActivity)getActivity()).mBackHandler;
         //##################### CLASE MENSAJE (DIALOGO)######################
         loDialogo = new clsMensaje(mContext);
         loVistaDialogo = v.findViewById(android.R.id.content);
@@ -429,6 +437,7 @@ public class DespatchGuideGenerateFragment extends Fragment {
                     rfidService.NAMESPACE_ = mWSParametersGuiaDespachoProc[2];
                     rfidService.URL_ = mWSParametersGuiaDespachoProc[3];
                     dto= rfidService.GuiaDespachoProcesarService(egDetailResponse.getItems(),gGuiaEntrada,lCodBodega);
+                    //dto = new DataSourceDto("00", "exitoso", "GDE-03-0000087464");
 
                 } catch (Exception ex){
                     dto = null;
@@ -631,5 +640,27 @@ public class DespatchGuideGenerateFragment extends Fragment {
 
         mprocesar_imgbtn.setEnabled(false);
         mprocesar_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+    }
+
+    // ################### Handler Back ##################
+
+    private void BackForce() {
+        if (mOptionHandler != null)
+            mOptionHandler.obtainMessage(1).sendToTarget();
+    }
+
+    @Override
+    public void onResume() {
+        if(loImprimir){
+            loImprimir = false;
+            BackForce();
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        loImprimir = true;
+        super.onPause();
     }
 }

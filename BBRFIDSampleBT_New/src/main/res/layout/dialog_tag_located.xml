@@ -10,6 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/gColorCyan_n700">
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_close"
+            android:backgroundTint="@color/gColorBlanco" />
 
         <ImageView
             android:layout_width="50dp"
@@ -26,27 +32,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="300dip"
-            android:layout_weight="1"
-            android:background="@color/gColorIndigo_n100"
-            android:layout_marginTop="5dip"
-            android:layout_marginBottom="5dip"
-            android:orientation="vertical">
-
-            <ProgressBar
-                android:id="@+id/tag_locate_progress"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:paddingTop="10dip"
-                android:paddingBottom="10dip"
-                android:layout_width="80dip"
-                android:layout_height="match_parent"
-                android:progressDrawable="@drawable/vertical_progress"
-                android:layout_gravity="center"
-                android:max="100" />
-
-        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,13 +80,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15sp"
                     android:text="grupo 2 "
+                    android:visibility="gone"
                     android:textColor="@color/gColorGris_n800"/>
                 <TextView
                     android:id="@+id/tvGrupo3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15sp"
-                    android:text="grupo 2 "
+                    android:text="grupo 3 "
+                    android:visibility="gone"
+                    android:textColor="@color/gColorGris_n800"/>
+                <TextView
+                    android:id="@+id/tvGrupo4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15sp"
+                    android:text="grupo 4 "
+                    android:visibility="gone"
+                    android:textColor="@color/gColorGris_n800"/>
+                <TextView
+                    android:id="@+id/tvGrupo5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15sp"
+                    android:text="grupo 5 "
+                    android:visibility="gone"
                     android:textColor="@color/gColorGris_n800"/>
 
             </LinearLayout>
@@ -150,47 +153,9 @@
                 android:progressDrawable="@drawable/horizontal_progress" />
 
         </LinearLayout>
-
         <!--<LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10sp">
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="Tipo:"
-                android:textColor="@color/gColorGris"
-                />
-
-            <Spinner
-                android:id="@+id/spinTipo"
-                style="@style/EstiloSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>-->
-
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:gravity="center" android:orientation="horizontal">
-
-
-            <!--<Button
-                android:id="@+id/btnDialogAceptar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:background="@color/gColorCyan_n700"
-                android:text="Aceptar"
-                android:textColor="@color/gColorBlanco" />-->
 
             <Button
                 android:id="@+id/btnDialogCancelar"
@@ -202,17 +167,7 @@
                 android:text="Cancelar"
                 android:textColor="@color/gColorBlanco" />
 
-            <!--<Button
-                android:id="@+id/btnDialogLimpiar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:background="@color/gColorNaranjaTM"
-                android:text="Limpiar"
-                android:textColor="@color/gColorBlanco" />-->
-
-        </LinearLayout>
+        </LinearLayout>-->
 
     </LinearLayout>
 
