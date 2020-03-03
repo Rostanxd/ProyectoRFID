@@ -14,6 +14,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.AdapterHashMap;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.DataSourceDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.GenericSpinnerDto;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.LoginData;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLectorRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ParamLogin;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ReceiveWareDetail;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.ResponseVal;
@@ -96,6 +97,8 @@ public class MainActivity extends Activity {
 
     public static final int MSG_BACK_PRESSED = 2;
 
+    public static ParamLectorRfid PARAM_LECTOR_RFID =  null;
+
     private String[] mFunctionsString;
 
     private DrawerLayout mDrawerLayout;
@@ -141,7 +144,7 @@ public class MainActivity extends Activity {
     private TextView mtvParam1;
     private Fragment mCurrentFragment;
     private boolean isAdmin, isExistParametrizacion;
-    private CardView mcvParametrizador,mcvConectividad,mcvConfiguracion,mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
+    private CardView mcvParametrizador,mcvConectividad,/*mcvConfiguracion,*/ mcvGuiaEntrada,mcvGuiaDespacho, mcvEnvioMercaderia,mcvRecepcionMercaderia,mcvInventariotienda, mcvReposicion, mcvTomaInventarioControl,mcvTomaInventarioParticipante;
     private GridLayout mainGrid;
 
     private  int PositionFrag;
@@ -169,6 +172,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        ParamRfidIteration paramRfidIteration = new ParamRfidIteration(mContext);
+        PARAM_LECTOR_RFID = paramRfidIteration.ConsultarParametros();
+
         rfidService = new RfidService(mContext);
         mlayouttvParam = (LinearLayout) findViewById(R.id.layouttvParam);
         mtvParam1 = (TextView) findViewById(R.id.tvParam1);
@@ -191,7 +197,7 @@ public class MainActivity extends Activity {
 
         mcvParametrizador  = (CardView)findViewById(R.id.cvParametrizador);
         mcvConectividad = (CardView)findViewById(R.id.cvConectividad);
-        mcvConfiguracion  = (CardView)findViewById(R.id.cvConfiguracion);
+        //mcvConfiguracion  = (CardView)findViewById(R.id.cvConfiguracion);
         mcvGuiaEntrada = (CardView)findViewById(R.id.cvGuiaEntrada);
         mcvGuiaDespacho = (CardView)findViewById(R.id.cvGuiaDespacho);
         mcvEnvioMercaderia = (CardView)findViewById(R.id.cvEnvioMercaderia);
@@ -211,7 +217,7 @@ public class MainActivity extends Activity {
             mlayouttvParam.setVisibility(View.GONE);
             mtvParam1.setVisibility(View.VISIBLE);
             mcvConectividad.setVisibility(View.GONE);
-            mcvConfiguracion.setVisibility(View.GONE);
+            //mcvConfiguracion.setVisibility(View.GONE);
             mcvGuiaEntrada.setVisibility(View.GONE);
             mcvGuiaDespacho.setVisibility(View.GONE);
             mcvEnvioMercaderia.setVisibility(View.GONE);
@@ -308,9 +314,9 @@ public class MainActivity extends Activity {
                         case R.id.cvConectividad:
                             id = 0;
                             break;
-                        case R.id.cvConfiguracion:
+                       /* case R.id.cvConfiguracion:
                             id = 6;
-                            break;
+                            break;*/
                         case R.id.cvGuiaEntrada:
                             id = 12;
                             break;
@@ -1562,6 +1568,21 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });
+
+        btnLimpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mspinTipo.setSelection(0);
+                mspinOrigen.setSelection(0);
+                medNumero.setText("");
+            }
+        });
         alertDialog1.show();
     }
 
@@ -1694,14 +1715,14 @@ public class MainActivity extends Activity {
 
         SeekBar mSeekBarPower = dialogView1.findViewById(R.id.SeekBarPower);
         TextView mtvSeleccionado = dialogView1.findViewById(R.id.tvSeleccionado);
-        TextView mtvpGED = dialogView1.findViewById(R.id.tvpGED);
+
+        /*TextView mtvpGED = dialogView1.findViewById(R.id.tvpGED);
         TextView mtvpERM = dialogView1.findViewById(R.id.tvpERM);
         TextView mtvpRepoInvPart = dialogView1.findViewById(R.id.tvpRepoInvPart);
 
         mtvpGED.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
                 RFPower = 17;
                 ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 17);
             }
@@ -1710,7 +1731,6 @@ public class MainActivity extends Activity {
         mtvpERM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
                 RFPower = 17;
                 ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 17 );
             }
@@ -1718,12 +1738,11 @@ public class MainActivity extends Activity {
         mtvpRepoInvPart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(mContext, "press...****", Toast.LENGTH_SHORT).show();
                 RFPower = 30;
                 ManagedSeekBarPower(mSeekBarPower, maxPower, mtvSeleccionado, 30 );
             }
         });
-
+*/
 
         Button btnAceptar = dialogView1.findViewById(R.id.btnDialogAceptar);
         Button btnCancelar = dialogView1.findViewById(R.id.btnDialogCancelar);
@@ -1790,7 +1809,7 @@ public class MainActivity extends Activity {
         alertDialog1.show();
     }
 
-    private void ManagedSeekBarPower(SeekBar mSeekBarPower, int maxPower, TextView mtvSeleccionado, int power){
+    /*private void ManagedSeekBarPower(SeekBar mSeekBarPower, int maxPower, TextView mtvSeleccionado, int power){
         final int mSeekBarPowerCorrection = 5;
 
         int realValueFromPersistentStorage = maxPower; //Get initial value from persistent storage, e.g., 100
@@ -1798,7 +1817,7 @@ public class MainActivity extends Activity {
 
         mSeekBarPower.setProgress(power - maxPower);
         mtvSeleccionado.setText(power+"");
-    }
+    }*/
 
     //RECEPCION DE MERCADERIA
 

@@ -17,11 +17,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.AdminSQLiteOpenHelper;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.Database.clsDatabase;
+import co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity.PowerStateRfid;
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.clsMensaje;
 
 public class ParameterActivity extends Activity {
@@ -29,6 +34,8 @@ public class ParameterActivity extends Activity {
     private Context mContext;
     private EditText medEndPointLocal,medEndPointExt,medCodBodega,medDesBodega,medHolding, medTimeDuration,medDateIni,medDispositivoId,medDateFin;
     private Spinner mspinTipoConexion;
+    private SeekBar mSeekBarPowerGEN, mSeekBarPowerGDE, mSeekBarPowerEM, mSeekBarPowerRM, mSeekBarPowerREP, mSeekBarPowerIP;
+    private TextView mtvPowerGEN, mtvPowerGDE, mtvPowerEM, mtvPowerRM, mtvPowerREP, mtvPowerIP;
     private Button mimgBtnSave;
     private clsDatabase loDatabase;
     private SQLiteDatabase loExecute;
@@ -56,7 +63,7 @@ public class ParameterActivity extends Activity {
         loExecute = loDatabase.getWritableDatabase();
         int codigo = 1;
 
-        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid from parameterservice where codigo ="+codigo, null);
+        Cursor fila = loExecute.rawQuery("select localendpoint, extendpoint, codbodega, descbodega, holding, conexiontype, dateini, dateend, dispositivoid, poderlecturarfid from parameterservice where codigo ="+codigo, null);
 
 
         if(fila.moveToFirst()){
@@ -79,12 +86,34 @@ public class ParameterActivity extends Activity {
             medDateFin.setText(fila.getString(7));
             medDispositivoId.setText(fila.getString(8));
 
+            PowerStateRfid powerStateRfid = DeserializeJsonPowerStateRfid(fila.getString(9));
+
+             /* mSeekBarPowerGEN, mSeekBarPowerGDE, mSeekBarPowerEM, mSeekBarPowerRM, mSeekBarPowerREP, mSeekBarPowerIP;
+              mtvPowerGEN, mtvPowerGDE, mtvPowerEM, mtvPowerRM, mtvPowerREP, mtvPowerIP;*/
+            ManagedSeekBarPower(mSeekBarPowerGEN, mtvPowerGEN, powerStateRfid.getGuiaEntrada());
+            ManagedSeekBarPower(mSeekBarPowerGDE, mtvPowerGDE, powerStateRfid.getGuiaDespacho());
+            ManagedSeekBarPower(mSeekBarPowerEM, mtvPowerEM, powerStateRfid.getEnvioMercaderia());
+            ManagedSeekBarPower(mSeekBarPowerRM, mtvPowerRM, powerStateRfid.getEnvioMercaderia());
+            ManagedSeekBarPower(mSeekBarPowerREP, mtvPowerREP, powerStateRfid.getReposicion());
+            ManagedSeekBarPower(mSeekBarPowerIP, mtvPowerIP, powerStateRfid.getInventarioParticipante());
+
+
         }
 
 
         loExecute.close();
     }
 
+    private void ManagedSeekBarPower(SeekBar seekBar, TextView textView, int power){
+        seekBar.setProgress(power - 5);
+        textView.setText(power+"");
+    }
+
+    private PowerStateRfid DeserializeJsonPowerStateRfid(String Json){
+        Gson gson = new Gson();
+        PowerStateRfid powerStateRfid = gson.fromJson(Json, PowerStateRfid.class);
+        return powerStateRfid;
+    }
     public void RegistrarModificar()
     {
         try{
@@ -98,6 +127,8 @@ public class ParameterActivity extends Activity {
             String Holding = medHolding.getText().toString();
             String timeDuration= medTimeDuration.getText().toString();
             String DispId = medDispositivoId.getText().toString();
+
+            String jsonPowerState = SerializeObjectPowerStateRfid();
 
             int codigo = 1;
 
@@ -157,6 +188,7 @@ public class ParameterActivity extends Activity {
             registro.put("dateini",dateini_);
             registro.put("dateend",datefin_ );
             registro.put("dispositivoid",DispId);
+            registro.put("poderlecturarfid",jsonPowerState);
 
             //}
             //else {
@@ -208,6 +240,22 @@ public class ParameterActivity extends Activity {
         }
 
 
+
+    }
+
+    private String SerializeObjectPowerStateRfid(){
+
+        PowerStateRfid powerStateRfid = new PowerStateRfid();
+        powerStateRfid.setGuiaEntrada(Integer.parseInt(mtvPowerGEN.getText().toString()) );
+        powerStateRfid.setGuiaDespacho(Integer.parseInt(mtvPowerGDE.getText().toString()) );
+        powerStateRfid.setEnvioMercaderia(Integer.parseInt(mtvPowerEM.getText().toString()) );
+        powerStateRfid.setRecepcionMercaderia(Integer.parseInt(mtvPowerRM.getText().toString()) );
+        powerStateRfid.setReposicion(Integer.parseInt(mtvPowerREP.getText().toString()) );
+        powerStateRfid.setInventarioParticipante(Integer.parseInt(mtvPowerIP.getText().toString()) );
+
+        Gson gson = new Gson();
+        String json = gson.toJson(powerStateRfid);
+        return json;
 
     }
 
@@ -268,9 +316,141 @@ public class ParameterActivity extends Activity {
         filter = new LightingColorFilter( Color.BLACK, Color.WHITE);
         myIcon.setColorFilter(filter);
 
+        //SEEK_BAR
+
+        mSeekBarPowerGEN = findViewById(R.id.SeekBarPowerGEN);
+        mSeekBarPowerGDE = findViewById(R.id.SeekBarPowerGDE);
+        mSeekBarPowerEM = findViewById(R.id.SeekBarPowerEM);
+        mSeekBarPowerRM = findViewById(R.id.SeekBarPowerRM);
+        mSeekBarPowerREP = findViewById(R.id.SeekBarPowerREP);
+        mSeekBarPowerIP = findViewById(R.id.SeekBarPowerIP);
+
+
+        mtvPowerGEN = findViewById(R.id.tvPowerGEN);
+        mtvPowerGDE = findViewById(R.id.tvPowerGDE);
+        mtvPowerEM = findViewById(R.id.tvPowerEM);
+        mtvPowerRM = findViewById(R.id.tvPowerRM);
+        mtvPowerREP = findViewById(R.id.tvPowerREP);
+        mtvPowerIP = findViewById(R.id.tvPowerIP);
+
         //mimgBtnSave.setCompoundDrawablesWithIntrinsicBounds( null, null, myIcon, null);
 
         LLenarCampos();
+
+        mSeekBarPowerGEN.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerGEN.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerGEN.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        mSeekBarPowerGDE.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerGDE.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerGDE.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mSeekBarPowerEM.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerEM.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerEM.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mSeekBarPowerRM.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerRM.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerRM.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mSeekBarPowerREP.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerREP.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerREP.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mSeekBarPowerIP.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = mSeekBarPowerIP.getProgress();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                val = i + 5;
+                mtvPowerIP.setText(val+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
 
 
         mimgBtnSave.setOnClickListener(new View.OnClickListener() {

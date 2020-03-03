@@ -256,7 +256,7 @@ public class ReplenishmentWareFragment extends Fragment {
     private String[] /*spinnerArray = null,*/ spinnerArraySeccion = null;
     private HashMap<Integer,String> /*spinnerMap = null,*/ spinnerMapSeccion = null;
 
-    private  int RFPower = 30;
+    private  int RFPower = 0;
     private ViewGroup loVistaDialogo;
     private clsMensaje loDialogo;
 
@@ -629,6 +629,7 @@ public class ReplenishmentWareFragment extends Fragment {
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
             updateButtonState();
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getReposicion();
             mReader.RF_SetRadioPowerState(RFPower);
         }
         else

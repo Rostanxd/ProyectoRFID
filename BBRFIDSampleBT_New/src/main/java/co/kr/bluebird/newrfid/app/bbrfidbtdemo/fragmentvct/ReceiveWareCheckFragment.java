@@ -274,7 +274,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private  int RFPower = 17;
+    private  int RFPower = 0;
     private boolean lectureHasPc = false;
 
     private ViewGroup loVistaDialogo;
@@ -715,6 +715,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             enableControl(true);
             DrawButtonMode();
             updateButtonState();
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getRecepcionMercaderia();
             mReader.RF_SetRadioPowerState(RFPower);
         }
         else

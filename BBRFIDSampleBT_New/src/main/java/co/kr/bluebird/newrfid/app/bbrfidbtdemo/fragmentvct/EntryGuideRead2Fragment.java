@@ -281,7 +281,7 @@ public class EntryGuideRead2Fragment extends Fragment {
 
     private LinearLayout mlayoutHeader;
 
-    private  int RFPower = 17;
+    private  int RFPower = 0;
     private boolean lectureHasPc = false;
     private boolean isWindowsInventoryLocated = false;
 
@@ -744,6 +744,8 @@ public class EntryGuideRead2Fragment extends Fragment {
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
             updateButtonState();
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getGuiaEntrada();
+            //Toast.makeText(mContext,"el power es: "+ RFPower, Toast.LENGTH_LONG).show();
             mReader.RF_SetRadioPowerState(RFPower);
         }
         else

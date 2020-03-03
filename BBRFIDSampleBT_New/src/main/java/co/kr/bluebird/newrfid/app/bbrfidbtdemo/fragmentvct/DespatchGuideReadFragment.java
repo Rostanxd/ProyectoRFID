@@ -250,7 +250,7 @@ public class DespatchGuideReadFragment extends Fragment {
     private EGProcesado egProcesado;
     public DespatchGuideGenerateFragment mDespatchGuideGenerateFragment;
 
-    private  int RFPower = 17;
+    private  int RFPower = 0;
     private clsMensaje loDialogo;
     private ViewGroup loVistaDialogo;
 
@@ -575,6 +575,7 @@ public class DespatchGuideReadFragment extends Fragment {
             enableControl(true);
             updateButtonState();
 
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getGuiaDespacho();
             mReader.RF_SetRadioPowerState(RFPower);
         }
         else

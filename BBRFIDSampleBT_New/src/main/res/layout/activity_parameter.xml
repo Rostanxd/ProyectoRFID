@@ -9,7 +9,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="480dp">
 
 
         <LinearLayout
@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
             android:layout_marginLeft="5dip"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip"
             android:orientation="vertical">
 
 
@@ -202,12 +202,196 @@
                 </TableRow>
 
 
+                <TableRow android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="Poder de lectura Rfid por opcion:" />
+
+                </TableRow>
+
+
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Guia Entrada" />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerGEN"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerGEN"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Guia Despacho " />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerGDE"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerGDE"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Envio Mercaderia" />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerEM"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerEM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Rec. Mercaderia" />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerRM"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerRM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Reposicion" />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerREP"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerREP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Inv. Participante" />
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <SeekBar
+                            android:id="@+id/SeekBarPowerIP"
+                            style="@android:style/Widget.Material.SeekBar"
+                            android:layout_width="200dip"
+                            android:layout_height="wrap_content"
+                            android:max="25"
+                            android:progressDrawable="@drawable/horizontal_progress" />
+
+                        <TextView
+                            android:id="@+id/tvPowerIP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5" />
+
+                    </LinearLayout>
+                </TableRow>
+
+
             </TableLayout>
 
 
 
 
-                <Button
+               <!-- <Button
                     android:id="@+id/imgBtnSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -218,14 +402,41 @@
                     android:textColor="@color/gColorBlanco"
                     android:background="@color/gColorAzulClaro"
                     android:text="@string/BTN_guardar"
-                    android:textAlignment="center" />
+                    android:textAlignment="center" />-->
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:orientation="vertical">
 
+            </LinearLayout>
 
 
         </LinearLayout>
 
 
+
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/imgBtnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:textColor="@color/gColorBlanco"
+            android:background="@color/gColorAzulClaro"
+            android:text="@string/BTN_guardar"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
 </LinearLayout>

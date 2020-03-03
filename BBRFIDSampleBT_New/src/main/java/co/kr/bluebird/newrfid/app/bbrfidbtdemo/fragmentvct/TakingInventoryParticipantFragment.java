@@ -273,7 +273,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
     private String[] spinnerArray = null;
     private HashMap<Integer,String> spinnerMap = null;
 
-    private  int RFPower = 30;
+    private  int RFPower = 0;
     private Validator validator;
     private ViewGroup loVistaDialogo;
     private clsMensaje loDialogo;
@@ -623,6 +623,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         mReader = BTReader.getReader(mContext, mInventoryHandler);
         if (mReader != null && mReader.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             enableControl(true);
+            RFPower = MainActivity.PARAM_LECTOR_RFID.getPowerStateRfid().getInventarioParticipante();
             mReader.RF_SetRadioPowerState(RFPower);
             updateButtonState();
         }
