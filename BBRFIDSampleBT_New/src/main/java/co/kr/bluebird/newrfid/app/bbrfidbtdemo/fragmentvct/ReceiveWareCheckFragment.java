@@ -2385,6 +2385,12 @@ public class ReceiveWareCheckFragment extends Fragment {
         skuData.setGrupo2(itemEncontradoSeleccinado.getItemGrupo2().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo2());
         skuData.setGrupo3(itemEncontradoSeleccinado.getItemGrupo3().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo3());
 
+        skuData.setGrupo4(itemEncontradoSeleccinado.getItemGrupo4().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo4());
+        skuData.setGrupo5(itemEncontradoSeleccinado.getItemGrupo5().equals("anyType{}") ? "" : itemEncontradoSeleccinado.getItemGrupo5());
+
+       /* skuData.setGrupo4("XML -TY646664");
+        skuData.setGrupo5("XML -PIPAPA211444545646641466");*/
+
         LocatedInvData locatedInvData = new LocatedInvData();
         locatedInvData.setOrdenCompra(null);
         locatedInvData.setNumeroGuia(null);
@@ -2421,7 +2427,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     }
     private void PersistirDatosBackInvLocated(PersistenceReceiveWare persistenceReceiveWare){
         metDocOrigenRW.setText(persistenceReceiveWare.getDocOrigen());
-        metDocDestinoRW.setText(persistenceReceiveWare.getDocOrigen());
+        metDocDestinoRW.setText(persistenceReceiveWare.getDocDestino());
         metMotivoRW.setText(persistenceReceiveWare.getMotivo());
         mtvCantItemLeidos.setText(persistenceReceiveWare.getItemsLeidos());
         mtvCantTotal.setText(persistenceReceiveWare.getItemsEsperados());

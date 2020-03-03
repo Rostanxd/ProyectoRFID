@@ -1627,6 +1627,9 @@ public class EntryGuideRead2Fragment extends Fragment {
                 skuData.setGrupo1(egTagsResponseItem_.getItemGrupo1().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo1());
                 skuData.setGrupo2(egTagsResponseItem_.getItemGrupo2().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo2());
                 skuData.setGrupo3(egTagsResponseItem_.getItemGrupo3().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo3());
+                skuData.setGrupo4(egTagsResponseItem_.getItemGrupo4().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo4());
+                skuData.setGrupo5(egTagsResponseItem_.getItemGrupo5().equals("anyType{}") ? "" : egTagsResponseItem_.getItemGrupo5());
+
 
                 LocatedInvData locatedInvData = new LocatedInvData();
                 locatedInvData.setOrdenCompra(medOrdenCompraGR.getText()+"");
