@@ -36,5 +36,14 @@
         android:title="@string/home_str"/>
 
 
+    <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_action_info"
+        android:orderInCategory="101"
+        android:showAsAction="always"
+        android:visible="true"
+        android:title="@string/info_str"/>
+
+
 
 </menu>

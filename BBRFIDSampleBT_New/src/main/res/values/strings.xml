@@ -19,7 +19,7 @@
     <string name="PhostExt">Host Externo</string>
     <string name="PportExt">Puerto Externo</string>
     <string name="PcodBodega">Cod Bodega</string>
-    <string name="PDescBodega">Descripcion Bodega</string>
+    <string name="PDescBodega">Nombre Bodega</string>
     <string name="PHolding">Holding</string>
     <string name="PconexType">Tipo Conexion</string>
     <string name="PDurTime">Tiempo Duracion</string>
@@ -310,6 +310,7 @@
     <string name="connected_str">"Connected"</string>
 
     <string name="home_str">"Home"</string>
+    <string name="info_str">"Informacion"</string>
 
     <string name="set_rfid_str">"Set RFID Mode"</string>
 

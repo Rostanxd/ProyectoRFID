@@ -120,6 +120,7 @@ public class ParamRfidIteration {
 
 
             String endpoint = "";
+            paramLectorRfid.setEndpointSelect("Local");
             if(fila.getString(5).equals("Local"))
             {
                 endpoint = fila.getString(0);
@@ -127,6 +128,7 @@ public class ParamRfidIteration {
             }
             else if(fechaActualFormat != null && fechaFinParamFormat != null && CompararFechas(fechaActualFormat,fechaFinParamFormat)){
                 endpoint = fila.getString(1);
+                paramLectorRfid.setEndpointSelect("Externo");
 
             }
             else {

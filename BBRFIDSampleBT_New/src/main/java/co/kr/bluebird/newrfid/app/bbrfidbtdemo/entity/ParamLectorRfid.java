@@ -1,16 +1,17 @@
 package co.kr.bluebird.newrfid.app.bbrfidbtdemo.entity;
 
 public class ParamLectorRfid {
-    public String endpoint;
-    public String endpointExt;
-    public String codbodega;
-    public String descBodega;
-    public String holding;
-    public String conexiontype;
-    public String dateini;
-    public String dateend;
-    public String dispositivoid;
-    public PowerStateRfid powerStateRfid;
+    private String endpoint;
+    private String endpointExt;
+    private String codbodega;
+    private String descBodega;
+    private String holding;
+    private String conexiontype;
+    private String dateini;
+    private String dateend;
+    private String dispositivoid;
+    private PowerStateRfid powerStateRfid;
+    private String endpointSelect;
 
     public String getEndpoint() {
         return endpoint;
@@ -90,5 +91,13 @@ public class ParamLectorRfid {
 
     public void setPowerStateRfid(PowerStateRfid powerStateRfid) {
         this.powerStateRfid = powerStateRfid;
+    }
+
+    public String getEndpointSelect() {
+        return endpointSelect;
+    }
+
+    public void setEndpointSelect(String endpointSelect) {
+        this.endpointSelect = endpointSelect;
     }
 }

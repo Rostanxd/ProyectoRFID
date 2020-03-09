@@ -46,6 +46,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import co.kr.bluebird.newrfid.app.bbrfidbtdemo.MainActivity;
@@ -291,6 +292,8 @@ public class InventoryPerStoreFragment extends Fragment {
         mlayoutHeaderSale = (LinearLayout) v.findViewById(R.id.layoutHeaderSale);
         mlayoutFooterSale = (LinearLayout) v.findViewById(R.id.layoutFooterSale);
 
+        enabledDisabledBtnClear(false);
+
 
         metEstiloItemIPS.addTextChangedListener(new TextWatcher() {
             @Override
@@ -331,6 +334,15 @@ public class InventoryPerStoreFragment extends Fragment {
             public void onClick(View view) {
                 metEstiloItemIPS.setText("");
                 garmentSaleObj = null;
+                mvPagerGarment.setAdapter(null);
+                mexpLV_Saldos.setAdapter((BaseExpandableListAdapter)null);
+                mtvLine.setText("");
+                mtvProduct.setText("");
+                mtvAnio.setText("");
+                mtvPrice.setText("");
+
+                mLayoutSaldos.setVisibility(View.GONE);
+                mLayoutInfo.setVisibility(View.VISIBLE);
             }
         });
 
@@ -515,13 +527,52 @@ public class InventoryPerStoreFragment extends Fragment {
         return ArrayBitmap;
     }
 
-    private HashMap<String, List<GarmentSize>> getData_()
+    private GarmentSaleObj OrdenarGarmentSale(){
+        int i = 0;
+        int indiceBusca = 0;
+
+        GarmentSaleObj ngarmentSaleObj = new GarmentSaleObj();
+        GarmentSale ngarmentSale = new GarmentSale();
+        List<GarmentSale> garmentSaleList = new ArrayList<>();
+
+
+        for (GarmentSale garmentSale : garmentSaleObj.getGarmentSaleList()) {
+            for (GarmentSize garmentSize:garmentSale.getSizes()) {
+                if(garmentSize.isBusca()){
+                    ngarmentSale.setColorName(garmentSale.getColorName());
+                    ngarmentSale.setSizes(garmentSale.getSizes());
+                    indiceBusca = i;
+                }
+            }
+            i++;
+        }
+
+        if(indiceBusca != 0){
+            garmentSaleList.add(ngarmentSale);
+            garmentSaleObj.getGarmentSaleList().remove(indiceBusca);
+        }
+
+
+
+        for (GarmentSale garmentSale : garmentSaleObj.getGarmentSaleList()) {
+            garmentSaleList.add(garmentSale);
+        }
+
+        ngarmentSaleObj.setStatus(garmentSaleObj.getStatus());
+        ngarmentSaleObj.setGarmentSaleList(garmentSaleList);
+
+        return ngarmentSaleObj;
+
+    }
+
+    private LinkedHashMap<String, List<GarmentSize>> getData_()
     {
-        HashMap<String, List<GarmentSize>> ParentItem = new HashMap<String, List<GarmentSize>>();
+        LinkedHashMap<String, List<GarmentSize>> ParentItem = new LinkedHashMap<String, List<GarmentSize>>();
         List<GarmentSize> garmentSizeList = null;
 
         int totalLocal = 0, totalOtros = 0;
-
+        garmentSaleObj = OrdenarGarmentSale();
+        //for (GarmentSale garmentSale:garmentSaleObj.getGarmentSaleList()) {
         for (GarmentSale garmentSale:garmentSaleObj.getGarmentSaleList()) {
             garmentSizeList = new ArrayList<GarmentSize>();
             for (GarmentSize garmentSize:garmentSale.getSizes()) {
@@ -720,6 +771,9 @@ public class InventoryPerStoreFragment extends Fragment {
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new ExpandableListAdapterInvPerStoreSaldos(mContext, expandableListTitle, expandableListDetail);
         mexpLV_Saldos.setAdapter(expandableListAdapter);
+        for(int i=0; i < expandableListAdapter.getGroupCount() ; i++){
+            mexpLV_Saldos.expandGroup(i);
+        }
         mexpLV_Saldos.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
@@ -774,38 +828,6 @@ public class InventoryPerStoreFragment extends Fragment {
 
     private void InvoqueDialogSaldoOtros()
     {
-        /*final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_saldos_otros);
-
-        final ListView lv =  dialog.findViewById(R.id.lv_otherSale);
-        final TextView mtvItem =  dialog.findViewById(R.id.tvItem);
-
-        mtvItem.setEnabled(false);
-        mtvItem.setText(mItemCodigo);
-        //ViewGroup headerview = (ViewGroup) getLayoutInflater().inflate(R.layout.header_reposicion,lv,false);
-        View headerview = View.inflate(mContext, R.layout.header_2column, null);
-        final TextView tvHCol1 = (TextView) headerview.findViewById(R.id.tvHCol1);
-        final TextView tvHCol2 = (TextView) headerview.findViewById(R.id.tvHCol2);
-
-        tvHCol1.setText("Local");
-        tvHCol2.setText("Stock");
-
-
-        lv.addHeaderView(headerview);
-
-        lv.setAdapter(new CustomListAdapterInvPerStoreOtherSale(mContext, storeExistenceObj.getExistencias()));
-        *//*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                ReplenishmentWareResult replenishmentWareResult = (ReplenishmentWareResult) lv.getItemAtPosition(position);
-                Toast.makeText(mContext, "Selected :" + " " + replenishmentWareResult.getItems()+", "+ replenishmentWareResult.getReplenishmentCount(), Toast.LENGTH_SHORT).show();
-            }
-        });*//*
-
-
-        dialog.show();*/
-
-
         View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_saldos_otros, loVistaDialogo, false);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
         builder1.setView(dialogView1);
@@ -943,5 +965,7 @@ public class InventoryPerStoreFragment extends Fragment {
     public void backLayoutInfo(){
         mLayoutSaldos.setVisibility(View.GONE);
         mLayoutInfo.setVisibility(View.VISIBLE);
+
+        EnableDisableBtnFooter(false, true);
     }
 }

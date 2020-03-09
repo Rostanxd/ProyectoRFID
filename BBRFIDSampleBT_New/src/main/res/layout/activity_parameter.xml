@@ -21,186 +21,231 @@
             android:layout_marginTop="10dip"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/endpointlocal" />
+
+                <EditText
+                    android:id="@+id/edEndPointLocal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/endpointext" />
+
+                <EditText
+                    android:id="@+id/edEndPointExt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PcodBodega" />
+
+                <EditText
+                    android:id="@+id/edCodBodega"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PDescBodega" />
+
+                <EditText
+                    android:id="@+id/edDesBodega"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PHolding" />
+
+                <EditText
+                    android:id="@+id/edHolding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PconexType" />
+
+                <Spinner
+                    android:id="@+id/spinTipoConexion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_spinner"
+                    android:layout_weight="1"
+                    android:entries="@array/ParamLocalExterno"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PDurTime" />
+
+                <EditText
+                    android:id="@+id/edTimeDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PDateIni" />
+
+                <EditText
+                    android:id="@+id/edDateIni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="@string/PDateFin" />
+
+                <EditText
+                    android:id="@+id/edDateFin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="110dip"
+                    android:layout_height="match_parent"
+                    android:text="ID Dispositivo" />
+
+                <EditText
+                    android:id="@+id/edDispositivoId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    />
+
+            </LinearLayout>
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
                 >
-
-                <TableRow>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/endpointlocal" />
-
-                    <EditText
-                        android:id="@+id/edEndPointLocal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        />
-                </TableRow>
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/endpointext" />
-
-                    <EditText
-                        android:id="@+id/edEndPointExt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/borde_edittext"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PcodBodega" />
-
-                    <EditText
-                        android:id="@+id/edCodBodega"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PDescBodega" />
-
-                    <EditText
-                        android:id="@+id/edDesBodega"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:id="@+id/tvCantItemLeidos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PHolding" />
-
-                    <EditText
-                        android:id="@+id/edHolding"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PconexType" />
-
-                    <Spinner
-                        android:id="@+id/spinTipoConexion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/borde_edittext"
-                        android:layout_weight="1"
-                        android:entries="@array/ParamLocalExterno"/>
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PDurTime" />
-
-                    <EditText
-                        android:id="@+id/edTimeDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:inputType="number"
-                        android:enabled="false"/>
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PDateIni" />
-
-                    <EditText
-                        android:id="@+id/edDateIni"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/borde_edittext"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/PDateFin" />
-
-                    <EditText
-                        android:id="@+id/edDateFin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:background="@drawable/borde_edittext"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="ID Dispositivo" />
-
-                    <EditText
-                        android:id="@+id/edDispositivoId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:background="@drawable/borde_edittext"
-                        android:inputType="textPersonName" />
-                </TableRow>
-
 
                 <TableRow android:layout_marginTop="5dp">
                     <TextView

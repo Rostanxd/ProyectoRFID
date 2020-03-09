@@ -395,6 +395,8 @@ public class MainActivity extends Activity {
                     loDialogo.gMostrarMensajeInformacion(loVistaDialogo, "El Dispositivo esta desconectado de la pistola RFID");
                     //Toast.makeText(mContext,"El Dispositivo esta desconectado de la pistola RFID",Toast.LENGTH_SHORT).show();
                 }
+            }else  if(id == R.id.action_info){
+                DialogInformacionApp();
             }
 
             /*if(id == R.id.){}*/
@@ -560,11 +562,17 @@ public class MainActivity extends Activity {
 
 
             case 13:
-                if (mDespatchGuideReadFragment == null) {
-                    mDespatchGuideReadFragment = DespatchGuideReadFragment.newInstance();
 
+                if(PARAM_LECTOR_RFID.getCodbodega().equals("01")){
+                    if (mDespatchGuideReadFragment == null) {
+                        mDespatchGuideReadFragment = DespatchGuideReadFragment.newInstance();
+                    }
+                    mCurrentFragment = mDespatchGuideReadFragment;
                 }
-                mCurrentFragment = mDespatchGuideReadFragment;
+                else {
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"La bodega donde se encuentra no puede realizar Guias de Despacho");
+                }
+
 
                 break;
 
@@ -841,8 +849,9 @@ public class MainActivity extends Activity {
             isFirstFragment = false;
             //mDrawerLayout.closeDrawer(mDrawerList);
             if (mDespatchGuideReadFragment != null) {
-                execFragmentTransaction = true;
+
                 if(isBackForce){
+                    execFragmentTransaction = true;
                     FragmentTransaction ft = mFragmentManager.beginTransaction();
                     ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
                     ft.commit();
@@ -860,11 +869,12 @@ public class MainActivity extends Activity {
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            execFragmentTransaction = false;
                             FragmentTransaction ft = mFragmentManager.beginTransaction();
                             ft.remove(mDespatchGuideReadFragment.mDespatchGuideGenerateFragment);
                             ft.commit();
                             mDespatchGuideReadFragment.mDespatchGuideGenerateFragment = null;
-                            //ReplaceFragment();
+                            ReplaceFragment();
                             alertDialog.dismiss();
                         }
                     });
@@ -888,8 +898,9 @@ public class MainActivity extends Activity {
             //mDrawerLayout.closeDrawer(mDrawerList);
 
             if (mShippingWareReadFragment != null) {
-                execFragmentTransaction = true;
+
                 if(isBackForce){
+                    execFragmentTransaction = true;
                     FragmentTransaction ft = mFragmentManager.beginTransaction();
                     ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
                     ft.commit();
@@ -909,11 +920,12 @@ public class MainActivity extends Activity {
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            execFragmentTransaction = false;
                             FragmentTransaction ft = mFragmentManager.beginTransaction();
                             ft.remove(mShippingWareReadFragment.mShippingWareGenerateFragment);
                             ft.commit();
                             mShippingWareReadFragment.mShippingWareGenerateFragment = null;
-                            //ReplaceFragment();
+                            ReplaceFragment();
                             alertDialog.dismiss();
 
 
@@ -997,6 +1009,10 @@ public class MainActivity extends Activity {
                 if(mReceiveWareCheckFragment != null){
                     if(mReceiveWareCheckFragment.isOpenInconsistency){
                         mReceiveWareCheckFragment.SetVisibleWareCheck();
+
+                        if(mReceiveWareCheckFragment.processFinalExitoso){
+                            switchToHome();
+                        }
                     }
                     else {
                         DialogConfirmacionBack("Esta seguro de regresar al menu principal, si lo hace perdera todo el trabajo realizado...");
@@ -1179,7 +1195,7 @@ public class MainActivity extends Activity {
                             {
                                 String[] parts = qrcode.trim().split(";");
                                 qrcode = parts[0];
-                                Toast.makeText(mContext, "Codigo Scaneado: "+qrcode, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(mContext, "Codigo Scaneado: "+qrcode, Toast.LENGTH_LONG).show();
                                 //String[] sqrcode
                                 InvocateWSReceptionDetail(new String[]{qrcode});
                             }
@@ -1240,17 +1256,19 @@ public class MainActivity extends Activity {
 
                 }
 
-                if(mCurrentFragment.equals(mReceiveWareCheckFragment))
+                /*if(mCurrentFragment.equals(mReceiveWareCheckFragment))
                 {
                     mReceiveWareCheckFragment.CleanControls();
-                    if(mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment != null){
-                        /*mReceiveWareCheckFragment.CleanControls();*/
+                    *//*if(mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment != null){
                         FragmentTransaction ft = mFragmentManager.beginTransaction();
                         ft.remove(mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment);
                         ft.commit();
                         mReceiveWareCheckFragment.mReceiveWareInconsistencyFragment = null;
-                    }
-                }
+                    }*//*
+                    FragmentTransaction ft = mFragmentManager.beginTransaction();
+                    ft.remove(mReceiveWareCheckFragment);
+                    ft.commit();
+                }*/
 
                 FragmentTransaction ft = mFragmentManager.beginTransaction();
                 ft.remove(mCurrentFragment);
@@ -1358,7 +1376,7 @@ public class MainActivity extends Activity {
                 if(ResposeEG.estado.codigo.equals("00")){
                     if(ResposeEG.data_ != null && ResposeEG.data_.guias != null && ResposeEG.data_.guias.size() > 0){
                         //Aqui se muestra la siguiente actividad
-                        if (mEntryGuideCheckFragment == null)
+                        /*if (mEntryGuideCheckFragment == null)
                         {
                             Bundle poArgumentos = new Bundle();
                             poArgumentos.putSerializable("objectResponse", ResposeEG);
@@ -1367,7 +1385,14 @@ public class MainActivity extends Activity {
 
                             poArgumentos.putString("NoOCompra", lsNumeroOrden);
                             mEntryGuideCheckFragment.setArguments(poArgumentos);
-                        }
+                        }*/
+
+                        Bundle poArgumentos = new Bundle();
+                        poArgumentos.putString("NoOCompra", lsNumeroOrden);
+                        poArgumentos.putSerializable("objectResponse", ResposeEG);
+                        mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                        mEntryGuideCheckFragment.setArguments(poArgumentos);
+
                         mCurrentFragment = mEntryGuideCheckFragment;
                         if(mCurrentFragment !=null)
                         {
@@ -1701,6 +1726,37 @@ public class MainActivity extends Activity {
 
 
     //##################### INVOCAR ALERTAS (DIALOGO)######################
+
+    private void DialogInformacionApp()
+    {
+        View dialogView1 = LayoutInflater.from(mContext).inflate(R.layout.dialog_info_app, loVistaDialogo, false);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder1.setView(dialogView1);
+        final AlertDialog alertDialog1 = builder1.create();
+
+        ParamRfidIteration paramRfidIteration = new ParamRfidIteration(mContext);
+        ParamLectorRfid paramLectorRfid = paramRfidIteration.ConsultarParametros();
+        PersistenceDataIteration persistenceDataIteration = new PersistenceDataIteration(mContext);
+        LoginData loginData = persistenceDataIteration.LoginDataPersistence();
+
+        TextView mtvUsuario = dialogView1.findViewById(R.id.tvUsuario);
+        TextView mtvLocal = dialogView1.findViewById(R.id.tvLocal);
+        TextView mtvTipoConexion = dialogView1.findViewById(R.id.tvTipoConexion);
+        Button btnCerrar = dialogView1.findViewById(R.id.btnDialogCerrar);
+
+        mtvTipoConexion.setText(paramLectorRfid.getEndpointSelect());
+        mtvLocal.setText(paramLectorRfid.getDescBodega());
+        mtvUsuario.setText(loginData.getUsuario().getDescripcion());
+
+        btnCerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog1.dismiss();
+            }
+        });
+
+        alertDialog1.show();
+    }
 
     private void DialogPowerState()
     {
