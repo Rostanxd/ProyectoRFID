@@ -179,7 +179,11 @@ public class ShippingWareGenerateFragment extends Fragment {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     CodBodAlmacenamiento = spinnerMapAlm.get(i);
-                    LLenarSpinnerDestino();
+
+                    if(!CodBodAlmacenamiento.equals("0")){
+                        LLenarSpinnerDestino();
+                    }
+
                 }
 
                 @Override

@@ -759,7 +759,7 @@ public class RfidService {
 
 
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
-        soRequest.addProperty("Bodcodigo",paramLectorRfid_.codbodega);
+        soRequest.addProperty("Bodcodigo",paramLectorRfid_.getCodbodega());
         soRequest.addProperty("Secconteo",pSecconteo);
         SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
         return responseSoapToObject.ResponsetoInventoryControl(response, exceptionData);

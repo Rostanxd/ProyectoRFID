@@ -183,7 +183,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     private boolean mFile = false;
 
-    private Handler mOptionHandler;
+    private Handler mOptionHandler, mBackHandler;
 
     private SoundPool mSoundPool;
 
@@ -297,7 +297,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     private EditText metNota;
     private LinearLayout mlayoutHeaderRWI, mlayaoutWareCheck, mlayaoutInconsistency;
     private ImageButton mBackButtonInconsistency;
-    public boolean isOpenInconsistency = false;
+    public boolean isOpenInconsistency = false, processFinalExitoso = false;
     private List<EGTagsResponseItem> listInc = null;
     private ReceiveWareDetail receiveWareDetail_param;
     public InvetoryLocatedFragment mInvetoryLocatedFragment;
@@ -323,6 +323,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         receiveWareDetail_param = (ReceiveWareDetail) getArguments().getSerializable("receiveWareDetail");
 
         mOptionHandler = ((MainActivity)getActivity()).mUpdateConnectHandler;
+        mBackHandler = ((MainActivity)getActivity()).mBackHandler;
 
         mlayoutHeaderRWC = (LinearLayout) v.findViewById(R.id.layoutHeaderRWC);
         mLocateLayout = (LinearLayout)v.findViewById(R.id.tag_locate_container);
@@ -425,7 +426,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         mbtnConfirmar.setCompoundDrawablesWithIntrinsicBounds( myIcon, null, null, null);
         mbtnConfirmar.setOnClickListener(sledListener);
 
-        ActivateButtons(false);
+        //ActivateButtons(false);
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.timer_progress);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -701,7 +702,8 @@ public class ReceiveWareCheckFragment extends Fragment {
             String msj = "Se ha cargado el Doc. Origen: "+doc_origen+". Cambie a modo Rfid, lea las prendas y compare";
             DialogIndicadorComparacion(msj);
         }
-        ActivateButtons(true);
+        //ActivateButtons(true);
+        EnabledDisabledButtons(true, 1);
         mSoundFileLoadState = false;
 
         createSoundPool();
@@ -796,19 +798,76 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     public void CleanControls()
     {
-        metDocOrigenRW.setText("");
-        metDocDestinoRW.setText("");
-        metMotivoRW.setText("");
+        //metDocOrigenRW.setText("");
+        //metDocDestinoRW.setText("");
+        //metMotivoRW.setText("");
         mtvCantItemLeidos.setText("0");
-        mtvCantTotal.setText("0");
+        //mtvCantTotal.setText("0");
         mprogress1.setProgress(0);
-        mlv_itemsEnc.setAdapter(null);
-        metNota.setText("");
-        mlayoutHeaderRWC.setVisibility(View.GONE);
+        //mlv_itemsEnc.setAdapter(null);
+        //metNota.setText("");
+        //mlayoutHeaderRWC.setVisibility(View.GONE);
         ArrLis = null;
 
-        egDetailResponse = null;
-        ActivateButtons(false);
+        //egDetailResponse = null;
+        //ActivateButtons(false);
+        mbtnConfirmar.setEnabled(false);
+        mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+    }
+
+    private void EnabledDisabledButtons(boolean isEnabled, int proceso)
+    {
+        mInvenButton.setEnabled(isEnabled);
+        mclean_imgbtn.setEnabled(isEnabled);
+
+        if(proceso == 1){
+            mStopInvenButton.setEnabled(false);
+            mbtnConfirmar.setEnabled(false);
+            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+
+        if(proceso == 2){
+            mStopInvenButton.setEnabled(false);
+            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+
+            getListEpcsRead();
+
+            if(ListEpcRead.size() > 0){
+                mbtnConfirmar.setEnabled(true);
+                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+            }
+        }
+        if(proceso == 3){
+            mStopInvenButton.setEnabled(true);
+            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
+
+            mbtnConfirmar.setEnabled(false);
+            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+
+        if(proceso == 4){
+            mStopInvenButton.setEnabled(false);
+            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+
+            getListEpcsRead();
+
+            if(ListEpcRead.size() > 0){
+                mbtnConfirmar.setEnabled(true);
+                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+            }
+
+        }
+
+        if(isEnabled){
+            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
+            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F38428")));
+        }
+        else {
+            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+            mclean_imgbtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        }
+
     }
 
     private OnClickListener sledListener = new OnClickListener() {
@@ -850,14 +909,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
                             btnConfirmarManagement(true);
 
-                            mInvenButton.setEnabled(false);
-                            mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-
-                            mStopInvenButton.setEnabled(true);
-                            mStopInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF3C10")));
-
-                            mbtnConfirmar.setEnabled(false);
-                            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+                            EnabledDisabledButtons(false,3);
 
                             startStopwatch();
                             mInventory = true;
@@ -877,10 +929,11 @@ public class ReceiveWareCheckFragment extends Fragment {
                         mInventory = false;
                         enableControl(!mInventory);
                         pauseStopwatch();
-                        mbtnConfirmar.setEnabled(true);
+                        /*mbtnConfirmar.setEnabled(true);
                         mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
                         mInvenButton.setEnabled(true);
-                        mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));
+                        mInvenButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1F9375")));*/
+                        EnabledDisabledButtons(true, 4);
                         lectureHasPc = !mIgnorePC;
                     } else if (ret == SDConsts.RFResult.STOP_FAILED_TRY_AGAIN)
                         Toast.makeText(mContext, "Stop Inventory failed", Toast.LENGTH_SHORT).show();
@@ -931,6 +984,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         mlayaoutWareCheck.setVisibility(View.GONE);
         mlayaoutInconsistency.setVisibility(View.VISIBLE);
         isOpenInconsistency = true;
+        metNota.setText("");
     }
 
     private void ProcesarLvItemsInc()
@@ -1514,9 +1568,9 @@ public class ReceiveWareCheckFragment extends Fragment {
                             if (ret == SDConsts.RFResult.SUCCESS) {
                                 startStopwatch();
                                 mInventory = true;
-                                mbtnConfirmar.setEnabled(false);
-                                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
-
+                                /*mbtnConfirmar.setEnabled(false);
+                                mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));*/
+                                EnabledDisabledButtons(false, 1);
                                 enableControl(!mInventory);
                             } else if (ret == SDConsts.RFResult.MODE_ERROR)
                                 Toast.makeText(mContext, "Start Inventory failed, Please check RFR900 MODE", Toast.LENGTH_SHORT).show();
@@ -1544,10 +1598,12 @@ public class ReceiveWareCheckFragment extends Fragment {
 
                             btnConfirmarManagement(true);
 
-                            if(Integer.parseInt(mtvCantItemLeidos.getText().toString()) != 0 && !metDocOrigenRW.getText().equals("")){
+                            EnabledDisabledButtons(true,2);
+
+                            /*if(Integer.parseInt(mtvCantItemLeidos.getText().toString()) != 0 && !metDocOrigenRW.getText().equals("")){
                                 mbtnConfirmar.setEnabled(true);
                                 mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
-                            }
+                            }*/
                         }
                         lectureHasPc = !mIgnorePC;
                         pauseStopwatch();
@@ -1658,7 +1714,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     // METODOS ASYNC
 
-    private void ActivateButtons(boolean isActivate){
+    /*private void ActivateButtons(boolean isActivate){
 
         if(isActivate){
             mInvenButton.setEnabled(isActivate);
@@ -1678,7 +1734,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
 
 
-    }
+    }*/
 
     private  class exWSRecepcionComparaAsync extends AsyncTask<Void, Void, Void> {
 
@@ -2119,6 +2175,8 @@ public class ReceiveWareCheckFragment extends Fragment {
                     case 3:
                         clearAll();
                         CleanControls();
+                        btnConfirmarManagement(true);
+
                         break;
                     case 4:
                         mWSParameter_RecepcionProcesar = getResources().getStringArray(R.array.WSparameter_RecepcionProcesar);
@@ -2155,8 +2213,9 @@ public class ReceiveWareCheckFragment extends Fragment {
             public void onClick(View v) {
                 clearAll();
                 CleanControls();
-                SetVisibleWareCheck();
-                btnConfirmarManagement(true);
+                /*SetVisibleWareCheck();
+                btnConfirmarManagement(true);*/
+                BackForce();
                 alertDialog.dismiss();
             }
         });
@@ -2229,6 +2288,8 @@ public class ReceiveWareCheckFragment extends Fragment {
             rfidService.URL_ = mWSParameter_RecepcionProcesar[3];
 
             dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,listInc);
+
+            /*dtoResponse = new DataSourceDto("00", "EXITOSO",null);*/
             return null;
         }
 
@@ -2241,6 +2302,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             ResponseVal responseVal = validator.getValidateDataSourceDto(dtoResponse);
 
             if(responseVal.isValidAccess()){
+                processFinalExitoso = true;
                 DialogOk("Operación correcta, se ha ingresado la mercaderia");
             }
             else {
@@ -2442,6 +2504,13 @@ public class ReceiveWareCheckFragment extends Fragment {
         int cant = mAdapter.getCount();
         mprogress1.setProgress(cant);
 
+    }
+
+    // ################### Handler Back ##################
+
+    private void BackForce() {
+        if (mBackHandler != null)
+            mBackHandler.obtainMessage(1).sendToTarget();
     }
 
 }
