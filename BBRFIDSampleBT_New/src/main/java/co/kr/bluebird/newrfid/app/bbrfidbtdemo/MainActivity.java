@@ -517,49 +517,48 @@ public class MainActivity extends Activity {
 
             case 12:
                 //################# GUIA DE ENTRADA ###############################
-                ViewGroup viewGroup = findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialogo_ingresotexto, viewGroup, false);
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
-                Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
-                EditText poTxtTexto = dialogView.findViewById(R.id.txtTextoIngreso);
-                TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-                poLabelTexto.setText("Por favor, ingrese un número de guía válido");
+
+                if(PARAM_LECTOR_RFID.getCodbodega().equals("01")){
+                    ViewGroup viewGroup = findViewById(android.R.id.content);
+                    View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialogo_ingresotexto, viewGroup, false);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+                    Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+                    EditText poTxtTexto = dialogView.findViewById(R.id.txtTextoIngreso);
+                    TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+                    poLabelTexto.setText("Por favor, ingrese un número de guía válido");
 
 
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(poTxtTexto.getText().toString() !="")
-                        {
-                            lsNumeroOrden = poTxtTexto.getText().toString();
-                            mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
-                            clsSoapAsync tarea = new clsSoapAsync();
-                            tarea.execute();
-                        }else{
-                            Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(poTxtTexto.getText().toString() !="")
+                            {
+                                lsNumeroOrden = poTxtTexto.getText().toString();
+                                mWSParameters = getResources().getStringArray(R.array.WSparameter_GuiaEntradaOC);
+                                clsSoapAsync tarea = new clsSoapAsync();
+                                tarea.execute();
+                            }else{
+                                Toast.makeText(mContext, "Ingrese No. Orden de Compra....",Toast.LENGTH_SHORT).show();
+                            }
+                            alertDialog.dismiss();
                         }
-                        alertDialog.dismiss();
-                    }
-                });
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();
-                /*
-                if (mEntryGuideCheckFragment == null){
-                    mEntryGuideCheckFragment = EntryGuideCheckFragment.newInstance();
+                    });
+                    btnCancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
                 }
-                mCurrentFragment = mEntryGuideCheckFragment;
-                */
+                else {
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"Local "+PARAM_LECTOR_RFID.getDescBodega()+ " no puede comprobar Guias de Entrada");
+                }
+
                 break;
-
-
 
             case 13:
 
@@ -570,7 +569,7 @@ public class MainActivity extends Activity {
                     mCurrentFragment = mDespatchGuideReadFragment;
                 }
                 else {
-                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"La bodega donde se encuentra no puede realizar Guias de Despacho");
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"Local "+PARAM_LECTOR_RFID.getDescBodega()+ " no puede realizar Guias de Despacho");
                 }
 
 
@@ -600,10 +599,16 @@ public class MainActivity extends Activity {
                 mCurrentFragment = mParameterFragment;
                 break;
             case 18:
-                if (mReplenishmentWareFragment == null)
-                    mReplenishmentWareFragment = ReplenishmentWareFragment.newInstance();
-                mCurrentFragment = mReplenishmentWareFragment;
+                if(!PARAM_LECTOR_RFID.getCodbodega().equals("01")){
+                    if (mReplenishmentWareFragment == null)
+                        mReplenishmentWareFragment = ReplenishmentWareFragment.newInstance();
+                    mCurrentFragment = mReplenishmentWareFragment;
+                }
+                else {
+                    loDialogo.gMostrarMensajeInformacion(loVistaDialogo,"Local "+PARAM_LECTOR_RFID.getDescBodega()+ " no puede realizar Reposición");
+                }
                 break;
+
                 /*if (mInventoryFragment == null)
                     mInventoryFragment = InventoryFragment.newInstance();
                 mCurrentFragment = mInventoryFragment;

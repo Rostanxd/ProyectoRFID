@@ -252,7 +252,7 @@ public class ReceiveWareInconsistencyFragment extends Fragment {
                 rfidService.NAMESPACE_ = mWSParameter_RecepcionProcesar[2];
                 rfidService.URL_ = mWSParameter_RecepcionProcesar[3];
 
-                dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,responseItems);
+                dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,responseItems, "");
             }
             catch (Exception ex){
                 error = true;

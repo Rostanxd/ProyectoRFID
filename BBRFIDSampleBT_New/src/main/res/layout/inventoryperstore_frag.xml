@@ -129,6 +129,7 @@
                 android:id="@+id/LayoutInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
                 <android.support.v4.view.ViewPager
@@ -147,24 +148,32 @@
                     android:id="@+id/tvLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="" />
 
                 <TextView
                     android:id="@+id/tvProduct"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="" />
 
                 <TextView
                     android:id="@+id/tvanio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="" />
 
                 <TextView
                     android:id="@+id/tvprice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="" />
 
             </LinearLayout>

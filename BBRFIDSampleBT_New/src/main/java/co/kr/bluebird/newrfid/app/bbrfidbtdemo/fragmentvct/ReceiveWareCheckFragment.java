@@ -252,7 +252,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     private ProgressBar mprogress1;
     //private EditText metDocOrigenRW,metDocDestinoRW,metMotivoRW ;
     private TextView metDocOrigenRW,metDocDestinoRW,metMotivoRW ;
-    private String  doc_origen = "";
+    private String  doc_origen = "", doc_destino = "";
     //private TableLayout tblItemDif,tblItemsNoEnc;
     //private TableLayout tblItemDif;
     private EGProcesado egProcesado;
@@ -672,6 +672,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
     @Override
     public void onStart() {
+        boolean IsPersist = false;
         if (D) Log.d(TAG, "onStart");
         //shared_recepcion_mercaderia
 
@@ -680,6 +681,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         prefs.edit().clear().commit();
 
         if(objJsonPersistence != null){
+            IsPersist = true;
             Gson gson = new Gson();
             PersistenceReceiveWare persistenceReceiveWare = gson.fromJson(objJsonPersistence, PersistenceReceiveWare.class);
             PersistirDatosBackInvLocated(persistenceReceiveWare);
@@ -692,6 +694,11 @@ public class ReceiveWareCheckFragment extends Fragment {
             {
                 doc_origen = receiveWareDetail.getDocOrigen().trim();
             }
+            if(doc_destino.isEmpty() && receiveWareDetail.getDocDestino() != null)
+            {
+                doc_destino = receiveWareDetail.getDocDestino().trim();
+            }
+
             metDocOrigenRW.setText(doc_origen);
             metDocDestinoRW.setText(receiveWareDetail.getDocDestino());
             metMotivoRW.setText(receiveWareDetail.getMotDescription());
@@ -704,6 +711,11 @@ public class ReceiveWareCheckFragment extends Fragment {
         }
         //ActivateButtons(true);
         EnabledDisabledButtons(true, 1);
+        if(IsPersist){
+            mbtnConfirmar.setEnabled(true);
+            mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0097a7")));
+        }
+
         mSoundFileLoadState = false;
 
         createSoundPool();
@@ -813,6 +825,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         //ActivateButtons(false);
         mbtnConfirmar.setEnabled(false);
         mbtnConfirmar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D5D7D6")));
+        ProcesarLvItemsDif(false);
     }
 
     private void EnabledDisabledButtons(boolean isEnabled, int proceso)
@@ -941,7 +954,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
                 case R.id.clean_imgbtn:
                     //DialogCleanControls();
-                    DialogConfirmar("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados",3,0);
+                    DialogConfirmar("¿Esta seguro que desea limpiar los datos escaneados? Se perderan todos los datos recolectados",3,0);
                     break;
 
                 case R.id.btnConfirmar:
@@ -1747,7 +1760,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSParameterRecepcionCompara[2];
             rfidService.URL_ = mWSParameterRecepcionCompara[3];
 
-            egDetailResponse = rfidService.WSRecepcionMercaderiaCompara(doc_origen,ListEpcRead);
+            egDetailResponse = rfidService.WSRecepcionMercaderiaCompara(doc_origen,ListEpcRead, doc_destino);
 
 
             return null;
@@ -2078,7 +2091,7 @@ public class ReceiveWareCheckFragment extends Fragment {
         Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
         Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
         TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+        poLabelTexto.setText("¿Esta seguro que desea limpiar los datos escaneados? Se perderan todos los datos recolectados");
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -2276,6 +2289,7 @@ public class ReceiveWareCheckFragment extends Fragment {
     private  class exWSRecepcionProcesarAsync extends AsyncTask<Void, Void, Void> {
 
         String doc_origen = EtDocOrigenRWI.getText().toString();
+        String doc_destino = EtDocDestinoRWI.getText().toString();
         String nota = metNota.getText().toString();
         DataSourceDto dtoResponse = null;
         //ProgressDialog progressDialog;
@@ -2287,7 +2301,7 @@ public class ReceiveWareCheckFragment extends Fragment {
             rfidService.NAMESPACE_ = mWSParameter_RecepcionProcesar[2];
             rfidService.URL_ = mWSParameter_RecepcionProcesar[3];
 
-            dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,listInc);
+            dtoResponse = rfidService.WSRecepcionMercaderiaProcesar(doc_origen,nota,listInc, doc_destino);
 
             /*dtoResponse = new DataSourceDto("00", "EXITOSO",null);*/
             return null;
@@ -2303,7 +2317,7 @@ public class ReceiveWareCheckFragment extends Fragment {
 
             if(responseVal.isValidAccess()){
                 processFinalExitoso = true;
-                DialogOk("Operación correcta, se ha ingresado la mercaderia");
+                DialogOk(dtoResponse.getDescripcion());
             }
             else {
                 loDialogo.gMostrarMensajeError(loVistaDialogo, responseVal.getErrorMsg());

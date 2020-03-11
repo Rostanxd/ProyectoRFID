@@ -209,10 +209,10 @@ mpbLeidos.setProgress( Integer.parseInt(mCountText.getText().toString()) );
                 if (responseVal.isFullCollection()) {
                     mspinnerConteoSetItems();
                 } else {
-                    Toast.makeText(mContext, R.string.INF_NoConteo, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.INF_NoConteo, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, responseVal.getErrorMsg(), Toast.LENGTH_LONG).show();
             }
 
 

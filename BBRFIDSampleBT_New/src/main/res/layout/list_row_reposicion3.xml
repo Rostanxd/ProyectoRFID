@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="000230597"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/gColorGrisAzul_n500" />
+        android:textColor="@color/gColorNegro" />
 
     <LinearLayout
         android:id="@+id/lyCant"
@@ -25,11 +25,11 @@
         android:layout_below="@+id/tvItemsREP">
 
         <TextView
-            android:layout_width="70sp"
+            android:layout_width="83sp"
             android:layout_height="wrap_content"
             android:text="Cant. Anterior: "
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvCantAntREP"
@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
 
     </LinearLayout>
 
@@ -49,11 +49,11 @@
         android:layout_below="@+id/lyCant">
 
         <TextView
-            android:layout_width="70sp"
+            android:layout_width="83sp"
             android:layout_height="wrap_content"
             android:text="Ventas: "
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvCantVentaREP"
@@ -61,8 +61,8 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
 
     </LinearLayout>
 
@@ -72,11 +72,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/lyVentas">
         <TextView
-            android:layout_width="70sp"
+            android:layout_width="83sp"
             android:layout_height="wrap_content"
             android:text="Stock Local:"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500"/>
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro"/>
 
         <TextView
             android:id="@+id/tvSaldoBodIntREP"
@@ -84,8 +84,8 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
 
     </LinearLayout>
 
@@ -108,15 +108,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="110dp"
+        android:layout_marginLeft="125dp"
         android:layout_below="@+id/tvItemsREP">
 
         <TextView
-            android:layout_width="63sp"
+            android:layout_width="74sp"
             android:layout_height="wrap_content"
             android:text="Cant. Actual: "
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvCantActualREP"
@@ -124,23 +124,23 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lyEgreso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
+        android:layout_marginLeft="125dp"
         android:layout_below="@+id/lyCantAct">
 
         <TextView
-            android:layout_width="63sp"
+            android:layout_width="74sp"
             android:layout_height="wrap_content"
             android:text="Egresos: "
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvCantEgresoREP"
@@ -148,23 +148,23 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lyStockOtros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
+        android:layout_marginLeft="125dp"
         android:layout_below="@+id/lyEgreso">
 
         <TextView
-            android:layout_width="63sp"
+            android:layout_width="74sp"
             android:layout_height="wrap_content"
             android:text="Stock Otros: "
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvSaldoOtrosREP"
@@ -172,8 +172,8 @@
             android:layout_height="wrap_content"
             android:text="12345"
             android:gravity="right"
-            android:textSize="11sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
     </LinearLayout>
 
 
@@ -182,7 +182,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="210dp"
+        android:layout_marginLeft="238dp"
         android:layout_below="@+id/tvItemsREP">
 
         <TextView
@@ -190,8 +190,8 @@
             android:layout_height="wrap_content"
             android:text="Dif.: "
             android:textStyle="bold"
-            android:textColor="@color/gColorGrisAzul_n500"
-            android:textSize="11sp" />
+            android:textColor="@color/gColorNegro"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tvDiferenciaREP"
@@ -200,8 +200,8 @@
             android:textStyle="bold"
             android:text="12345"
             android:gravity="right"
-            android:textSize="10sp"
-            android:textColor="@color/gColorGrisAzul_n500" />
+            android:textSize="13sp"
+            android:textColor="@color/gColorNegro" />
     </LinearLayout>
 
 

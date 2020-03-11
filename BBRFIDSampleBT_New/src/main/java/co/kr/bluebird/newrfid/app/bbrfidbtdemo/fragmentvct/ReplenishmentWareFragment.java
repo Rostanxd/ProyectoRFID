@@ -839,27 +839,25 @@ public class ReplenishmentWareFragment extends Fragment {
     }
     //OnItemSelectedListener
 
-
-
     private void DialogCleanControls(){
-        AlertDialog.Builder alerta = new AlertDialog.Builder(mContext);
-        alerta.setMessage("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...")
-                .setCancelable(false)
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        clearAll();
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-        alerta.show();
-    }
+        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialogo_confirmacion, loVistaDialogo, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.myDialog));
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
+        poLabelTexto.setText("Esta seguro de realizar un limpieza se perderan todos los datos recolectados...");
 
+
+        btnOk.setOnClickListener(v -> {
+            clearAll();
+            alertDialog.dismiss();
+        });
+        btnCancelar.setOnClickListener(v -> alertDialog.cancel());
+        alertDialog.show();
+
+    }
     private void setDialogSale(List<ReplenishmentSale> replenishmentSaleList)
     {
         /*final Dialog dialog = new Dialog(mContext);

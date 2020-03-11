@@ -616,6 +616,9 @@ public class InventoryPerStoreFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             //super.onPostExecute(aVoid);
+            if(garment != null && garment.getEstado() != null && garment.getEstado().getCodigo().equals("00")){
+                metEstiloItemIPS.setText(garment.getItmCodigo());
+            }
             CleanExpLV_Saldos();
             mLayoutSaldos.setVisibility(View.GONE);
             mLayoutInfo.setVisibility(View.VISIBLE);
