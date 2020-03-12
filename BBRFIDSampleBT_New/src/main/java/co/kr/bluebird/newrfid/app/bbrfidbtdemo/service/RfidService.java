@@ -49,6 +49,7 @@ import co.kr.bluebird.newrfid.app.bbrfidbtdemo.utility.ResponseSoapToObject;
 public class RfidService {
 
     private String gUsuario ;
+    private int timeout;
     private ParamRfidIteration paramRfidIteration;
     private ParamLectorRfid paramLectorRfid_;
     private Context globalContext;
@@ -66,6 +67,7 @@ public class RfidService {
 
     public RfidService(Context mContext_)
     {
+        timeout = 60000;
         paramRfidIteration = new ParamRfidIteration(mContext_);
         paramLectorRfid_ =  paramRfidIteration.ConsultarParametros();
         paramLogin_ = paramRfidIteration.ConsultarParametrosLogin();
@@ -258,7 +260,16 @@ public class RfidService {
 
             soapEnvelope.setOutputSoapObject(Request);
 
-            HttpTransportSE transportSE = new HttpTransportSE(URL);
+            HttpTransportSE transportSE ;
+
+            if(URL.contains("awsrfidconteodetalle")){
+                transportSE = new HttpTransportSE(URL,timeout);
+                transportSE.setReadTimeout(timeout);
+            }
+            else {
+                transportSE = new HttpTransportSE(URL);
+            }
+
             transportSE.debug = true;
 
 
@@ -688,9 +699,9 @@ public class RfidService {
      * @param epcs
      * @return
      */
-    public EGDetailResponse WSRecepcionMercaderiaCompara(String Docorigen, List<String> epcs)
+    public EGDetailResponse WSRecepcionMercaderiaCompara(String Docorigen, List<String> epcs, String DocDestino)
     {
-        SoapObject request =  AsemblerRequestRecepCompare(Docorigen, epcs);
+        SoapObject request =  AsemblerRequestRecepCompare(Docorigen,DocDestino, epcs);
         SoapObject response = CallService(request,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
         return responseSoapToObject.ResponseToEGDetailResponse(response, exceptionData, "REC");
     }
@@ -701,11 +712,13 @@ public class RfidService {
      * @param epcs
      * @return
      */
-    private SoapObject AsemblerRequestRecepCompare(String Docorigen, List<String> epcs){
+    private SoapObject AsemblerRequestRecepCompare(String Docorigen, String DocDestino, List<String> epcs){
 
         SoapObject request = new SoapObject(NAMESPACE_, METHOD_NAME_);
         request.addProperty("Docorigen", Docorigen);
+        request.addProperty("Docdestino", DocDestino);
         request.addProperty("Bodcodori", paramLectorRfid_.getCodbodega());
+        request.addProperty("Usrcodigo", gUsuario );
 
         SoapObject soNivel2 = new SoapObject(NAMESPACE_, "soNivel2");
         soNivel2.addProperty("dispositivoId",paramLectorRfid_.getDispositivoid());
@@ -735,11 +748,12 @@ public class RfidService {
      * @param responseItems
      * @return
      */
-    public   DataSourceDto WSRecepcionMercaderiaProcesar(String pDocOrigen, String pNota, List<EGTagsResponseItem> responseItems)
+    public   DataSourceDto WSRecepcionMercaderiaProcesar(String pDocOrigen, String pNota, List<EGTagsResponseItem> responseItems, String pDocDestino)
     {
         SoapObject soNivel1 = new SoapObject(NAMESPACE_, METHOD_NAME_);
         soNivel1.addProperty("Bodcodori", paramLectorRfid_.getCodbodega());
         soNivel1.addProperty("Docorigen", pDocOrigen);
+        soNivel1.addProperty("Docdestino", pDocDestino);
         soNivel1.addProperty("Nota", pNota);
         SoapObject response =AsemblerRequestRecepMercaderiaProcesar( soNivel1, SOAP_ACTION_, paramLectorRfid_.getEndpoint()+URL_, NAMESPACE_, responseItems,true);
         return responseSoapToObject.ResponseToDatasourceDto(response, exceptionData);
@@ -827,7 +841,8 @@ public class RfidService {
     public Garment WSInventoryPerStore(String coditem)
     {
         SoapObject soRequest = new SoapObject(NAMESPACE_, METHOD_NAME_);
-        soRequest.addProperty("Itmcodigo", coditem);
+        /*soRequest.addProperty("Itmcodigo", coditem);*/
+        soRequest.addProperty("Epccodigo", coditem);
         SoapObject response = CallService(soRequest,SOAP_ACTION_,paramLectorRfid_.getEndpoint()+URL_,true,false);
         return responseSoapToObject.ResponseToGarment(response, exceptionData);
     }

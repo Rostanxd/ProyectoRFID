@@ -801,7 +801,7 @@ public class TakingInventoryParticipantFragment extends Fragment {
         Button btnOk = dialogView.findViewById(R.id.btnConfirmar);
         Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
         TextView poLabelTexto = dialogView.findViewById(R.id.lblTextoLabel);
-        poLabelTexto.setText("¿Esta seguro que desea Limpiar los datos escaneados? Se perderan todos los datos recolectados");
+        poLabelTexto.setText("¿Esta seguro que desea limpiar los datos escaneados? Se perderan todos los datos recolectados");
 
 
         btnOk.setOnClickListener(new View.OnClickListener() {

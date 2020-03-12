@@ -648,9 +648,11 @@ public class ResponseSoapToObject {
                     SoapObject soSeccion = (SoapObject) soSecciones.getProperty(x);
                     seccion = new ICSeccion();
                     seccion.setNombre(soSeccion.getPropertyAsString("nombre"));
+                    String percent = soSeccion.getPropertyAsString("porcentaje");
+                    percent = percent.trim().replace(',', '.');
                     seccion.setLeido(Integer.valueOf(soSeccion.getPropertyAsString("leido")));
                     seccion.setEsperado(Integer.valueOf(soSeccion.getPropertyAsString("esperado")));
-                    seccion.setPorcentaje(Double.valueOf(soSeccion.getPropertyAsString("porcentaje")));
+                    seccion.setPorcentaje(Double.valueOf(percent));
 
                     icSeccionList.add(seccion);
                 }

@@ -594,7 +594,7 @@ public class ShippingWareGenerateFragment extends Fragment {
 
         //String customHtml = "<html><body><h1>Hello, WebView</h1></body></html>";
 
-        tvTittle.setText("Se ha generado correctamente el egreso de mercaderia");
+        tvTittle.setText("Se ha generado correctamente el Egreso de Mercaderia");
         wb_qrcode.loadData(html, "text/html", "UTF-8");
 
 
